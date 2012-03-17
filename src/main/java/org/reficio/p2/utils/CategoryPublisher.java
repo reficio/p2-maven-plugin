@@ -21,7 +21,8 @@ import org.apache.maven.plugin.AbstractMojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.eclipse.tycho.p2.facade.internal.P2ApplicationLauncher;
+import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
+// import org.eclipse.tycho.p2.facade.internal.P2ApplicationLauncher;
 
 import java.io.File;
 import java.io.IOException;

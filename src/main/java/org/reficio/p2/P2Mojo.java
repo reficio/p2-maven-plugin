@@ -28,15 +28,31 @@ import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.eclipse.tycho.equinox.EquinoxServiceFactory;
-import org.eclipse.tycho.p2.facade.internal.P2ApplicationLauncher;
+// import org.eclipse.tycho.equinox.EquinoxServiceFactory;
+// import org.eclipse.tycho.p2.facade.internal.P2ApplicationLauncher;
+import org.eclipse.sisu.equinox.EquinoxServiceFactory;
+import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
+import org.reficio.p2.domain.Configuration;
 import org.reficio.p2.utils.BundleWrapper;
 import org.reficio.p2.utils.CategoryPublisher;
+import org.sonatype.aether.RepositorySystem;
+import org.sonatype.aether.RepositorySystemSession;
+import org.sonatype.aether.collection.CollectRequest;
+import org.sonatype.aether.collection.DependencyCollectionException;
+import org.sonatype.aether.graph.Dependency;
+import org.sonatype.aether.graph.DependencyNode;
+// import org.sonatype.aether.repository.ArtifactRepository;
+import org.sonatype.aether.repository.RemoteRepository;
+import org.sonatype.aether.resolution.DependencyRequest;
+import org.sonatype.aether.resolution.DependencyResolutionException;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
+import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Set;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
@@ -100,6 +116,8 @@ public class P2Mojo extends AbstractMojo {
      */
     private EquinoxServiceFactory p2;
 
+    // private TargetPlatformBuilder platformBuilder;
+
     /**
      * @component
      * @required
@@ -143,20 +161,124 @@ public class P2Mojo extends AbstractMojo {
      */
     private String additionalArgs;
 
+
+    /**
+     * The entry point to Aether, i.e. the component doing all the work.
+     *
+     * @component
+     */
+    private RepositorySystem repoSystem;
+
+    /**
+     * The current repository/network configuration of Maven.
+     *
+     * @parameter default-value="${repositorySystemSession}"
+     * @readonly
+     */
+    private RepositorySystemSession repoSession;
+
+    /**
+     * The project's remote repositories to use for the resolution of project dependencies.
+     *
+     * @parameter default-value="${project.remoteProjectRepositories}"
+     * @readonly
+     */
+    private List<RemoteRepository> projectRepos;
+
+    /**
+     * The project's remote repositories to use for the resolution of plugins and their dependencies.
+     *
+     * @parameter default-value="${project.remotePluginRepositories}"
+     * @readonly
+     */
+    private List<RemoteRepository> pluginRepos;
+
+    /**
+     * @parameter default-value=""
+     */
+    private List artifacts;
+
     protected Log log = getLog();
 
 
-    public void execute() {
-        try {
-            boolean executionProceeded = executeBndWrapper();
-            if (executionProceeded == false) {
-                return;
-            }
-            executeP2PublisherPlugin();
-            executeCategoryPublisher();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public void testResolution() throws DependencyCollectionException, DependencyResolutionException {
+
+        Dependency dependency =
+                new Dependency(new DefaultArtifact("org.apache.maven:maven-profile:2.2.1"), "compile");
+
+        CollectRequest collectRequest = new CollectRequest();
+        collectRequest.setRoot(dependency);
+        for (RemoteRepository r : projectRepos) {
+            collectRequest.addRepository(r);
         }
+
+        DependencyNode node = repoSystem.collectDependencies(repoSession, collectRequest).getRoot();
+        DependencyRequest dependencyRequest = new DependencyRequest(node, null);
+        repoSystem.resolveDependencies(repoSession, dependencyRequest);
+        PreorderNodeListGenerator nlg = new PreorderNodeListGenerator();
+        node.accept(nlg);
+        System.out.println(nlg.getClassPath());
+
+
+
+    }
+
+    public void execute() {
+
+        log.info(project.getId()+"");
+        log.info(project.getPlugin("org.reficio:maven-p2-plugin") + "");
+        log.info(project.getParent()+"");
+        log.info("Artifacts:");
+//        for (Object artifact : artifacts)
+//            log.info("\t"+artifact);
+//
+
+
+
+
+        // File dir1 = new File(".");
+        try {
+            System.out.println("Current dir : " + project.getBasedir().getCanonicalPath());
+            File config = new File(project.getBasedir(), "p2.xml");
+            if(config.exists()) {
+                log.info(config.getAbsolutePath());
+                Configuration c = Configuration.readConfiguration(config);
+                log.info("Config: \n" + c);
+            } else {
+                log.info("File does not exist");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+//        try {
+//            testResolution();
+//        } catch (DependencyCollectionException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        } catch (DependencyResolutionException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        }
+
+//        List<org.apache.maven.artifact.repository.ArtifactRepository> repos = project.getRemoteArtifactRepositories();
+//        for (org.apache.maven.artifact.repository.ArtifactRepository r : repos) {
+//            log.info(r.getUrl());
+//        }
+
+
+        log.info("Invoking maven-p2-plugin");
+
+//        try {
+//            boolean executionProceeded = executeBndWrapper();
+//            if (executionProceeded == false) {
+//                return;
+//            }
+//            executeP2PublisherPlugin();
+//            executeCategoryPublisher();
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     protected boolean executeBndWrapper() throws Exception {
@@ -174,7 +296,7 @@ public class P2Mojo extends AbstractMojo {
                 plugin(
                         groupId("org.eclipse.tycho.extras"),
                         artifactId("tycho-p2-extras-plugin"),
-                        version("0.13.0")
+                        version("0.14.0")
                 ),
                 goal("publish-features-and-bundles"),
                 configuration(

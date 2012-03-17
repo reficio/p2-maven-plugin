@@ -19,13 +19,18 @@ package org.reficio.p2.utils;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
+import aQute.lib.osgi.Resource;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.Artifact;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
 
+import java.io.*;
+import java.util.Enumeration;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 /**
  * User: Tom Bujok (tom.bujok@reficio.org)
  * Date: 2012-02-09
@@ -119,6 +124,39 @@ public class BundleWrapper {
             bundleUtils.reportErrors(analyzer);
         } finally {
             analyzer.close();
+            unsignJar(outputFile);
+        }
+    }
+
+    private void unsignJar(File outputFile) {
+        try {
+            File file = new File(outputFile.getParent(), outputFile.getName() + "asd" + ".tmp");
+            file.createNewFile();
+            FileOutputStream outputStream = new FileOutputStream(file);
+            ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+            ZipFile zip = new ZipFile(outputFile);
+            for (Enumeration list = zip.entries(); list.hasMoreElements(); ) {
+                ZipEntry entry = (ZipEntry) list.nextElement();
+                if (entry.isDirectory()) {
+                    continue;
+                }
+                String name = entry.getName();
+                if (name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
+                    System.out.println("Removing [" + name + "] from " + outputFile.getName());
+                    continue;
+                }
+                zipOutputStream.putNextEntry(entry);
+                IOUtils.copy(zip.getInputStream(entry), zipOutputStream);
+
+            }
+            zipOutputStream.flush();
+            zipOutputStream.close();
+            outputFile.delete();
+            outputFile.createNewFile();
+            FileUtils.copyFile(file, outputFile);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -142,7 +180,7 @@ public class BundleWrapper {
     }
 
     private void setPackageOptions(Analyzer analyzer) {
-        analyzer.setProperty(Analyzer.IMPORT_PACKAGE, "*");
+        analyzer.setProperty(Analyzer.IMPORT_PACKAGE, "*;resolution:=optional");
         String export = analyzer.calculateExportsFromContents(analyzer.getJar());
         analyzer.setProperty(Analyzer.EXPORT_PACKAGE, export);
     }

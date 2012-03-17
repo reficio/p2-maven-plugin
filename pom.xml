@@ -12,14 +12,19 @@
 
     <properties>
         <maven.version>3.0.3</maven.version>
+        <tycho.version>0.14.0</tycho.version>
+        <aether.version>1.13.1</aether.version>
+        <wagon.version>2.2</wagon.version>
     </properties>
 
 
     <dependencies>
+
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
             <version>${maven.version}</version>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>junit</groupId>
@@ -27,49 +32,63 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
             <version>${maven.version}</version>
+            <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
             <version>${maven.version}</version>
+            <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.sonatype.aether</groupId>
+            <artifactId>aether-api</artifactId>
+            <version>${aether.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sonatype.aether</groupId>
+            <artifactId>aether-util</artifactId>
+            <version>${aether.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-compat</artifactId>
+            <version>${maven.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.1</version>
         </dependency>
-
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
         </dependency>
-
         <dependency>
             <groupId>biz.aQute</groupId>
             <artifactId>bnd</artifactId>
             <version>0.0.384</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
             <version>1.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.twdata.maven</groupId>
             <artifactId>mojo-executor</artifactId>
             <version>2.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>maven-bundle-plugin</artifactId>
@@ -82,17 +101,34 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>tycho-p2-facade</artifactId>
-            <version>0.13.0</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.eclipse.tycho</groupId>-->
+        <!--<artifactId>sisu-equinox-api</artifactId>-->
+        <!--<version>${tycho.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.eclipse.tycho</groupId>-->
+        <!--<artifactId>sisu-equinox-embedder</artifactId>-->
+        <!--<version>${tycho.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.eclipse.tycho</groupId>-->
+        <!--<artifactId>sisu-equinox-launching</artifactId>-->
+        <!--<version>${tycho.version}</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+        <!--<groupId>org.eclipse.tycho</groupId>-->
+        <!--<artifactId>tycho-core</artifactId>-->
+        <!--<version>${tycho.version}</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.eclipse.tycho.extras</groupId>
             <artifactId>tycho-p2-extras-plugin</artifactId>
-            <version>0.13.0</version>
+            <version>${tycho.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>junit</groupId>
@@ -100,15 +136,40 @@
             <version>4.9</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>1.9.0</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.16.1-GA</version>
+        </dependency>
+
+
     </dependencies>
 
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-component-metadata</artifactId>
+                <version>1.5.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-metadata</goal>
+                            <goal>generate-test-metadata</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <repositories>
         <repository>
