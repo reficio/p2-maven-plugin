@@ -17,9 +17,7 @@
         <wagon.version>2.2</wagon.version>
     </properties>
 
-
     <dependencies>
-
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
@@ -70,6 +68,11 @@
             <version>2.1</version>
         </dependency>
         <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
@@ -100,35 +103,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>org.eclipse.tycho</groupId>-->
-        <!--<artifactId>sisu-equinox-api</artifactId>-->
-        <!--<version>${tycho.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.eclipse.tycho</groupId>-->
-        <!--<artifactId>sisu-equinox-embedder</artifactId>-->
-        <!--<version>${tycho.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.eclipse.tycho</groupId>-->
-        <!--<artifactId>sisu-equinox-launching</artifactId>-->
-        <!--<version>${tycho.version}</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-        <!--<groupId>org.eclipse.tycho</groupId>-->
-        <!--<artifactId>tycho-core</artifactId>-->
-        <!--<version>${tycho.version}</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.eclipse.tycho.extras</groupId>
             <artifactId>tycho-p2-extras-plugin</artifactId>
             <version>${tycho.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>junit</groupId>
@@ -142,13 +121,6 @@
             <version>1.9.0</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.16.1-GA</version>
-        </dependency>
-
 
     </dependencies>
 

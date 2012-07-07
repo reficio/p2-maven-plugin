@@ -39,3 +39,6 @@ target
 *.ipr
 *.iws
 *.iml
+
+
+src/site/markdown/*.*

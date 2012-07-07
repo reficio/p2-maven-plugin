@@ -19,18 +19,18 @@ package org.reficio.p2.utils;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
-import aQute.lib.osgi.Resource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.maven.artifact.Artifact;
+import org.sonatype.aether.artifact.Artifact;
 
-
-import java.io.*;
-import java.util.Enumeration;
-import java.util.Set;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
 /**
  * User: Tom Bujok (tom.bujok@reficio.org)
  * Date: 2012-02-09
@@ -57,9 +57,8 @@ public class BundleWrapper {
         this.artifacts = artifacts;
         this.artifactsDestinationFolder = artifactsDestinationFolder;
         this.bundlesDestinationFolder = bundlesDestinationFolder;
-
-        fetchArtifacts();
         if (hasArtifactsStateChanged()) {
+            fetchArtifacts();
             wrapArtifacts();
             return true;
         }
@@ -67,26 +66,28 @@ public class BundleWrapper {
     }
 
     private void fetchArtifacts() throws IOException {
+        FileUtils.deleteDirectory(artifactsDestinationFolder);
         artifactsDestinationFolder.mkdirs();
         for (Artifact artifact : artifacts) {
             File unwrappedArtifact = new File(artifactsDestinationFolder, artifact.getFile().getName());
-            if (unwrappedArtifact.exists() == false) {
-                FileUtils.copyFile(artifact.getFile(), unwrappedArtifact);
-            }
+            FileUtils.copyFile(artifact.getFile(), unwrappedArtifact);
         }
     }
 
     private boolean hasArtifactsStateChanged() {
-        for (Artifact artifact : artifacts) {
-            File wrappedArtifact = new File(bundlesDestinationFolder, artifact.getFile().getName());
-            if (wrappedArtifact.exists() == false) {
-                return true;
-            }
+        Set<String> newArtifacts = new TreeSet<String>();
+        for(Artifact artifact: artifacts) {
+            newArtifacts.add(artifact.getFile().getName());
         }
-        return false;
+        Set<String> oldArtifacts = new TreeSet<String>();
+        for(File file: artifactsDestinationFolder.listFiles()) {
+            oldArtifacts.add(file.getName());
+        }
+        return oldArtifacts.equals(newArtifacts) == false;
     }
 
     private void wrapArtifacts() throws Exception {
+        FileUtils.deleteDirectory(bundlesDestinationFolder);
         bundlesDestinationFolder.mkdirs();
         for (File unwrappedFile : artifactsDestinationFolder.listFiles()) {
             File wrappedFile = new File(bundlesDestinationFolder, unwrappedFile.getName());
@@ -142,7 +143,6 @@ public class BundleWrapper {
                 }
                 String name = entry.getName();
                 if (name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
-                    System.out.println("Removing [" + name + "] from " + outputFile.getName());
                     continue;
                 }
                 zipOutputStream.putNextEntry(entry);

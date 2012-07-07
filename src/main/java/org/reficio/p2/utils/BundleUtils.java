@@ -20,7 +20,8 @@ package org.reficio.p2.utils;
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
 import org.apache.felix.bundleplugin.BundlePlugin;
-import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.sonatype.aether.artifact.Artifact;
 
 import java.io.IOException;
 import java.util.jar.Attributes;
@@ -36,25 +37,36 @@ import java.util.jar.Manifest;
  */
 public class BundleUtils extends BundlePlugin {
 
+    private static final String BUNDLE_SYMBOLIC_NAME_ATTR_NAME = "Bundle-SymbolicName";
+
     public boolean reportErrors(Analyzer analyzer) {
         return super.reportErrors("", analyzer);
     }
 
+    public static org.apache.maven.artifact.Artifact aetherToMavenArtifactBasic(Artifact artifact) {
+        DefaultArtifact mavenArtifact = new DefaultArtifact(
+                artifact.getGroupId(),
+                artifact.getArtifactId(),
+                artifact.getVersion(),
+                null, null, null, null);
+        return mavenArtifact;
+    }
+
     public String getBundleSymbolicName(Artifact artifact) {
-        return super.getMaven2OsgiConverter().getBundleSymbolicName(artifact);
+        return super.getMaven2OsgiConverter().getBundleSymbolicName(aetherToMavenArtifactBasic(artifact));
     }
 
     public String getBundleVersion(Artifact artifact) {
-        return super.getMaven2OsgiConverter().getVersion(artifact);
+        return super.getMaven2OsgiConverter().getVersion(aetherToMavenArtifactBasic(artifact));
     }
 
     public boolean isBundle(Jar jar) {
         try {
             Manifest manifest = jar.getManifest();
-            if(manifest == null) {
+            if (manifest == null) {
                 return false;
             }
-            Attributes.Name symbolicName = new Attributes.Name("Bundle-SymbolicName");
+            Attributes.Name symbolicName = new Attributes.Name(BUNDLE_SYMBOLIC_NAME_ATTR_NAME);
             Attributes attributes = manifest.getMainAttributes();
             return attributes != null && attributes.containsKey(symbolicName);
         } catch (IOException e) {

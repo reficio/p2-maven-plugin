@@ -20,7 +20,6 @@ package org.reficio.p2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.AbstractMojoExecutionException;
@@ -28,30 +27,22 @@ import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-// import org.eclipse.tycho.equinox.EquinoxServiceFactory;
-// import org.eclipse.tycho.p2.facade.internal.P2ApplicationLauncher;
 import org.eclipse.sisu.equinox.EquinoxServiceFactory;
 import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
-import org.reficio.p2.domain.Configuration;
+import org.reficio.p2.utils.ArtifactResolver;
 import org.reficio.p2.utils.BundleWrapper;
 import org.reficio.p2.utils.CategoryPublisher;
+import org.sonatype.aether.RepositoryException;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
-import org.sonatype.aether.collection.CollectRequest;
-import org.sonatype.aether.collection.DependencyCollectionException;
-import org.sonatype.aether.graph.Dependency;
-import org.sonatype.aether.graph.DependencyNode;
-// import org.sonatype.aether.repository.ArtifactRepository;
+import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.repository.RemoteRepository;
-import org.sonatype.aether.resolution.DependencyRequest;
-import org.sonatype.aether.resolution.DependencyResolutionException;
-import org.sonatype.aether.util.artifact.DefaultArtifact;
-import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -186,103 +177,38 @@ public class P2Mojo extends AbstractMojo {
     private List<RemoteRepository> projectRepos;
 
     /**
-     * The project's remote repositories to use for the resolution of plugins and their dependencies.
-     *
-     * @parameter default-value="${project.remotePluginRepositories}"
-     * @readonly
-     */
-    private List<RemoteRepository> pluginRepos;
-
-    /**
      * @parameter default-value=""
      */
-    private List artifacts;
+    private List<String> artifacts;
 
     protected Log log = getLog();
 
 
-    public void testResolution() throws DependencyCollectionException, DependencyResolutionException {
-
-        Dependency dependency =
-                new Dependency(new DefaultArtifact("org.apache.maven:maven-profile:2.2.1"), "compile");
-
-        CollectRequest collectRequest = new CollectRequest();
-        collectRequest.setRoot(dependency);
-        for (RemoteRepository r : projectRepos) {
-            collectRequest.addRepository(r);
-        }
-
-        DependencyNode node = repoSystem.collectDependencies(repoSession, collectRequest).getRoot();
-        DependencyRequest dependencyRequest = new DependencyRequest(node, null);
-        repoSystem.resolveDependencies(repoSession, dependencyRequest);
-        PreorderNodeListGenerator nlg = new PreorderNodeListGenerator();
-        node.accept(nlg);
-        System.out.println(nlg.getClassPath());
-
-
-
-    }
 
     public void execute() {
-
-        log.info(project.getId()+"");
-        log.info(project.getPlugin("org.reficio:maven-p2-plugin") + "");
-        log.info(project.getParent()+"");
-        log.info("Artifacts:");
-//        for (Object artifact : artifacts)
-//            log.info("\t"+artifact);
-//
-
-
-
-
-        // File dir1 = new File(".");
         try {
-            System.out.println("Current dir : " + project.getBasedir().getCanonicalPath());
-            File config = new File(project.getBasedir(), "p2.xml");
-            if(config.exists()) {
-                log.info(config.getAbsolutePath());
-                Configuration c = Configuration.readConfiguration(config);
-                log.info("Config: \n" + c);
-            } else {
-                log.info("File does not exist");
+            Set<Artifact> resolvedArtifacts = resolveArtifacts(artifacts);
+            boolean executionProceeded = executeBndWrapper(resolvedArtifacts);
+            if (executionProceeded == false) {
+                return;
             }
-
+            executeP2PublisherPlugin();
+            executeCategoryPublisher();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
-
-//        try {
-//            testResolution();
-//        } catch (DependencyCollectionException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        } catch (DependencyResolutionException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
-
-//        List<org.apache.maven.artifact.repository.ArtifactRepository> repos = project.getRemoteArtifactRepositories();
-//        for (org.apache.maven.artifact.repository.ArtifactRepository r : repos) {
-//            log.info(r.getUrl());
-//        }
-
-
-        log.info("Invoking maven-p2-plugin");
-
-//        try {
-//            boolean executionProceeded = executeBndWrapper();
-//            if (executionProceeded == false) {
-//                return;
-//            }
-//            executeP2PublisherPlugin();
-//            executeCategoryPublisher();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
-    protected boolean executeBndWrapper() throws Exception {
-        Set<Artifact> artifactsToWrap = project.getArtifacts();
+    public Set<Artifact> resolveArtifacts(List<String> artifacts) throws RepositoryException {
+        ArtifactResolver resolver = new ArtifactResolver(repoSystem, repoSession, projectRepos);
+        Set<Artifact> resolvedArtifacts = new HashSet<Artifact>();
+        for(String artifact : artifacts) {
+            resolvedArtifacts.addAll(resolver.resolve(artifact));
+        }
+        return resolvedArtifacts;
+    }
+
+    protected boolean executeBndWrapper(Set<Artifact> artifactsToWrap) throws Exception {
         File bundlesDestinationFolder = new File(buildDirectory, BUNDLES_DESTINATION_FOLDER);
         File artifactsDestinationFolder = new File(buildDirectory, VANILLA_DESTINATION_FOLDER);
         BundleWrapper wrapper = new BundleWrapper(pedantic);
