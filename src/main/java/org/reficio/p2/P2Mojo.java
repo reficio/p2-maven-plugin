@@ -212,6 +212,8 @@ public class P2Mojo extends AbstractMojo {
     protected boolean executeBndWrapper(Set<Artifact> artifactsToWrap) throws Exception {
         File bundlesDestinationFolder = new File(buildDirectory, BUNDLES_DESTINATION_FOLDER);
         File artifactsDestinationFolder = new File(buildDirectory, VANILLA_DESTINATION_FOLDER);
+        bundlesDestinationFolder.mkdirs();
+        artifactsDestinationFolder.mkdirs();
         BundleWrapper wrapper = new BundleWrapper(pedantic);
         return wrapper.execute(artifactsToWrap, artifactsDestinationFolder, bundlesDestinationFolder);
     }
