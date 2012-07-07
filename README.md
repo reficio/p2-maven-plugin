@@ -114,6 +114,7 @@ You will see the following output:
 
 Your site will be located in the target/repository folder and will look like this:
 ```
+	pom.xml
 	target
     ├── repository
     │   ├── artifacts.jar
@@ -121,8 +122,13 @@ Your site will be located in the target/repository folder and will look like thi
     │   ├── content.jar
     │   └── plugins
     │       ├── org.apache.commons.io_2.1.0.jar
-    │       ├── org.apache.commons.lang3_3.1.0.jar
     │       ├── org.apache.commons.lang_2.4.0.jar
     │       ├── org.apache.commons.lang_2.5.0.jar
-    │       └── org.apache.commons.lang_2.6.0.jar
+    │       ├── org.apache.commons.lang_2.6.0.jar
+    │       └── org.apache.commons.lang3_3.1.0.jar        
 ```
+
+Now you can use your P2 site locally, or exposing it using for example jetty-plugin and play with your Eclips RCP project like you were in the Plain Old Java Environment.
+
+### Bits and pieces
+There are many more use cases that I am gonna describe here in the nearest future.
