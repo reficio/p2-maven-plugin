@@ -28,9 +28,9 @@
     <part id="general">
         <title>General</title>
 
-        <faq id="whats-is-maven-p2-plugin">
+        <faq id="whats-is-p2-maven-plugin">
             <question>
-                What is soap-ws?
+                What is p2-maven-plugin?
             </question>
             <answer>
                 <p>
