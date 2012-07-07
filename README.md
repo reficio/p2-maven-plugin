@@ -87,11 +87,20 @@ You will see the following output:
     [INFO] 
     [INFO] --- p2-maven-plugin:1.0.0-SNAPSHOT:site (generate-p2-site) @ example-p2-site ---
     [INFO] Command line:
-        /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources && /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher -artifactRepository file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository -metadataRepository file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository -publishArtifacts -compress -source /opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/source
+        /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources && /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/
+        Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/
+        org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher 
+        -artifactRepository file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository -metadataRepository file:/opt/
+        workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository -publishArtifacts -compress -source /opt/workspaces/reficio/p2-
+        maven-plugin/src/main/resources/target/source
     Generating metadata for ..
     Generation completed with success [0 seconds].
     [INFO] Command line:
-        /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository && /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.CategoryPublisher -categoryDefinition file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/category.xml -metadataRepository file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/
+        /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository && /System/Library/Java/JavaVirtualMachines/
+        1.6.0.jdk/Contents/Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/
+        org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.CategoryPublisher -
+        categoryDefinition file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/category.xml -metadataRepository 
+        file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/        
     Generating metadata for ..
     Generation completed with success [0 seconds].
     [INFO] ------------------------------------------------------------------------
@@ -105,6 +114,7 @@ You will see the following output:
 
 Your site will be located in the target/repository folder and will look like this:
 ```
+	target
     ├── repository
     │   ├── artifacts.jar
     │   ├── category.xml
