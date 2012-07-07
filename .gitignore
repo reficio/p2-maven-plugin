@@ -39,6 +39,7 @@ target
 *.ipr
 *.iws
 *.iml
+.DS_Store
 
 
 src/site/markdown/*.*
