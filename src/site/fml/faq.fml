@@ -28,7 +28,7 @@
     <part id="general">
         <title>General</title>
 
-        <faq id="whats-is-soap-ws">
+        <faq id="whats-is-maven-p2-plugin">
             <question>
                 What is soap-ws?
             </question>
@@ -43,42 +43,6 @@
             </answer>
         </faq>
 
-        <faq id="why-should-i-bother">
-            <question>
-                What should I bother?
-            </question>
-            <answer>
-                Have a look at this:
-                <ul>
-                    <li>Have you ever had problems with the versioning of web-service endpoints? Have you ever had to address the problem how to deal with many versions of the same classes generated from two versions of the same WSDL in one code base? Did you try to prefix the classes, change the package, or do any other mambo-jumbo tricks that are clearly against the best-practices of software design?</li>
-                    <li>Have you every tried to chain and orchestrate a few web-service invocations applying some XSLT transformation to the consecutive responses forwarding them to the next endpoint? Have you ever seen how cumbersome it is using Java generated ws clients/servers?</li>
-                    <li>Have you ever had to re-generate the ws-stubs, recompile and redeploy you application because of a tiny change in the WSDL?</li>
-                    <li>Have you every been confused why you generate all these domain and stub classes to invoke one simple web-service operation and to get a plain response that could be processed with XSTL one-liner?</li>
-                    <li>Have you ever had to had to send a simple XML message to a SOAP server in a fire and forget mode?</li>
-                    <li>Have you ever had to expose a mock SOAP endpoint that would respond to the request sending a sample response -let's say in an unit test?</li>
-                    <li>Have you ever had to download a hierarchical WSDL file with hierarchical XSD schemas and store it on your local hard drive with all the import and includes fixed properly so that you can reuse it locally?</li>
-                    <li>Have you ever…</li>
-                </ul>
-                <p>
-                    Yes, that's what soap-ws can do for you. But it can do much more, just dive in and check the plethora of stuff that we have implemented.
-                </p>
-            </answer>
-        </faq>
-
-        <faq id="how-can-i-hack-around">
-            <question>
-                How can I hack around?
-            </question>
-            <answer>
-                Try here:
-                <ul>
-                    <li>GitHub -> https://github.com/centeractive/soap-ws</li>
-                    <li>Jenkins -> https://reficio.ci.cloudbees.com/job/soap-ws</li>
-                    <li>Sonar -> http://nemo.sonarsource.org/dashboard/index/com.centeractive:soap-ws</li>
-                    <li>Site -> http://projects.reficio.org/soap-ws/1.0.0-SNAPSHOT</li>
-                </ul>
-            </answer>
-        </faq>
     </part>
 
 </faqs>
