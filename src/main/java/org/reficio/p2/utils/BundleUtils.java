@@ -22,6 +22,8 @@ import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
 import org.apache.felix.bundleplugin.BundlePlugin;
 import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.handler.ArtifactHandler;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.sonatype.aether.artifact.Artifact;
 
 import java.io.IOException;
@@ -45,12 +47,18 @@ public class BundleUtils extends BundlePlugin {
     }
 
     public static org.apache.maven.artifact.Artifact aetherToMavenArtifactBasic(Artifact artifact) {
-        DefaultArtifact mavenArtifact = new DefaultArtifact(
-                artifact.getGroupId(),
+    	String type = artifact.getProperty("type", "");
+    	String scope = org.apache.maven.artifact.Artifact.SCOPE_COMPILE;
+    	String classifier = null;
+    	ArtifactHandler artifactHandler = new DefaultArtifactHandler(type);
+    	
+		DefaultArtifact mavenArtifact = new DefaultArtifact(
+				artifact.getGroupId(),
                 artifact.getArtifactId(),
-                artifact.getVersion(),
-                null, null, null, null);
-        return mavenArtifact;
+                artifact.getVersion(), 
+                scope, type, classifier, artifactHandler);
+        
+		return mavenArtifact;
     }
 
     public String getBundleSymbolicName(Artifact artifact) {
