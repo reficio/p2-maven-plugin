@@ -134,7 +134,7 @@ Now you can use your P2 site locally (or exposing it using for example jetty-plu
 There are many more use cases that I am gonna describe here.
 
 #### Default options 
-This example is located here: src/main/example/default/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/src/main/examples/default/pom.xml
 
 This is the default and the shortest configuration. Only the identifiers of the dependencies have  to be specified. What would be the behavior if we used the configuraiton listed below:
 
@@ -168,7 +168,7 @@ Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, a
 the bundle is not already an osgi bundle - othwerise you have to use the override option - please see the "override" example located here: /examples/override/pom.xml
 
 #### Override option
-This example is located here: src/main/example/override/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/src/main/example/override/pom.xml
 
 This is the configuration that overrides the default MANIFEST.MF files in jars that are already OSGi bundles. <override>true</override> section has to be included to enable this opion
 
@@ -206,10 +206,8 @@ you can also specify some instructions (what makes sense with override):
     </artifact>
 ```
 
-Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
-
 #### Transitive option
-This example is located here: src/main/example/transitive/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/src/main/example/transitive/pom.xml
 
 This is the configuration that excludes transitive dependencies. <transitive>false</transitive> section has to be included to enable this option.
 
@@ -240,5 +238,3 @@ is an equivalent of the following definition:
         </instructions>
     </artifact>
 ```
-
-Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
