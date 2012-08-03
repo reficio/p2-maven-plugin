@@ -33,28 +33,28 @@
                                 instructions, they will be IGNORED (see override
                               - p2 site will be generated
 
-                        This definition of an artifact:
-                            <artifact>
-                                <id>commons-io:commons-io:2.1</id>
-                            </artifact>
+                            This definition of an artifact:
+                                <artifact>
+                                    <id>commons-io:commons-io:2.1</id>
+                                </artifact>
 
-                        is an equivalent of the following definition:
-                            <artifact>
-                                <id>commons-io:commons-io:2.1</id>
-                                <transitive>true</transitive>
-                                <override>false</override>
-                                <instructions>
-                                    <Import-Package>*;resolution:=optional</Import-Package>
-                                    <Export-Package>*</Export-Package>
-                                </instructions>
-                            </artifact>
+                            is an equivalent of the following definition:
+                                <artifact>
+                                    <id>commons-io:commons-io:2.1</id>
+                                    <transitive>true</transitive>
+                                    <override>false</override>
+                                    <instructions>
+                                        <Import-Package>*;resolution:=optional</Import-Package>
+                                        <Export-Package>*</Export-Package>
+                                    </instructions>
+                                </artifact>
 
-                        Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version,
-                        are calculated according to the following rules:
-                        http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
-                        If you specify any instructions yourself they will be used as the default ones, if
-                        the bundle is not already an osgi bundle - othwerise you have to use the override
-                        option - please see the /examples/override/pom.xml example
+                            Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version,
+                            are calculated according to the following rules:
+                            http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
+                            If you specify any instructions yourself they will be used as the default ones, if
+                            the bundle is not already an osgi bundle - othwerise you have to use the override
+                            option - please see the /examples/override/pom.xml example
                         -->
                         <configuration>
                             <artifacts>
