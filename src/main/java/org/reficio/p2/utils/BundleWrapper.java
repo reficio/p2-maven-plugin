@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 centeractive ag. All Rights Reserved.
+ * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -22,88 +22,76 @@ import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.maven.plugin.logging.Log;
+import org.reficio.p2.P2Artifact;
+import org.reficio.p2.log.Logger;
 import org.sonatype.aether.artifact.Artifact;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
- * User: Tom Bujok (tom.bujok@reficio.org)
- * Date: 2012-02-09
- * Time: 9:46 PM
+ * @author Tom Bujok (tom.bujok@reficio.org)
+ * @since 1.0.0
  * <p/>
- * Reficio (TM) - Reestablish your software!
+ * Reficio (TM) - Reestablish your software!</br>
  * http://www.reficio.org
  */
 public class BundleWrapper {
 
-    protected BundleUtils bundleUtils;
-    private boolean pedantic;
+    private static final Log log = Logger.getLog();
 
-    private Set<Artifact> artifacts;
-    private File artifactsDestinationFolder;
-    private File bundlesDestinationFolder;
+    protected final BundleUtils bundleUtils;
+    private final boolean pedantic;
+    private final File bundlesDestinationFolder;
 
-    public BundleWrapper(boolean pedantic) {
+    public BundleWrapper(boolean pedantic, File bundlesDestinationFolder) {
         this.bundleUtils = new BundleUtils();
         this.pedantic = pedantic;
-    }
-
-    public boolean execute(Set<Artifact> artifacts, File artifactsDestinationFolder, File bundlesDestinationFolder) throws Exception {
-        this.artifacts = artifacts;
-        this.artifactsDestinationFolder = artifactsDestinationFolder;
         this.bundlesDestinationFolder = bundlesDestinationFolder;
-        if (hasArtifactsStateChanged()) {
-            fetchArtifacts();
-            wrapArtifacts();
-            return true;
-        }
-        return false;
     }
 
-    private void fetchArtifacts() throws IOException {
-        FileUtils.deleteDirectory(artifactsDestinationFolder);
-        artifactsDestinationFolder.mkdirs();
-        for (Artifact artifact : artifacts) {
-            File unwrappedArtifact = new File(artifactsDestinationFolder, artifact.getFile().getName());
-            FileUtils.copyFile(artifact.getFile(), unwrappedArtifact);
+    public void execute(P2Artifact artifact) throws Exception {
+        wrapArtifacts(artifact);
+    }
+
+    private void wrapArtifacts(P2Artifact p2Artifact) throws Exception {
+        validateConfig(p2Artifact);
+        for (Artifact artifact : p2Artifact.getArtifacts()) {
+            File wrappedFile = new File(bundlesDestinationFolder, artifact.getFile().getName());
+            doWrap(p2Artifact, artifact.getFile(), wrappedFile);
         }
     }
 
-    private boolean hasArtifactsStateChanged() {
-        Set<String> newArtifacts = new TreeSet<String>();
-        for(Artifact artifact: artifacts) {
-            newArtifacts.add(artifact.getFile().getName());
+    private void validateConfig(P2Artifact p2Artifact) {
+        if (p2Artifact.shouldOverrideManifest() && p2Artifact.shouldIncludeTransitive()) {
+            String message = "[%s] <override>true</override> cannot be specified together with <transitive>true</transitive> ";
+            message += "If you want to override the original MANIFEST.MF file you have to exclude the transitive dependencies (and add them separately if you wish). ";
+            message += "It's not recommended, however, to override the original MANIFEST.MF file, unless you really know what you are doing! ";
+            throw new RuntimeException(String.format(message, p2Artifact.getId()));
         }
-        Set<String> oldArtifacts = new TreeSet<String>();
-        for(File file: artifactsDestinationFolder.listFiles()) {
-            oldArtifacts.add(file.getName());
-        }
-        return oldArtifacts.equals(newArtifacts) == false;
-    }
-
-    private void wrapArtifacts() throws Exception {
-        FileUtils.deleteDirectory(bundlesDestinationFolder);
-        bundlesDestinationFolder.mkdirs();
-        for (File unwrappedFile : artifactsDestinationFolder.listFiles()) {
-            File wrappedFile = new File(bundlesDestinationFolder, unwrappedFile.getName());
-            if (wrappedFile.exists()) {
-                continue;
-            }
-            doWrap(unwrappedFile, wrappedFile);
+        if (p2Artifact.shouldIncludeTransitive() && !p2Artifact.getInstructions().isEmpty()) {
+            String message = "Instructions specified together <transitive>true</transitive>; ";
+            message += "Make sure to specify proper wildcards export-packages directives.";
+            log.warn(String.format("[%s] %s", p2Artifact.getId(), message));
         }
     }
 
-    private void doWrap(File inputFile, File outputFile) throws Exception {
+    private void doWrap(P2Artifact p2Artifact, File inputFile, File outputFile) throws Exception {
         if (isAlreadyBundle(inputFile)) {
-            handleBundleJarWrap(inputFile, outputFile);
+            if (p2Artifact.shouldOverrideManifest()) {
+                handleVanillaJarWrap(p2Artifact, inputFile, outputFile);
+            } else {
+                handleBundleJarWrap(inputFile, outputFile);
+            }
         } else {
-            handleVanillaJarWrap(inputFile, outputFile);
+            handleVanillaJarWrap(p2Artifact, inputFile, outputFile);
         }
     }
 
@@ -116,8 +104,8 @@ public class BundleWrapper {
         FileUtils.copyFile(inputFile, outputFile);
     }
 
-    private void handleVanillaJarWrap(File inputFile, File outputFile) throws Exception {
-        Analyzer analyzer = initializeAnalyzer(inputFile);
+    private void handleVanillaJarWrap(P2Artifact p2Artifact, File inputFile, File outputFile) throws Exception {
+        Analyzer analyzer = initializeAnalyzer(p2Artifact, inputFile);
         try {
             analyzer.calcManifest();
             Jar jar = analyzer.getJar();
@@ -130,43 +118,36 @@ public class BundleWrapper {
         }
     }
 
-    private void unsignJar(File outputFile) {
+    private void unsignJar(File jarToUnsign) {
         try {
-            File file = new File(outputFile.getParent(), outputFile.getName() + "asd" + ".tmp");
-            file.createNewFile();
-            FileOutputStream outputStream = new FileOutputStream(file);
-            ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
-            ZipFile zip = new ZipFile(outputFile);
+            File unsignedJar = new File(jarToUnsign.getParent(), jarToUnsign.getName() + ".tmp");
+            unsignedJar.createNewFile();
+            ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(unsignedJar));
+            ZipFile zip = new ZipFile(jarToUnsign);
             for (Enumeration list = zip.entries(); list.hasMoreElements(); ) {
                 ZipEntry entry = (ZipEntry) list.nextElement();
-                if (entry.isDirectory()) {
-                    continue;
-                }
                 String name = entry.getName();
-                if (name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
+                if (entry.isDirectory() || name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
                     continue;
                 }
                 zipOutputStream.putNextEntry(entry);
                 IOUtils.copy(zip.getInputStream(entry), zipOutputStream);
-
             }
-            zipOutputStream.flush();
             zipOutputStream.close();
-            outputFile.delete();
-            outputFile.createNewFile();
-            FileUtils.copyFile(file, outputFile);
-
+            FileUtils.copyFile(unsignedJar, jarToUnsign);
+            unsignedJar.delete();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Analyzer initializeAnalyzer(File fileToWrap) throws IOException {
+    private Analyzer initializeAnalyzer(P2Artifact p2Artifact, File fileToWrap) throws IOException {
         Analyzer analyzer = instantiateAnalyzer(fileToWrap);
         setAnalyzerOptions(analyzer);
         setPackageOptions(analyzer);
-        setBundleOptions(fileToWrap, analyzer);
+        setBundleOptions(analyzer, p2Artifact, fileToWrap);
         setManifest(analyzer);
+        setInstructions(analyzer, p2Artifact);
         return analyzer;
     }
 
@@ -186,21 +167,27 @@ public class BundleWrapper {
         analyzer.setProperty(Analyzer.EXPORT_PACKAGE, export);
     }
 
-    private void setBundleOptions(File fileToWrap, Analyzer analyzer) {
-        Artifact artifact = getArtifact(fileToWrap.getName());
+    private void setBundleOptions(Analyzer analyzer, P2Artifact p2Artifact, File fileToWrap) {
+        Artifact artifact = getArtifact(fileToWrap.getName(), p2Artifact.getArtifacts());
         String version = bundleUtils.getBundleVersion(artifact);
         analyzer.setProperty(Analyzer.BUNDLE_VERSION, version);
         String symbolicName = bundleUtils.getBundleSymbolicName(artifact);
         analyzer.setProperty(Analyzer.BUNDLE_SYMBOLICNAME, symbolicName);
     }
 
-    private Artifact getArtifact(String jarName) {
+    private void setInstructions(Analyzer analyzer, P2Artifact p2Artifact) {
+        if (!p2Artifact.getInstructions().isEmpty()) {
+            analyzer.setProperties(BundleUtils.transformDirectives(p2Artifact.getInstructions()));
+        }
+    }
+
+    private Artifact getArtifact(String jarName, List<Artifact> artifacts) {
         for (Artifact artifact : artifacts) {
             if (artifact.getFile().getName().equals(jarName)) {
                 return artifact;
             }
         }
-        throw new RuntimeException("Artifact not found");
+        throw new RuntimeException(String.format("Internal error - artifact [%s] not found", jarName));
     }
 
     private void setManifest(Analyzer analyzer) throws IOException {

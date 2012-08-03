@@ -11,7 +11,7 @@
     <description>Maven plugin for the automation of jars wrapping and p2 site generation</description>
 
     <properties>
-        <maven.version>3.0.3</maven.version>
+        <maven.version>3.0.4</maven.version>
         <tycho.version>0.14.0</tycho.version>
         <aether.version>1.13.1</aether.version>
         <wagon.version>2.2</wagon.version>
@@ -56,6 +56,7 @@
         <system>jenkins</system>
         <url>https://reficio.ci.cloudbees.com/job/maven-p2-plugin/</url>
     </ciManagement>
+
 
     <dependencies>
         <dependency>
@@ -161,6 +162,16 @@
     </dependencies>
 
     <build>
+
+        <resources>
+            <resource>
+                <directory>src/main/examples</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.codehaus.plexus</groupId>
@@ -213,7 +224,7 @@
                     <useDefaultMapping>true</useDefaultMapping>
                     <properties>
                         <year>${project.inceptionYear}</year>
-                        <company>centeractive ag</company>
+                        <company>Reficio (TM) - Reestablish your software!</company>
                     </properties>
                     <encoding>UTF-8</encoding>
                 </configuration>

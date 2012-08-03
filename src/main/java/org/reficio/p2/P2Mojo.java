@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 centeractive ag. All Rights Reserved.
+ * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -30,6 +30,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.sisu.equinox.EquinoxServiceFactory;
 import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
+import org.reficio.p2.log.Logger;
 import org.reficio.p2.utils.ArtifactResolver;
 import org.reficio.p2.utils.BundleWrapper;
 import org.reficio.p2.utils.CategoryPublisher;
@@ -43,19 +44,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 
 /**
- * User: Tom Bujok (tom.bujok@reficio.org)
- * Date: 2012-02-09
- * Time: 9:46 PM
+ * @author Tom Bujok (tom.bujok@reficio.org)
+ * @since 1.0.0
  * <p/>
- * Reficio (TM) - Reestablish your software!
+ * Reficio (TM) - Reestablish your software!</br>
  * http://www.reficio.org
  *
  * @goal site
@@ -65,8 +63,8 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
  */
 public class P2Mojo extends AbstractMojo {
 
-    private static final String BUNDLES_DESTINATION_FOLDER = "/source/plugins";
-    private static final String VANILLA_DESTINATION_FOLDER = "/jars";
+    private static final String BUNDLES_TOP_FOLDER = "/source";
+    private static final String BUNDLES_DESTINATION_FOLDER = BUNDLES_TOP_FOLDER + "/plugins";
     private static final String DEFAULT_CATEGORY_FILE = "category.xml";
     private static final String DEFAULT_CATEGORY_CLASSPATH_LOCATION = "/";
 
@@ -178,44 +176,46 @@ public class P2Mojo extends AbstractMojo {
     private List<RemoteRepository> projectRepos;
 
     /**
-     * @parameter default-value=""
+     * @parameter
      */
-    private List<String> artifacts;
+    private List<P2Artifact> artifacts;
 
     protected Log log = getLog();
-
-
+    private File bundlesDestinationFolder;
 
     public void execute() {
         try {
-            Set<Artifact> resolvedArtifacts = resolveArtifacts(artifacts);
-            boolean executionProceeded = executeBndWrapper(resolvedArtifacts);
-            if (executionProceeded == false) {
-                return;
-            }
+            initializeEnvironment();
+            resolveArtifacts();
+            executeBndWrapper();
             executeP2PublisherPlugin();
             executeCategoryPublisher();
+            cleanupEnvironment();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Set<Artifact> resolveArtifacts(List<String> artifacts) throws RepositoryException {
-        ArtifactResolver resolver = new ArtifactResolver(repoSystem, repoSession, projectRepos);
-        Set<Artifact> resolvedArtifacts = new HashSet<Artifact>();
-        for(String artifact : artifacts) {
-            resolvedArtifacts.addAll(resolver.resolve(artifact));
-        }
-        return resolvedArtifacts;
+    private void initializeEnvironment() throws IOException {
+        Logger.initialize(getLog());
+        bundlesDestinationFolder = new File(buildDirectory, BUNDLES_DESTINATION_FOLDER);
+        FileUtils.deleteDirectory(new File(buildDirectory, BUNDLES_TOP_FOLDER));
+        bundlesDestinationFolder.mkdirs();
     }
 
-    protected boolean executeBndWrapper(Set<Artifact> artifactsToWrap) throws Exception {
-        File bundlesDestinationFolder = new File(buildDirectory, BUNDLES_DESTINATION_FOLDER);
-        File artifactsDestinationFolder = new File(buildDirectory, VANILLA_DESTINATION_FOLDER);
-        bundlesDestinationFolder.mkdirs();
-        artifactsDestinationFolder.mkdirs();
-        BundleWrapper wrapper = new BundleWrapper(pedantic);
-        return wrapper.execute(artifactsToWrap, artifactsDestinationFolder, bundlesDestinationFolder);
+    public void resolveArtifacts() throws RepositoryException {
+        ArtifactResolver resolver = new ArtifactResolver(repoSystem, repoSession, projectRepos);
+        for (P2Artifact artifact : artifacts) {
+            List<Artifact> result = resolver.resolve(artifact.getId(), !artifact.shouldIncludeTransitive());
+            artifact.setArtifacts(result);
+        }
+    }
+
+    protected void executeBndWrapper() throws Exception {
+        BundleWrapper wrapper = new BundleWrapper(pedantic, bundlesDestinationFolder);
+        for (P2Artifact artifact : artifacts) {
+            wrapper.execute(artifact);
+        }
     }
 
     protected void executeP2PublisherPlugin() throws MojoExecutionException, IOException {
@@ -261,6 +261,10 @@ public class P2Mojo extends AbstractMojo {
             IOUtils.closeQuietly(writer);
             categoryFileURL = categoryDefinitionFile.getAbsolutePath();
         }
+    }
+
+    private void cleanupEnvironment() throws IOException {
+        FileUtils.deleteDirectory(new File(buildDirectory, BUNDLES_TOP_FOLDER));
     }
 
 }

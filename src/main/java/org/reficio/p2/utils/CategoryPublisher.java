@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 centeractive ag. All Rights Reserved.
+ * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -28,11 +28,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * User: Tom Bujok (tom.bujok@reficio.org)
- * Date: 2012-02-09
- * Time: 9:46 PM
+ * @author Tom Bujok (tom.bujok@reficio.org)
+ * @since 1.0.0
  * <p/>
- * Reficio (TM) - Reestablish your software!
+ * Reficio (TM) - Reestablish your software!</br>
  * http://www.reficio.org
  */
 public class CategoryPublisher {

@@ -52,11 +52,11 @@ The last thing that you have to know is how to use it. I prepared an example pom
                                 <artifacts>
                                 	<!-- specify your depencies here -->
                                 	<!-- groupId:artifactId:version -->
-                                    <artifact>commons-io:commons-io:2.1</artifact>
-                                    <artifact>commons-lang:commons-lang:2.4</artifact>
-                                    <artifact>commons-lang:commons-lang:2.5</artifact>
-                                    <artifact>commons-lang:commons-lang:2.6</artifact>
-                                    <artifact>org.apache.commons:commons-lang3:3.1</artifact>
+                                    <artifact><id>commons-io:commons-io:2.1</id></artifact>
+                                    <artifact><id>commons-lang:commons-lang:2.4</id></artifact>
+                                    <artifact><id>commons-lang:commons-lang:2.5</id></artifact>
+                                    <artifact><id>commons-lang:commons-lang:2.6</id></artifact>
+                                    <artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
                                 </artifacts>
                             </configuration>
                         </execution>

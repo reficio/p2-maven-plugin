@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.reficio.rcp</groupId>
+    <artifactId>example-p2-site</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.reficio</groupId>
+                <artifactId>p2-maven-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>generate-p2-site</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+
+                        <!--
+                            This is the default configuration. Only identifiers of the dependencies
+                            have to be specified. What would be the behavior:
+                              - specified dependencies will be fetched
+                              - transitive dependencies will be fetched
+                              - jars that are NOT osgi bundles will be "bundled" using bnd tool, ,
+                                if you specify instructions, they will be APPLIED
+                              - jars that are osgi bundles will be simply included, if you specify
+                                instructions, they will be IGNORED (see override example)
+                              - p2 site will be generated
+
+                        This definition of an artifact:
+                            <artifact>
+                                <id>commons-io:commons-io:2.1</id>
+                            </artifact>
+
+                        is an equivalent of the following definition:
+                            <artifact>
+                                <id>commons-io:commons-io:2.1</id>
+                                <transitive>true</transitive>
+                                <override>false</override>
+                                <instructions>
+                                    <Import-Package>*;resolution:=optional</Import-Package>
+                                    <Export-Package>*</Export-Package>
+                                </instructions>
+                            </artifact>
+
+                        Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version,
+                        are calculated according to the following rules:
+                        http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
+                        If you specify any instructions yourself they will be used as the default ones, if
+                        the bundle is not already an osgi bundle - othwerise you have to use the override
+                        option - please see the /examples/override/pom.xml example
+                        -->
+                        <configuration>
+                            <artifacts>
+                                <artifact><id>commons-lang:commons-lang:2.4</id></artifact>
+                                <artifact><id>commons-lang:commons-lang:2.5</id></artifact>
+                                <artifact><id>commons-lang:commons-lang:2.6</id></artifact>
+                            </artifacts>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>reficio</id>
+            <url>http://repo.reficio.org/maven/</url>
+        </repository>
+    </repositories>
+
+</project>
+
+

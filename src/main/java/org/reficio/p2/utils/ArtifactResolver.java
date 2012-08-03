@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 centeractive ag. All Rights Reserved.
+ * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -26,19 +26,19 @@ import org.sonatype.aether.collection.CollectRequest;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.repository.RemoteRepository;
+import org.sonatype.aether.resolution.ArtifactRequest;
 import org.sonatype.aether.resolution.DependencyRequest;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
 
-import javax.security.auth.DestroyFailedException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * User: Tom Bujok (tom.bujok@reficio.org)
- * Date: 2012-03-18
- * Time: 4:02 PM
+ * @author Tom Bujok (tom.bujok@reficio.org)
+ * @since 1.0.0
  * <p/>
- * Reficio (TM) - Reestablish your software!
+ * Reficio (TM) - Reestablish your software!</br>
  * http://www.reficio.org
  */
 public class ArtifactResolver {
@@ -61,10 +61,21 @@ public class ArtifactResolver {
         this.scope = scope;
     }
 
-    public List<Artifact> resolve(String artifact) throws RepositoryException {
-        CollectRequest collectRequest = populateCollectRequest();
-        Dependency dependency = new Dependency(new DefaultArtifact(artifact), scope);
-        collectRequest.addDependency(dependency);
+    public List<Artifact> resolve(String artifact, boolean skipTransitive) throws RepositoryException {
+        if (skipTransitive) {
+            return Arrays.asList(resolveNoTransitive(artifact));
+        } else {
+            return resolveWithTransitive(artifact);
+        }
+    }
+
+    private Artifact resolveNoTransitive(String artifact) throws RepositoryException {
+        ArtifactRequest request = populateArtifactRequest(artifact);
+        return system.resolveArtifact(session, request).getArtifact();
+    }
+
+    private List<Artifact> resolveWithTransitive(String artifact) throws RepositoryException {
+        CollectRequest collectRequest = populateCollectRequest(artifact);
         DependencyNode node = system.collectDependencies(session, collectRequest).getRoot();
         DependencyRequest dependencyRequest = new DependencyRequest(node, null);
         system.resolveDependencies(session, dependencyRequest);
@@ -73,12 +84,23 @@ public class ArtifactResolver {
         return nodeGenerator.getArtifacts(false);
     }
 
-    private CollectRequest populateCollectRequest() {
+
+    private CollectRequest populateCollectRequest(String artifact) {
         CollectRequest collectRequest = new CollectRequest();
         for (RemoteRepository r : repos) {
             collectRequest.addRepository(r);
         }
+        collectRequest.addDependency(new Dependency(new DefaultArtifact(artifact), scope));
         return collectRequest;
+    }
+
+    private ArtifactRequest populateArtifactRequest(String artifact) {
+        ArtifactRequest artifactRequest = new ArtifactRequest();
+        for (RemoteRepository r : repos) {
+            artifactRequest.addRepository(r);
+        }
+        artifactRequest.setArtifact(new DefaultArtifact(artifact));
+        return artifactRequest;
     }
 
 }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.reficio.rcp</groupId>
+    <artifactId>example-p2-site</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.reficio</groupId>
+                <artifactId>p2-maven-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>generate-p2-site</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+
+                        <!--
+                            This is the configuration that excludes transitive dependencies.
+                            <transitive>false</transitive> section has to be included.
+                            What would be the behavior:
+                              - specified dependencies will be fetched
+                              - transitive dependencies will NOT be fetched
+                              - jars that are NOT osgi bundles will be "bundled" using bnd tool
+                                if you specify instructions they will be APPLIED
+                              - jars that are osgi bundles will be simply included
+                                if you specify instructions they will be IGNORED
+                              - p2 site will be generated
+
+                        This definition of an artifact:
+                            <artifact>
+                                <id>commons-io:commons-io:2.1</id>
+                                <transitive>false</transitive>
+                            </artifact>
+
+                        is an equivalent of the following definition:
+                            <artifact>
+                                <id>commons-io:commons-io:2.1</id>
+                                <transitive>false</transitive>
+                                <override>false</override>
+                                <instructions>
+                                    <Import-Package>*;resolution:=optional</Import-Package>
+                                    <Export-Package>*</Export-Package>
+                                </instructions>
+                            </artifact>
+
+                            Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version,
+                            are calculated according to the following rules:
+                            http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
+                        -->
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <id>commons-lang:commons-lang:2.4</id>
+                                    <transitive>false</transitive>
+                                </artifact>
+                                <artifact>
+                                    <id>commons-lang:commons-lang:2.5</id>
+                                    <transitive>false</transitive>
+                                </artifact>
+                                <artifact>
+                                    <id>commons-lang:commons-lang:2.6</id>
+                                    <transitive>false</transitive>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>reficio</id>
+            <url>http://repo.reficio.org/maven/</url>
+        </repository>
+    </repositories>
+
+</project>
+
+

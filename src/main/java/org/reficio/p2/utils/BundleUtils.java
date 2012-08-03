@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 centeractive ag. All Rights Reserved.
+ * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -25,15 +25,16 @@ import org.apache.maven.artifact.DefaultArtifact;
 import org.sonatype.aether.artifact.Artifact;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 /**
- * User: Tom Bujok (tom.bujok@reficio.org)
- * Date: 2012-02-09
- * Time: 9:46 PM
+ * @author Tom Bujok (tom.bujok@reficio.org)
+ * @since 1.0.0
  * <p/>
- * Reficio (TM) - Reestablish your software!
+ * Reficio (TM) - Reestablish your software!</br>
  * http://www.reficio.org
  */
 public class BundleUtils extends BundlePlugin {
@@ -49,7 +50,7 @@ public class BundleUtils extends BundlePlugin {
                 artifact.getGroupId(),
                 artifact.getArtifactId(),
                 artifact.getVersion(),
-                null, null, null, null);
+                "compile", artifact.getExtension(), artifact.getClassifier(), null);
         return mavenArtifact;
     }
 
@@ -73,6 +74,12 @@ public class BundleUtils extends BundlePlugin {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    public static Properties transformDirectives(Map instructions) {
+        Properties properties = new Properties();
+        properties.putAll(BundlePlugin.transformDirectives(instructions));
+        return properties;
     }
 
 }
