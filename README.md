@@ -134,7 +134,7 @@ Now you can use your P2 site locally (or exposing it using for example jetty-plu
 There are many more use cases that I am gonna describe here.
 
 #### Default options 
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/src/examples/default/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/default/pom.xml
 
 This is the simplest and the shortest configuration. Only the identifiers of the dependencies have to be specified. 
 What will be the behavior like if we use the configuraiton listed below?
@@ -169,7 +169,7 @@ Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, a
 the bundle is not already an osgi bundle - othwerise you have to use the override option - please see the "override" example located here: /examples/override/pom.xml
 
 #### Override option
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/src/examples/override/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/override/pom.xml
 
 This is the configuration that enables you to override the default MANIFEST.MF files in jars that are already OSGi bundles. <override>true</override> section has to be included to enable this opion
 
@@ -208,7 +208,7 @@ you can also specify some instructions (what makes sense with override):
 ```
 
 #### Transitive option
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/src/examples/transitive/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/transitive/pom.xml
 
 This is the configuration that enables you to exclude transitive dependencies. <transitive>false</transitive> section has to be included to enable this option.
 
@@ -252,7 +252,7 @@ There are some other plugin options that you can specity on the <configuration> 
 </tr>
 <tr>
 	<td>categoryFileURL</td>
-	<td>default category file, all plugins in one category</td>
+	<td>default category file (all plugins in one category)</td>
 	<td>URL of the category.xml file which should be used for the p2 site generation</td>
 </tr>
 <tr>
@@ -277,11 +277,11 @@ There are some other plugin options that you can specity on the <configuration> 
 </tr>
 </table>
 
-Sample configuration snippet with additional options:
+Sample configuration snippet with the additional options:
 ```xml 
 	<configuration>
     	<pedantic>false</pedantic>
-    	<additionalArgs></additionalArgs>
+    	<additionalArgs>-consoleLog -debug -verbose</additionalArgs>
     	<compressSite>true</compressSite>
     	<forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
 	</configuration>
