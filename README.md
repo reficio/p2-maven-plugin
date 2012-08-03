@@ -6,23 +6,23 @@
 Welcome to p2-maven-plugin! This is an easy-to-use Maven3 plugin responsible for the automation of dependency management in the Eclipse RCP environment.
 
 ### Why should you bother?
-Are you familiar with the automated dependency management like in Maven, Gradle or any other pretty fancy tool? What I mean is that you define a bunch of dependencies in your project descriptor and that is the only thing that you have to take care of? The dependency tree is calculated and all dependencies are resolved and downloaded back-stage so that you can have a beer while nerdy C++ programmers manually play with DLLs in the lib folder. Yes, Java Developers like automated dependency management that was introduced by Maven 8 years? ago and that revolutionized the build automation. And yes, Java Developers think that automated dependency management is the de-facto standard, so that they cannot even think of going back in time and doing stuff that should be done by them automagically.
+Are you familiar with the automated dependency management like in Maven, Gradle or any other fancy tool? What I mean is that you define a bunch of dependencies in the project descriptor and that is the only thing that you have to take care of. The dependency tree is calculated automatically and all dependencies are resolved and downloaded back-stage, so that you can have a beer while nerdy C++ programmers manually play with their DLLs in the lib folder. Yes, Java Developers like the automated dependency management - it was introduced by Maven more that 8 years ago and it simply revolutionized the build automation. And yes, Java Developers think that the automated dependency management is the de-facto standard, so that they cannot even think of going back in time and doing stuff that should be done by them automagically.
 
-And now you are thrown into a RCP project. After 5 minutes of excitement, you notice, that your colleagues that are on the this very project do not use continuous integration and their application is not mavenized. Import of the native maven project takes you around an hour. Between swearing and drinking your 4th coffee you are close to handing in a notice. But it is not that easy to defeat you. Before you head back home you decide to solve all of these issues and enjoy software development for the last time in your life. You immediately spot that bright guys from tycho implemented a set of brilliant plugins to mavenize your RCP app. Your heartbeat increases, your breath becomes nervously shallow, and voila! you shout. You managed to build your first hello-world example using tycho and maven. But then, something unexpected happens, something that will take all you joy and you will not be the same person any more. You try to add a dependency to you shiny bright piece of work… How it comes, what the hell is that, or are they all nuttheads - these thoughts penetrate your brain so intensively that you decide to move to scala programming and never ever touch RCP again…
+To better understand what I mean here read this story please: *And now you are thrown into an RCP project. After 5 minutes of excitement you notice that your colleagues on the the project do not use continuous integration and their application is not mavenized. Import of the native eclipse project takes you more than an hour before it compiles successfully. The zip file with the target platform is passed over to you on a pendrive, paths are hardcoded. WTF you think… Between swearing and drinking your 4th coffee you are close to handing in a notice. But, since you are a geek it is not that easy to defeat you. Before you head back home you decide to give it one more shot to enjoy software development once more in your life. Googling around you immediately spot that the bright guys from the Tycho project implemented a set of brilliant plugins to mavenize your RCP app. Your heartbeat increases, your breath becomes nervously shallow, and "voila!" you shout as manage to build your first hello-world example using tycho and maven. But then, something unexpected happens, something that will take all you joy and you will not be the same person any more. You try to add an external dependency to you shiny bright piece of work… How it comes, what the hell is that, or are they all nuttheads - these thoughts penetrate your brain so intensively that you decide to quite your job, move to scala programming and never ever touch the RCP platform again…*
 
-Now you probably understand the main goal of this plugin. It tries to bridge the gap between Maven-like and RCP-like dependency management so that all Java developers can easily use all the Maven features in RCP development. Tycho does a greate job here, but as there was missing piece there I decided to contribute this plugin as IMHO it can help a lot! Read further to fully understand why dependency management in RCP is not that easy and why it is not maven-compliant. Enjoy!
+Now you probably understand the main goal of this plugin. It tries to bridge the gap between Maven-like and RCP-like dependency management so that all Java developers can easily use all the Maven features in the RCP development. Tycho does a greate job here, but as there was missing piece there I decided to contribute this plugin as IMHO it can help a lot! Read further to fully understand why dependency management in RCP is not that easy and why it is not maven-compliant. Enjoy!
 
 ### Java vs. Maven vs. Eclipse RCP - dependency war
-Eclipse RCP dependency management is a bit different than a common java model. It is caused by two facts: on the one hand it is a OSGi environment which extends that Java dependency model a bit, on the other hand there are some Eclipse RCP conventions on the top of it which at the first glance may make an awkward impression. So how does it look like you think? Nothing simpler - in Eclipse RCP every dependency should be stored in an P2 update site. Eclipse provides a set of update sites and if all dependencies were there we would be safe and sound, but guess what, there are not. That is problem #1. Problem #2 is that because it's an OSGi environment you are only allowed to use bundles - and guess what?, not all java artifacts are bundles, they are not even close to that. So, let's rewind: I have to have all my artifacts as bundles, but they are not bundles and they have to be located in a P2 site, and I don't have that site. How do I do that you ask? Yes, it is not that difficult, there is a bnd tool written by Peter Kriens that can transform your jars to bundles. There is also a convenience tool provided by Eclipse that can generate a P2 site (in a cumbersome and painful way). Both tools assume that all your jars/bundles are located in a folder - which means that you have to download the artifacts yourself. You can use Maven you think. Yes that is true. But there is a significant difference in the way how Maven calculates the dependency tree. In OSGi, in an update site, you can have 3 versions of the same dependency, as your bundles may selectively include one class from version X, and seconds class from version Y. In Maven though if you specify 2 version of one dependency only one of them will be fetched as you don't want to have 2 almost identical dependencies on your classpath. This is problem #3. So in essence to solve your problems have to do three things by yourself:
+Eclipse RCP dependency management is a bit different than a common java model. It is caused by two facts: on the one hand it is an OSGi environment which extends the Java dependency model, on the other hand there are some Eclipse RCP conventions on the top of it which at the first glance may make an awkward impression. So how does it look like, you think? Nothing simpler - in Eclipse RCP every dependency should be stored in an P2 update site. Eclipse provides a set of update sites and if all popular dependencies were there we would be safe and sound, but guess what, they are not there - which is the problem #1. The problem #2 is that because it's an OSGi environment you are only allowed to use bundles - and guess what?, not all java artifacts are bundles, they are not even close to that. So, let's rewind: I have to have all my artifacts as bundles, but they are not bundles and they have to be located in a P2 site, and I don't have that site. How do I do that, you ask? Yes, it is not that difficult, there is a bnd tool written by Peter Kriens that can transform your jars into bundles. There is also a convenience tool provided by Eclipse that can generate a P2 site (in a cumbersome and painful way). Both tools assume that all your jars/bundles are located in a local folder - which means that you have to download the artifacts yourself. You can use Maven you think. Yes that is true. But there is a significant difference in the way how Maven calculates the dependency tree. In OSGi, in an update site, you can have 3 versions of the same dependency, as your bundles may selectively include one class from version X, and seconds class from version Y. In Maven, though, if you specify 2 version of one dependency only one of them will be fetched as you don't want to have 2 almost identical dependencies on your classpath. This is problem #3. So in essence to solve your problems have to do three things by yourself:
 * download all required dependencies to a folder
-* recognize which dependencies are not OSGi bundles and bundle them using bnd tool
+* recognize which dependencies are not OSGi bundles and bundle them using the bnd tool
 * take all your bundles and invoke a P2 tool to generate the P2 site.
-Ufff, that is a cumbersome, manual, repeatable and stupid activity.
+Ufff, that is a manual, cumbersome, repeatable and stupid activity that may take you a few hours.
 
-That's where p2-maven plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that brilliant?
+That's where p2-maven plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is… :)
 
-### How to use it
-The last thing that you have to know is how to use it. I prepared an example pom.xml so that you can give it a try right away. Here's the code:
+### How to use it in 2 minutes?
+The last thing that you have to know is how to use it. I prepared an example pom.xml file so that you can give it a try right away. Here's the code:
 
 ```xml 
 	<?xml version="1.0" encoding="UTF-8"?>
@@ -128,7 +128,117 @@ Your site will be located in the target/repository folder and will look like thi
     │       └── org.apache.commons.lang3_3.1.0.jar        
 ```
 
-Now you can use your P2 site locally, or exposing it using for example jetty-plugin and play with your Eclipse RCP project like you were in the Plain Old Java Environment.
+Now you can use your P2 site locally (or exposing it using for example jetty-plugin) and play with your Eclipse RCP project like you were in the Plain Old Java Environment.
 
-### Bits and pieces
-There are many more use cases that I am gonna describe here in the nearest future.
+### Examples
+There are many more use cases that I am gonna describe here.
+
+#### Default options 
+This example is located here: src/main/example/default/pom.xml
+
+This is the default and the shortest configuration. Only the identifiers of the dependencies have  to be specified. What would be the behavior if we used the configuraiton listed below:
+
+* specified dependencies will be fetched
+* transitive dependencies will be fetched
+* jars that are NOT osgi bundles will be "bundled" using bnd tool; if you instructions w, they will be APPLIED.
+* jars that are osgi bundles will be simply included, if you specify instructions, they will be IGNORED (see override example)
+* p2 site will be generated
+ 
+This definition of an artifact:
+```xml 
+    <artifact>
+        <id>commons-io:commons-io:2.1</id>
+    </artifact>
+```
+
+is an equivalent of the following definition:
+```xml 
+    <artifact>
+        <id>commons-io:commons-io:2.1</id>
+        <transitive>true</transitive>
+        <override>false</override>
+        <instructions>
+            <Import-Package>*;resolution:=optional</Import-Package>
+            <Export-Package>*</Export-Package>
+        </instructions>
+    </artifact>
+```     
+
+Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html If you specify any instructions yourself they will be used as the default ones, if
+the bundle is not already an osgi bundle - othwerise you have to use the override option - please see the "override" example located here: /examples/override/pom.xml
+
+#### Override option
+This example is located here: src/main/example/override/pom.xml
+
+This is the configuration that overrides the default MANIFEST.MF files in jars that are already OSGi bundles. <override>true</override> section has to be included to enable this opion
+
+If you want to override the default MANIFEST.MF you also have to disable the fetch of the transitive dependencies, otherwise it would not make much sense. When you override the file generated by the provider of the jar you probably know what you are doing - which means you are fine-tuning the MANIFEST.MF options. If transitive dependencies were included your fine-tuning would be applied to all of them, which in our opinion does not make sense and may lead to unexpected behavior. If you do not specify <transitive>false</transitive> along the <override>true</override> an exception will be thrown.
+
+If you do not specify bnd instructions the MANIFEST.MF will be overridden using the default instructions. Please see the "default" example located here: src/main/example/default/pom.xml for more info.
+
+What would be the behavior:
+
+* specified dependencies will be fetched
+* transitive dependencies will NOT be fetched
+* jars that are NOT osgi bundles will be "bundled" using bnd tool; if you specify instructions they will be APPLIED
+* jars that are osgi bundles will be "bundled" using bnd tool; if you specify instructions they will be APPLIED
+* p2 site will be generated
+
+This definition of an artifact should look like this:
+```xml 
+    <artifact>
+        <id>commons-io:commons-io:2.1</id>
+        <transitive>false</transitive>
+        <override>true</override>
+    </artifact>
+```
+
+you can also specify some instructions (what makes sense with override):
+```xml 
+    <artifact>
+        <id>commons-io:commons-io:2.1</id>
+        <transitive>true</transitive>
+        <override>false</override>
+        <instructions>
+            <Import-Package>*;resolution:=optional</Import-Package>
+            <Export-Package>*</Export-Package>
+        </instructions>
+    </artifact>
+```
+
+Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
+
+#### Transitive option
+This example is located here: src/main/example/transitive/pom.xml
+
+This is the configuration that excludes transitive dependencies. <transitive>false</transitive> section has to be included to enable this option.
+
+What would be the behavior:
+* specified dependencies will be fetched
+* transitive dependencies will NOT be fetched
+* jars that are NOT osgi bundles will be "bundled" using bnd tool; if you specify instructions they will be APPLIED
+* jars that are osgi bundles will be simply included; if you specify instructions they will be IGNORED
+* p2 site will be generated
+
+This definition of an artifact:
+```xml 
+    <artifact>
+        <id>commons-io:commons-io:2.1</id>
+        <transitive>false</transitive>
+    </artifact>
+```
+
+is an equivalent of the following definition:
+```xml 
+    <artifact>
+        <id>commons-io:commons-io:2.1</id>
+        <transitive>false</transitive>
+        <override>false</override>
+        <instructions>
+            <Import-Package>*;resolution:=optional</Import-Package>
+            <Export-Package>*</Export-Package>
+        </instructions>
+    </artifact>
+```
+
+Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html

@@ -34,22 +34,22 @@
                                 if you specify instructions they will be IGNORED
                               - p2 site will be generated
 
-                        This definition of an artifact:
-                            <artifact>
-                                <id>commons-io:commons-io:2.1</id>
-                                <transitive>false</transitive>
-                            </artifact>
+                            This definition of an artifact:
+                                <artifact>
+                                    <id>commons-io:commons-io:2.1</id>
+                                    <transitive>false</transitive>
+                                </artifact>
 
-                        is an equivalent of the following definition:
-                            <artifact>
-                                <id>commons-io:commons-io:2.1</id>
-                                <transitive>false</transitive>
-                                <override>false</override>
-                                <instructions>
-                                    <Import-Package>*;resolution:=optional</Import-Package>
-                                    <Export-Package>*</Export-Package>
-                                </instructions>
-                            </artifact>
+                            is an equivalent of the following definition:
+                                <artifact>
+                                    <id>commons-io:commons-io:2.1</id>
+                                    <transitive>false</transitive>
+                                    <override>false</override>
+                                    <instructions>
+                                        <Import-Package>*;resolution:=optional</Import-Package>
+                                        <Export-Package>*</Export-Package>
+                                    </instructions>
+                                </artifact>
 
                             Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version,
                             are calculated according to the following rules:

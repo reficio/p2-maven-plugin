@@ -30,7 +30,7 @@
                               - jars that are NOT osgi bundles will be "bundled" using bnd tool, ,
                                 if you specify instructions, they will be APPLIED
                               - jars that are osgi bundles will be simply included, if you specify
-                                instructions, they will be IGNORED (see override example)
+                                instructions, they will be IGNORED (see override
                               - p2 site will be generated
 
                         This definition of an artifact:
