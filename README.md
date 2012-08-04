@@ -186,7 +186,7 @@ What will be the behavior like if we use the configuraiton listed below?
 * p2 site will be generated
 
 This definition of an artifact should look like this:
-```xml 
+```xml
     <artifact>
         <id>commons-io:commons-io:2.1</id>
         <transitive>false</transitive>
@@ -195,7 +195,7 @@ This definition of an artifact should look like this:
 ```
 
 you can also specify some instructions (what makes sense with override):
-```xml 
+```xml
     <artifact>
         <id>commons-io:commons-io:2.1</id>
         <transitive>true</transitive>
@@ -221,7 +221,7 @@ What will be the behavior like if we use the configuraiton listed below?
 * p2 site will be generated
 
 This definition of an artifact:
-```xml 
+```xml
     <artifact>
         <id>commons-io:commons-io:2.1</id>
         <transitive>false</transitive>
@@ -229,7 +229,7 @@ This definition of an artifact:
 ```
 
 is an equivalent of the following definition:
-```xml 
+```xml
     <artifact>
         <id>commons-io:commons-io:2.1</id>
         <transitive>false</transitive>
@@ -242,43 +242,45 @@ is an equivalent of the following definition:
 ```
 
 ### Plugin options
-There are some other plugin options that you can specity on the <configuration> level:
+There are some other plugin options that you can specify in the configuration:
+
 <table>
 <tr><th>Option</th><th>Default value</th><th>Description</th></tr>
 <tr>
-	<td>destinationDirectory</td>
-	<td>${project.basedir}/target/repository</td>
-	<td>Folder where the generated p2 site should be copied to</td>
+    <td>destinationDirectory</td>
+    <td>${project.basedir}/target/repository</td>
+    <td>Folder where the generated p2 site should be copied to</td>
 </tr>
 <tr>
-	<td>categoryFileURL</td>
-	<td>default category file (all plugins in one category)</td>
-	<td>URL of the category.xml file which should be used for the p2 site generation</td>
+    <td>categoryFileURL</td>
+    <td>default category file (all plugins in one category)</td>
+    <td>URL of the category.xml file which should be used for the p2 site generation</td>
 </tr>
 <tr>
-	<td>pedantic</td>
-	<td>false</td>
-	<td>Specifies if the bnd tool should be pedantic</td>
+    <td>pedantic</td>
+    <td>false</td>
+    <td>Specifies if the bnd tool should be pedantic</td>
 </tr>
 <tr>
-	<td>compressSite</td>
-	<td>true</td>
-	<td>Specifies if to compress the descriptors of the generated site</td>
+    <td>compressSite</td>
+    <td>true</td>
+    <td>Specifies if to compress the descriptors of the generated site</td>
 </tr>
 <tr>
-	<td>forkedProcessTimeoutInSeconds</td>
-	<td>0 (infinite)</td>
-	<td>Kill the p2 forked process after a certain number of seconds.</td>
-
+    <td>forkedProcessTimeoutInSeconds</td>
+    <td>0 (infinite)</td>
+    <td>Kill the p2 forked process after a certain number of seconds.</td>
+</tr>
 <tr>
-	<td>additionalArgs</td>
-	<td></td>
-	<td>Specifies additional arguments to p2Launcher, for example -consoleLog -debug -verbose</td>
+    <td>additionalArgs</td>
+    <td></td>
+    <td>Specifies additional arguments to p2Launcher, for example -consoleLog -debug -verbose</td>
 </tr>
 </table>
 
+
 Sample configuration snippet with the additional options:
-```xml 
+```xml
 	<configuration>
     	<pedantic>false</pedantic>
     	<additionalArgs>-consoleLog -debug -verbose</additionalArgs>
