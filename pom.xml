@@ -361,7 +361,7 @@
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ssh</artifactId>
-                <version>1.0</version>
+                <version>1.0-beta-7</version>
                 <!-- http://jira.codehaus.org/browse/WAGON-354 -->
             </extension>
         </extensions>
