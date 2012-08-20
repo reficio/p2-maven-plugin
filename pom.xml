@@ -401,8 +401,7 @@
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ssh</artifactId>
-                <version>1.0-beta-7</version>
-                <!-- http://jira.codehaus.org/browse/WAGON-354 -->
+                <version>2.2</version>
             </extension>
         </extensions>
     </build>
@@ -448,14 +447,10 @@
     </profiles>
 
     <distributionManagement>
-        <site>
-            <id>reficio</id>
-            <url>${reficio.server}/projects/${project.artifactId}/${project.version}/</url>
-        </site>
         <repository>
             <id>reficio</id>
             <name>Reficio Maven Repository</name>
-            <url>${reficio.server}/repo/maven</url>
+            <url>scp://${reficio.server}/var/www/repo/maven</url>
         </repository>
     </distributionManagement>
 
