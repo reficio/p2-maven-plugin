@@ -148,11 +148,6 @@ Unfortunately, it's not the end of the story since tycho does not support local 
 
 Now, simply reference your site in your target definition and play with your Eclipse RCP project like you were in the Plain Old Java Environment.
 
-Remember:
-* DO NOT to use the pomDependencies -> consider option as it simply of NO good
-* DO NOT define your dependencies as standard mvn dependcies in the pom.xml (it will work in the console, but it will not work in Eclipse IDE)
-* SIMPLY define all your external dependencies that are not in the update-sites in the p2-maven-plugin definition, generate the site, and make it available using jetty (or any other mechanism). In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP!
-
 ```
 	$ mvn jetty:run
 	
@@ -186,6 +181,15 @@ Remember:
     [INFO] Started Jetty Server
     [INFO] Starting scanner at interval of 10 seconds.
 ```
+
+## Best Practices
+* DO NOT to use the pomDependencies->consider option as it simply of NO good
+* DO NOT define your external dependencies as standard mvn dependcies in the pom.xml (it will work in the console, but it will not work in the Eclipse IDE when you import the project, since the target configuration knows nothing about them)
+* Use the MANIFEST-FIRST approach - define all your depencies in the MANIFES.MF files.
+* If some of your depencies are not OSGi bundles or are not available in P2 update sites, SIMPLY define them in the p2-maven-plugin config, generate the site and make it available using jetty (or any other mechanism). Then add the URL of the exposed site to the target platform definition. In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP!
+* Whenever you have to add another external dependency, simply re-invoke "mvn p2:site" and jetty will re-fetch the site.
+* You can automatize the generation/exposition of our site using Jenkins and Apache2
+
 
 ## Examples
 There are many more use cases that I am gonna describe here.
