@@ -288,3 +288,17 @@ Sample configuration snippet with the additional options:
     	<forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
 	</configuration>
 ```
+
+## Last but not least
+
+### How can I hack around?
+* GitHub -> https://github.com/reficio/p2-maven-plugin
+* Jenkins -> https://reficio.ci.cloudbees.com/job/p2-maven-plugin/
+* Sonar -> coming soon...
+* Site -> http://projects.reficio.org/p2-maven-plugin/1.0.0-SNAPSHOT/manual.html
+
+### Who's behind it?
+Tom Bujok [tom.bujok@gmail.com]
+
+Reficio™ - Reestablish your software!
+www.reficio.org
