@@ -31,7 +31,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * User: Tom Bujok (tom.bujok@reficio.org)
+ * User: Tom Bujok (tom.bujok@gmail.com)
  * Date: 2012-02-12
  * Time: 2:04 PM
  * <p/>

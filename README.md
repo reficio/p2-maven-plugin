@@ -22,7 +22,7 @@ Ufff, that is a manual, cumbersome, repeatable and stupid activity that may take
 That's where p2-maven plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is… :)
 
 ### How to use it in 2 minutes?
-The last thing that you have to know is how to use it. I prepared an example pom.xml file so that you can give it a try right away. Here's the code:
+The last thing that you have to know is how to use it. I prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using jetty-maven-plugin. Here's the code:
 
 ```xml 
 	<?xml version="1.0" encoding="UTF-8"?>
@@ -43,11 +43,7 @@ The last thing that you have to know is how to use it. I prepared an example pom
                     <version>1.0.0-SNAPSHOT</version>
                     <executions>
                         <execution>
-                            <id>generate-p2-site</id>
-                            <phase>compile</phase>
-                            <goals>
-                                <goal>site</goal>
-                            </goals>
+                            <id>default-cli</id>
                             <configuration>
                                 <artifacts>
                                 	<!-- specify your depencies here -->
@@ -62,6 +58,20 @@ The last thing that you have to know is how to use it. I prepared an example pom
                         </execution>
                     </executions>
                 </plugin>
+                
+                <plugin>
+	                <groupId>org.mortbay.jetty</groupId>
+    	            <artifactId>jetty-maven-plugin</artifactId>
+        	        <version>8.1.5.v20120716</version>
+            	    <configuration>
+                	    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    	<webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
+                    	<webApp>
+                       		<contextPath>/site</contextPath>
+                    	</webApp>
+	               </configuration>
+            	</plugin>
+                
             </plugins>
         </build>
     
@@ -74,11 +84,12 @@ The last thing that you have to know is how to use it. I prepared an example pom
     
     </project>
 ```
-There are many more configuration options, but basically that's the thing that you need. Now you only have to invoke mvn compile in the folder where the pom.xml file is located and when the process finishes your P2 site is ready!
+There are many more configuration options, but basically that's the thing that you need. Now you only have to invoke mvn p2:site in the folder where the pom.xml file is located and when the process finishes your P2 site is ready!
 
 You will see the following output:
 ```
-    $ mvn compile
+    $ mvn p2:site
+    
     [INFO] Scanning for projects...
     [INFO]                                                                         
     [INFO] ------------------------------------------------------------------------
@@ -128,13 +139,46 @@ Your site will be located in the target/repository folder and will look like thi
     │       └── org.apache.commons.lang3_3.1.0.jar        
 ```
 
-Now you can use your P2 site locally (or exposing it using for example jetty-plugin) and play with your Eclipse RCP project like you were in the Plain Old Java Environment.
+Now you can use your P2 site locally or exposing it using for example jetty-plugin and play with your Eclipse RCP project like you were in the Plain Old Java Environment. The example above contains a sample jetty-plugin configuration. Just type mvn jetty:run and open the following link http://localhost:8080/site Your site will be there.
+```
+	$ mvn jetty:run
+	
+    [INFO] Scanning for projects...
+    [INFO]
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Building example-p2-site 1.0.0
+    [INFO] ------------------------------------------------------------------------
+    [INFO]
+    [INFO] >>> jetty-maven-plugin:8.1.5.v20120716:run (default-cli) @ example-p2-site >>>
+    [INFO]
+    [INFO] <<< jetty-maven-plugin:8.1.5.v20120716:run (default-cli) @ example-p2-site <<<
+    [INFO]
+    [INFO] --- jetty-maven-plugin:8.1.5.v20120716:run (default-cli) @ example-p2-site ---
+    [INFO] Configuring Jetty for project: example-p2-site
+    [INFO] Webapp source directory = /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository
+    [INFO] Reload Mechanic: automatic
+    [INFO] Classes directory /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/classes does not exist
+    [INFO] Context path = /site
+    [INFO] Tmp directory = /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/tmp
+    [INFO] Web defaults = org/eclipse/jetty/webapp/webdefault.xml
+    [INFO] Web overrides =  none
+    [INFO] web.xml file = null
+    [INFO] Webapp directory = /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository
+    2012-08-20 14:20:13.473:INFO:oejs.Server:jetty-8.1.5.v20120716
+    2012-08-20 14:20:13.582:INFO:oejpw.PlusConfiguration:No Transaction manager found - if your webapp requires one, please configure one.
+    2012-08-20 14:20:13.878:INFO:oejsh.ContextHandler:started o.m.j.p.JettyWebAppContext{/site,file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/},file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/
+    2012-08-20 14:20:13.878:INFO:oejsh.ContextHandler:started o.m.j.p.JettyWebAppContext{/site,file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/},file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/
+    2012-08-20 14:20:13.878:INFO:oejsh.ContextHandler:started o.m.j.p.JettyWebAppContext{/site,file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/},file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/
+    2012-08-20 14:20:13.938:INFO:oejs.AbstractConnector:Started SelectChannelConnector@0.0.0.0:8080
+    [INFO] Started Jetty Server
+    [INFO] Starting scanner at interval of 10 seconds.
+```
 
 ### Examples
 There are many more use cases that I am gonna describe here.
 
 #### Default options 
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/default/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml
 
 This is the simplest and the shortest configuration. Only the identifiers of the dependencies have to be specified. 
 What will be the behavior like if we use the configuraiton listed below?
@@ -239,6 +283,18 @@ is an equivalent of the following definition:
             <Export-Package>*</Export-Package>
         </instructions>
     </artifact>
+```
+
+#### Maven phase
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/phase/pom.xml
+
+You can also bind the invocation of the plugin to a Maven option. Just specify the following binding and your p2 plugin will be invoked during the 'mvn compile' phase.
+```xml
+	<id>generate-p2-site</id>
+    <phase>compile</phase>
+    <goals>
+    	<goal>site</goal>
+    </goals>
 ```
 
 ### Plugin options

@@ -50,16 +50,15 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 
 /**
- * @author Tom Bujok (tom.bujok@reficio.org)
- * @since 1.0.0
- * <p/>
- * Reficio (TM) - Reestablish your software!</br>
- * http://www.reficio.org
- *
+ * @author Tom Bujok (tom.bujok@gmail.com)
  * @goal site
  * @phase compile
  * @requiresDependencyResolution
- * @requiresDependencyCollection
+ * @requiresDependencyCollection <br/>
+ * <p/>
+ * Reficio (TM) - Reestablish your software!</br>
+ * http://www.reficio.org
+ * @since 1.0.0
  */
 public class P2Mojo extends AbstractMojo {
 
@@ -156,6 +155,8 @@ public class P2Mojo extends AbstractMojo {
      * The entry point to Aether, i.e. the component doing all the work.
      *
      * @component
+     * @required
+     * @readonly
      */
     private RepositorySystem repoSystem;
 
@@ -163,6 +164,7 @@ public class P2Mojo extends AbstractMojo {
      * The current repository/network configuration of Maven.
      *
      * @parameter default-value="${repositorySystemSession}"
+     * @required
      * @readonly
      */
     private RepositorySystemSession repoSession;
@@ -171,12 +173,15 @@ public class P2Mojo extends AbstractMojo {
      * The project's remote repositories to use for the resolution of project dependencies.
      *
      * @parameter default-value="${project.remoteProjectRepositories}"
+     * @required
      * @readonly
      */
     private List<RemoteRepository> projectRepos;
 
     /**
      * @parameter
+     * @required
+     * @readonly
      */
     private List<P2Artifact> artifacts;
 

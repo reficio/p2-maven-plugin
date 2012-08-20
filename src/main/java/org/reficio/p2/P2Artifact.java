@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Tom Bujok (tom.bujok@reficio.org)
+ * @author Tom Bujok (tom.bujok@gmail.com)
  * @since 1.0.0
  * <p/>
  * Reficio (TM) - Reestablish your software!</br>

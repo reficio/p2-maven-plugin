@@ -21,7 +21,7 @@ package org.reficio.p2.log;
 import org.apache.maven.plugin.logging.Log;
 
 /**
- * @author Tom Bujok (tom.bujok@reficio.org)
+ * @author Tom Bujok (tom.bujok@gmail.com)
  * @since 1.0.0
  * <p/>
  * Reficio (TM) - Reestablish your software!</br>
