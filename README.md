@@ -3,18 +3,15 @@
 ## Truly mavenize your Eclipse RCP project!
 
 ### Intro
-Welcome to p2-maven-plugin! This is an easy-to-use Maven3 plugin responsible for the automation of dependency management in the Eclipse RCP environment.
+Welcome to p2-maven-plugin! This is an easy-to-use Maven3 plugin responsible for the automation of dependency management in the Eclipse RCP environment. It was developed as I practically needed it in one of the commercial projects that I currently work on.
 
 ### Why should you bother?
 Are you familiar with the automated dependency management like in Maven, Gradle or any other fancy tool? What I mean is that you define a bunch of dependencies in the project descriptor and that is the only thing that you have to take care of. The dependency tree is calculated automatically and all dependencies are resolved and downloaded back-stage, so that you can have a beer while nerdy C++ programmers manually play with their DLLs in the lib folder. Yes, Java Developers like the automated dependency management - it was introduced by Maven more that 8 years ago and it simply revolutionized the build automation. And yes, Java Developers think that the automated dependency management is the de-facto standard, so that they cannot even think of going back in time and doing stuff that should be done by them automagically.
 
+If you do not believe me read the following blog entry, it perfectly describes the problem: http://bit.ly/PypQEy
+The author presents five different approaches how to configure the dependency management in an Eclipse RCP project and in the end she could not propose a satisfactory solution.
+
 To better understand what I mean here read this story please: *And now you are thrown into an RCP project. After 5 minutes of excitement you notice that your colleagues on the the project do not use continuous integration and their application is not mavenized. Import of the native eclipse project takes you more than an hour before it compiles successfully. The zip file with the target platform is passed over to you on a pendrive, paths are hardcoded. WTF you think… Between swearing and drinking your 4th coffee you are close to handing in a notice. But, since you are a geek it is not that easy to defeat you. Before you head back home you decide to give it one more shot to enjoy software development once more in your life. Googling around you immediately spot that the bright guys from the Tycho project implemented a set of brilliant plugins to mavenize your RCP app. Your heartbeat increases, your breath becomes nervously shallow, and "voila!" you shout as manage to build your first hello-world example using tycho and maven. But then, something unexpected happens, something that will take all you joy and you will not be the same person any more. You try to add an external dependency to you shiny bright piece of work… How it comes, what the hell is that, or are they all nuttheads - these thoughts penetrate your brain so intensively that you decide to quite your job, move to scala programming and never ever touch the RCP platform again…*
-
-If you do not believe me read the following blog entry, it perfectly describes the problem. Your build works either in Eclipse or in Maven. It is almost impossible to simply configure it in such a way that it works for both.
-
-* http://bit.ly/PypQEy
-
-Could you imagine such a blog entry about defining a dependency in Maven/Gradle/Ivy? The author presents five different approaches how to configure the dependency management and in the end she could not propose a satisfactory solution. Defining the dependencies in both meta-systems is redundant and does not seem reasonable.
 
 Now you probably understand the main goal of this plugin. It tries to bridge the gap between Maven-like and RCP-like dependency management so that all Java developers can easily use all the Maven features in the RCP development. Tycho does a great job here, but as there was missing piece there I decided to contribute this plugin as IMHO it can help a lot! Read further to fully understand why dependency management in RCP is not that easy and why it is not maven-compliant. Enjoy!
 
@@ -152,9 +149,9 @@ Unfortunately, it's not the end of the story since tycho does not support local 
 Now, simply reference your site in your target definition and play with your Eclipse RCP project like you were in the Plain Old Java Environment.
 
 Remember:
-* DO NOT to use the "<pomDependencies>consider</pomDependencies>" as it simply of NO good
+* DO NOT to use the pomDependencies -> consider option as it simply of NO good
 * DO NOT define your dependencies as standard mvn dependcies in the pom.xml (it will work in the console, but it will not work in Eclipse IDE)
-* SIMPLY define all your external dependencies that are not in update-sites in the p2-maven-plugin, generate the site, and make it available. In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP!
+* SIMPLY define all your external dependencies that are not in the update-sites in the p2-maven-plugin definition, generate the site, and make it available using jetty (or any other mechanism). In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP!
 
 ```
 	$ mvn jetty:run
