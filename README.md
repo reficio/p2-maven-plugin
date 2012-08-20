@@ -21,8 +21,10 @@ Ufff, that is a manual, cumbersome, repeatable and stupid activity that may take
 
 That's where p2-maven plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is… :)
 
-### How to use it in 2 minutes?
-The last thing that you have to know is how to use it. I prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using jetty-maven-plugin. Here's the code:
+## How to use it in 2 minutes?
+The last thing that you have to know is how to use it. I prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
+
+Here's the code:
 
 ```xml 
 	<?xml version="1.0" encoding="UTF-8"?>
@@ -174,10 +176,10 @@ Now you can use your P2 site locally or exposing it using for example jetty-plug
     [INFO] Starting scanner at interval of 10 seconds.
 ```
 
-### Examples
+## Examples
 There are many more use cases that I am gonna describe here.
 
-#### Default options 
+### Default options 
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml
 
 This is the simplest and the shortest configuration. Only the identifiers of the dependencies have to be specified. 
@@ -212,7 +214,7 @@ is an equivalent of the following definition:
 Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html If you specify any instructions yourself they will be used as the default ones, if
 the bundle is not already an osgi bundle - othwerise you have to use the override option - please see the "override" example located here: /examples/override/pom.xml
 
-#### Override option
+### Override option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/override/pom.xml
 
 This is the configuration that enables you to override the default MANIFEST.MF files in jars that are already OSGi bundles. <override>true</override> section has to be included to enable this opion
@@ -251,7 +253,7 @@ you can also specify some instructions (what makes sense with override):
     </artifact>
 ```
 
-#### Transitive option
+### Transitive option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/transitive/pom.xml
 
 This is the configuration that enables you to exclude transitive dependencies. <transitive>false</transitive> section has to be included to enable this option.
@@ -285,7 +287,7 @@ is an equivalent of the following definition:
     </artifact>
 ```
 
-#### Maven phase
+### Maven phase binding
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/phase/pom.xml
 
 You can also bind the invocation of the plugin to a Maven option. Just specify the following binding and your p2 plugin will be invoked during the 'mvn compile' phase.
@@ -297,7 +299,7 @@ You can also bind the invocation of the plugin to a Maven option. Just specify t
     </goals>
 ```
 
-### Plugin options
+## Plugin options
 There are some other plugin options that you can specify in the configuration:
 
 <table>
