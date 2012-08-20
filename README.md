@@ -10,7 +10,13 @@ Are you familiar with the automated dependency management like in Maven, Gradle 
 
 To better understand what I mean here read this story please: *And now you are thrown into an RCP project. After 5 minutes of excitement you notice that your colleagues on the the project do not use continuous integration and their application is not mavenized. Import of the native eclipse project takes you more than an hour before it compiles successfully. The zip file with the target platform is passed over to you on a pendrive, paths are hardcoded. WTF you think… Between swearing and drinking your 4th coffee you are close to handing in a notice. But, since you are a geek it is not that easy to defeat you. Before you head back home you decide to give it one more shot to enjoy software development once more in your life. Googling around you immediately spot that the bright guys from the Tycho project implemented a set of brilliant plugins to mavenize your RCP app. Your heartbeat increases, your breath becomes nervously shallow, and "voila!" you shout as manage to build your first hello-world example using tycho and maven. But then, something unexpected happens, something that will take all you joy and you will not be the same person any more. You try to add an external dependency to you shiny bright piece of work… How it comes, what the hell is that, or are they all nuttheads - these thoughts penetrate your brain so intensively that you decide to quite your job, move to scala programming and never ever touch the RCP platform again…*
 
-Now you probably understand the main goal of this plugin. It tries to bridge the gap between Maven-like and RCP-like dependency management so that all Java developers can easily use all the Maven features in the RCP development. Tycho does a greate job here, but as there was missing piece there I decided to contribute this plugin as IMHO it can help a lot! Read further to fully understand why dependency management in RCP is not that easy and why it is not maven-compliant. Enjoy!
+If you do not believe me read the following blog entry, it perfectly describes the problem. Your build works either in Eclipse or in Maven. It is almost impossible to simply configure it in such a way that it works for both.
+
+* http://bit.ly/PypQEy
+
+Could you imagine such a blog entry about defining a dependency in Maven/Gradle/Ivy? The author presents five different approaches how to configure the dependency management and in the end she could not propose a satisfactory solution. Defining the dependencies in both meta-systems is redundant and does not seem reasonable.
+
+Now you probably understand the main goal of this plugin. It tries to bridge the gap between Maven-like and RCP-like dependency management so that all Java developers can easily use all the Maven features in the RCP development. Tycho does a great job here, but as there was missing piece there I decided to contribute this plugin as IMHO it can help a lot! Read further to fully understand why dependency management in RCP is not that easy and why it is not maven-compliant. Enjoy!
 
 ### Java vs. Maven vs. Eclipse RCP - dependency war
 Eclipse RCP dependency management is a bit different than a common java model. It is caused by two facts: on the one hand it is an OSGi environment which extends the Java dependency model, on the other hand there are some Eclipse RCP conventions on the top of it which at the first glance may make an awkward impression. So how does it look like, you think? Nothing simpler - in Eclipse RCP every dependency should be stored in an P2 update site. Eclipse provides a set of update sites and if all popular dependencies were there we would be safe and sound, but guess what, they are not there - which is the problem #1. The problem #2 is that because it's an OSGi environment you are only allowed to use bundles - and guess what?, not all java artifacts are bundles, they are not even close to that. So, let's rewind: I have to have all my artifacts as bundles, but they are not bundles and they have to be located in a P2 site, and I don't have that site. How do I do that, you ask? Yes, it is not that difficult, there is a bnd tool written by Peter Kriens that can transform your jars into bundles. There is also a convenience tool provided by Eclipse that can generate a P2 site (in a cumbersome and painful way). Both tools assume that all your jars/bundles are located in a local folder - which means that you have to download the artifacts yourself. You can use Maven you think. Yes that is true. But there is a significant difference in the way how Maven calculates the dependency tree. In OSGi, in an update site, you can have 3 versions of the same dependency, as your bundles may selectively include one class from version X, and seconds class from version Y. In Maven, though, if you specify 2 version of one dependency only one of them will be fetched as you don't want to have 2 almost identical dependencies on your classpath. This is problem #3. So in essence to solve your problems have to do three things by yourself:
@@ -141,7 +147,15 @@ Your site will be located in the target/repository folder and will look like thi
     │       └── org.apache.commons.lang3_3.1.0.jar        
 ```
 
-Now you can use your P2 site locally or exposing it using for example jetty-plugin and play with your Eclipse RCP project like you were in the Plain Old Java Environment. The example above contains a sample jetty-plugin configuration. Just type mvn jetty:run and open the following link http://localhost:8080/site Your site will be there.
+Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is too expose our newly created repository using an HTTP server. We're gonna use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin configuration. Just type mvn jetty:run and open the following link http://localhost:8080/site Your p2 update site will be there.
+
+Now, simply reference your site in your target definition and play with your Eclipse RCP project like you were in the Plain Old Java Environment.
+
+Remember:
+* DO NOT to use the "<pomDependencies>consider</pomDependencies>" as it simply of NO good
+* DO NOT define your dependencies as standard mvn dependcies in the pom.xml (it will work in the console, but it will not work in Eclipse IDE)
+* SIMPLY define all your external dependencies that are not in update-sites in the p2-maven-plugin, generate the site, and make it available. In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP!
+
 ```
 	$ mvn jetty:run
 	
@@ -214,45 +228,6 @@ is an equivalent of the following definition:
 Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html If you specify any instructions yourself they will be used as the default ones, if
 the bundle is not already an osgi bundle - othwerise you have to use the override option - please see the "override" example located here: /examples/override/pom.xml
 
-### Override option
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/override/pom.xml
-
-This is the configuration that enables you to override the default MANIFEST.MF files in jars that are already OSGi bundles. <override>true</override> section has to be included to enable this opion
-
-If you want to override the default MANIFEST.MF you also have to disable the fetch of the transitive dependencies, otherwise it would not make much sense. When you override the file generated by the provider of the jar you probably know what you are doing - which means you are fine-tuning the MANIFEST.MF options. If transitive dependencies were included your fine-tuning would be applied to all of them, which in our opinion does not make sense and may lead to unexpected behavior. If you do not specify <transitive>false</transitive> along the <override>true</override> an exception will be thrown.
-
-If you do not specify bnd instructions the MANIFEST.MF will be overridden using the default instructions. Please see the "default" example located here: src/main/example/default/pom.xml for more info.
-
-What will be the behavior like if we use the configuraiton listed below?
-
-* specified dependencies will be fetched
-* transitive dependencies will NOT be fetched
-* jars that are NOT osgi bundles will be "bundled" using bnd tool; if you specify instructions they will be APPLIED
-* jars that are osgi bundles will be "bundled" using bnd tool; if you specify instructions they will be APPLIED
-* p2 site will be generated
-
-This definition of an artifact should look like this:
-```xml
-    <artifact>
-        <id>commons-io:commons-io:2.1</id>
-        <transitive>false</transitive>
-        <override>true</override>
-    </artifact>
-```
-
-you can also specify some instructions (what makes sense with override):
-```xml
-    <artifact>
-        <id>commons-io:commons-io:2.1</id>
-        <transitive>true</transitive>
-        <override>false</override>
-        <instructions>
-            <Import-Package>*;resolution:=optional</Import-Package>
-            <Export-Package>*</Export-Package>
-        </instructions>
-    </artifact>
-```
-
 ### Transitive option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/transitive/pom.xml
 
@@ -298,6 +273,46 @@ You can also bind the invocation of the plugin to a Maven option. Just specify t
     	<goal>site</goal>
     </goals>
 ```
+
+### Override option
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/override/pom.xml
+
+This is the configuration that enables you to override the default MANIFEST.MF files in jars that are already OSGi bundles. <override>true</override> section has to be included to enable this opion
+
+If you want to override the default MANIFEST.MF you also have to disable the fetch of the transitive dependencies, otherwise it would not make much sense. When you override the file generated by the provider of the jar you probably know what you are doing - which means you are fine-tuning the MANIFEST.MF options. If transitive dependencies were included your fine-tuning would be applied to all of them, which in our opinion does not make sense and may lead to unexpected behavior. If you do not specify <transitive>false</transitive> along the <override>true</override> an exception will be thrown.
+
+If you do not specify bnd instructions the MANIFEST.MF will be overridden using the default instructions. Please see the "default" example located here: src/main/example/default/pom.xml for more info.
+
+What will be the behavior like if we use the configuraiton listed below?
+
+* specified dependencies will be fetched
+* transitive dependencies will NOT be fetched
+* jars that are NOT osgi bundles will be "bundled" using bnd tool; if you specify instructions they will be APPLIED
+* jars that are osgi bundles will be "bundled" using bnd tool; if you specify instructions they will be APPLIED
+* p2 site will be generated
+
+This definition of an artifact should look like this:
+```xml
+    <artifact>
+        <id>commons-io:commons-io:2.1</id>
+        <transitive>false</transitive>
+        <override>true</override>
+    </artifact>
+```
+
+you can also specify some instructions (what makes sense with override):
+```xml
+    <artifact>
+        <id>commons-io:commons-io:2.1</id>
+        <transitive>true</transitive>
+        <override>false</override>
+        <instructions>
+            <Import-Package>*;resolution:=optional</Import-Package>
+            <Export-Package>*</Export-Package>
+        </instructions>
+    </artifact>
+```
+
 
 ## Plugin options
 There are some other plugin options that you can specify in the configuration:
