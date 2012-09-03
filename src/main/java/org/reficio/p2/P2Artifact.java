@@ -18,8 +18,9 @@
  */
 package org.reficio.p2;
 
-import org.sonatype.aether.artifact.Artifact;
+import org.reficio.p2.utils.ResolvedArtifact;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +28,9 @@ import java.util.Map;
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
  * @since 1.0.0
- * <p/>
- * Reficio (TM) - Reestablish your software!</br>
- * http://www.reficio.org
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
  */
 public class P2Artifact {
 
@@ -49,11 +50,16 @@ public class P2Artifact {
     private boolean override = false;
 
     /**
+     * Indicator to include source dependencies
+     */
+    private boolean source = false;
+
+    /**
      * The BND instructions for the bundle.
      */
     private Map instructions = new LinkedHashMap();
 
-    private List<Artifact> artifacts;
+    private List<ResolvedArtifact> resolvedArtifacts = new ArrayList<ResolvedArtifact>();
 
     public P2Artifact() {
     }
@@ -74,12 +80,12 @@ public class P2Artifact {
         this.instructions = instructions;
     }
 
-    public List<Artifact> getArtifacts() {
-        return artifacts;
+    public List<ResolvedArtifact> getArtifacts() {
+        return resolvedArtifacts;
     }
 
-    public void setArtifacts(List<Artifact> artifacts) {
-        this.artifacts = artifacts;
+    public void addResolvedArtifact(ResolvedArtifact artifact) {
+        this.resolvedArtifacts.add(artifact);
     }
 
     public boolean shouldIncludeTransitive() {
@@ -96,6 +102,10 @@ public class P2Artifact {
 
     public void setOverride(boolean override) {
         this.override = override;
+    }
+
+    public boolean shouldIncludeSources() {
+        return source;
     }
 
 }

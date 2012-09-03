@@ -33,13 +33,15 @@ import java.util.jar.Manifest;
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
  * @since 1.0.0
- * <p/>
- * Reficio (TM) - Reestablish your software!</br>
- * http://www.reficio.org
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
  */
 public class BundleUtils extends BundlePlugin {
 
     private static final String BUNDLE_SYMBOLIC_NAME_ATTR_NAME = "Bundle-SymbolicName";
+    private static final String BUNDLE_VERSION = "Bundle-Version";
+    private static final String BUNDLE_NAME = "Bundle-Name";
 
     public boolean reportErrors(Analyzer analyzer) {
         return super.reportErrors("", analyzer);
@@ -54,25 +56,44 @@ public class BundleUtils extends BundlePlugin {
         return mavenArtifact;
     }
 
-    public String getBundleSymbolicName(Artifact artifact) {
+    public String calculateBundleSymbolicName(Artifact artifact) {
         return super.getMaven2OsgiConverter().getBundleSymbolicName(aetherToMavenArtifactBasic(artifact));
     }
 
-    public String getBundleVersion(Artifact artifact) {
+    public String calculateBundleVersion(Artifact artifact) {
         return super.getMaven2OsgiConverter().getVersion(aetherToMavenArtifactBasic(artifact));
     }
 
     public boolean isBundle(Jar jar) {
+        return getBundleSymbolicName(jar) != null;
+    }
+
+    public String getBundleSymbolicName(Jar jar) {
+        return getManifestValue(jar, BUNDLE_SYMBOLIC_NAME_ATTR_NAME);
+    }
+
+    public String getBundleVersion(Jar jar) {
+        return getManifestValue(jar, BUNDLE_VERSION);
+    }
+
+    public String getBundleName(Jar jar) {
+        return getManifestValue(jar, BUNDLE_NAME);
+    }
+
+    private String getManifestValue(Jar jar, String attributeName) {
         try {
             Manifest manifest = jar.getManifest();
             if (manifest == null) {
-                return false;
+                return null;
             }
-            Attributes.Name symbolicName = new Attributes.Name(BUNDLE_SYMBOLIC_NAME_ATTR_NAME);
+            Attributes.Name symbolicName = new Attributes.Name(attributeName);
             Attributes attributes = manifest.getMainAttributes();
-            return attributes != null && attributes.containsKey(symbolicName);
+            if (attributes == null) {
+                return null;
+            }
+            return attributes.getValue(symbolicName);
         } catch (IOException e) {
-            return false;
+            return null;
         }
     }
 

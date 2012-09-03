@@ -23,9 +23,10 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -66,9 +67,21 @@ public class BundleUtilsTest {
     @Test
     public void testIsBundleManifestContainsKey() throws IOException {
         Jar jar = mock(Jar.class, Mockito.RETURNS_DEEP_STUBS);
-        when(jar.getManifest().getMainAttributes().containsKey(any())).thenReturn(Boolean.TRUE);
+        when(jar.getManifest().getMainAttributes().getValue(any(Attributes.Name.class))).thenReturn("org.apache.commons");
         BundleUtils utils = new BundleUtils();
         assertTrue(utils.isBundle(jar));
+    }
+
+    @Test
+    public void testManifestAttributes() {
+        assertNotNull(new Manifest().getMainAttributes());
+    }
+
+    @Test
+    public void testMatches() {
+        String name = "Commons Lang";
+        assertTrue(name.matches(".*\\s+.*"));
+        assertTrue(name.matches(".*[A-Z].*"));
     }
 
 }

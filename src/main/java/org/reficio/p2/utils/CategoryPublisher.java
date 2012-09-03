@@ -30,9 +30,9 @@ import java.io.IOException;
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
  * @since 1.0.0
- * <p/>
- * Reficio (TM) - Reestablish your software!</br>
- * http://www.reficio.org
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
  */
 public class CategoryPublisher {
 

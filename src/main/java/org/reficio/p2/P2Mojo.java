@@ -34,6 +34,7 @@ import org.reficio.p2.log.Logger;
 import org.reficio.p2.utils.ArtifactResolver;
 import org.reficio.p2.utils.BundleWrapper;
 import org.reficio.p2.utils.CategoryPublisher;
+import org.reficio.p2.utils.ResolvedArtifact;
 import org.sonatype.aether.RepositoryException;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
@@ -210,10 +211,27 @@ public class P2Mojo extends AbstractMojo {
 
     public void resolveArtifacts() throws RepositoryException {
         ArtifactResolver resolver = new ArtifactResolver(repoSystem, repoSession, projectRepos);
-        for (P2Artifact artifact : artifacts) {
-            List<Artifact> result = resolver.resolve(artifact.getId(), !artifact.shouldIncludeTransitive());
-            artifact.setArtifacts(result);
+        for (P2Artifact p2Artifact : artifacts) {
+            log.info("Processing " + p2Artifact.getId());
+            List<Artifact> result = resolver.resolve(p2Artifact.getId(), !p2Artifact.shouldIncludeTransitive());
+            for (Artifact resolved : result) {
+                log.info("\t " + resolved.toString());
+                Artifact resolvedSource = resolveSource(p2Artifact, resolver, resolved);
+                p2Artifact.addResolvedArtifact(new ResolvedArtifact(resolved, resolvedSource));
+            }
         }
+    }
+
+    public Artifact resolveSource(P2Artifact p2Artifact, ArtifactResolver resolver, Artifact artifact) {
+        Artifact resolvedSource = null;
+        if (p2Artifact.shouldIncludeSources()) {
+            try {
+                resolvedSource = resolver.resolveSource(artifact);
+            } catch (Exception ex) {
+                log.warn("Cannot resolve source for artifact " + artifact.toString());
+            }
+        }
+        return resolvedSource;
     }
 
     protected void executeBndWrapper() throws Exception {

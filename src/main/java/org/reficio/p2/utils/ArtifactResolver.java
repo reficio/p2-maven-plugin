@@ -29,6 +29,7 @@ import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.resolution.ArtifactRequest;
 import org.sonatype.aether.resolution.DependencyRequest;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
+import org.sonatype.aether.util.artifact.SubArtifact;
 import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
 
 import java.util.Arrays;
@@ -37,9 +38,9 @@ import java.util.List;
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
  * @since 1.0.0
- * <p/>
- * Reficio (TM) - Reestablish your software!</br>
- * http://www.reficio.org
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
  */
 public class ArtifactResolver {
 
@@ -69,6 +70,12 @@ public class ArtifactResolver {
         }
     }
 
+    public Artifact resolveSource(Artifact artifact) throws RepositoryException {
+        ArtifactRequest request = populateSourceRequest(artifact);
+        Artifact result = system.resolveArtifact(session, request).getArtifact();
+        return result;
+    }
+
     private Artifact resolveNoTransitive(String artifact) throws RepositoryException {
         ArtifactRequest request = populateArtifactRequest(artifact);
         return system.resolveArtifact(session, request).getArtifact();
@@ -95,11 +102,22 @@ public class ArtifactResolver {
     }
 
     private ArtifactRequest populateArtifactRequest(String artifact) {
-        ArtifactRequest artifactRequest = new ArtifactRequest();
+        ArtifactRequest artifactRequest = populateRepos(new ArtifactRequest());
+        artifactRequest.setArtifact(new DefaultArtifact(artifact));
+        return artifactRequest;
+    }
+
+    private ArtifactRequest populateSourceRequest(Artifact artifact) {
+        ArtifactRequest artifactRequest = populateRepos(new ArtifactRequest());
+        Artifact sourceArtifact = new SubArtifact(artifact, "sources", "jar");
+        artifactRequest.setArtifact(sourceArtifact);
+        return artifactRequest;
+    }
+
+    private ArtifactRequest populateRepos(ArtifactRequest artifactRequest) {
         for (RemoteRepository r : repos) {
             artifactRequest.addRepository(r);
         }
-        artifactRequest.setArtifact(new DefaultArtifact(artifact));
         return artifactRequest;
     }
 
