@@ -1,4 +1,4 @@
-# p2-maven-plugin
+# p2-maven-plugin {<img src="https://secure.travis-ci.org/reficio/p2-maven-plugin.png" />}[http://travis-ci.org/reficio/p2-maven-plugin.png]
 
 ## Truly mavenize your Eclipse RCP project!
 
