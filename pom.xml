@@ -164,6 +164,22 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-clover2-plugin</artifactId>
+                <version>3.1.7</version>
+                <executions>
+                    <execution>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>instrument</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generateHtml>true</generateHtml>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-component-metadata</artifactId>
                 <version>1.5.5</version>
@@ -321,6 +337,13 @@
                                     </reports>
                                 </reportSet>
                             </reportSets>
+                        </plugin>
+                        <plugin>
+                            <groupId>com.atlassian.maven.plugins</groupId>
+                            <artifactId>maven-clover2-plugin</artifactId>
+                            <configuration>
+                                <generateHtml>true</generateHtml>
+                            </configuration>
                         </plugin>
                     </reportPlugins>
                 </configuration>
