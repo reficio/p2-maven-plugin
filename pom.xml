@@ -169,14 +169,12 @@
                 <version>3.1.7</version>
                 <executions>
                     <execution>
-                        <phase>pre-site</phase>
-                        <goals>
-                            <goal>instrument</goal>
-                        </goals>
+                        <id>default-cli</id>
                     </execution>
                 </executions>
                 <configuration>
                     <generateHtml>true</generateHtml>
+                    <generateXml>true</generateXml>
                 </configuration>
             </plugin>
             <plugin>
@@ -343,6 +341,7 @@
                             <artifactId>maven-clover2-plugin</artifactId>
                             <configuration>
                                 <generateHtml>true</generateHtml>
+                                <generateXml>true</generateXml>
                             </configuration>
                         </plugin>
                     </reportPlugins>
