@@ -131,6 +131,7 @@ public class BundleWrapper {
     private void unsignJar(File jarToUnsign) {
         try {
             File unsignedJar = new File(jarToUnsign.getParent(), jarToUnsign.getName() + ".tmp");
+            log.debug("Unsign Jar: " + jarToUnsign.getName());
             unsignedJar.createNewFile();
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(unsignedJar));
             ZipFile zip = new ZipFile(jarToUnsign);

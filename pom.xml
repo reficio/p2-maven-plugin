@@ -5,14 +5,14 @@
     <groupId>org.reficio</groupId>
     <artifactId>p2-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0.M1</version>
     <name>p2-maven-plugin</name>
     <url>http://projects.reficio.org/${project.artifactId}/${project.version}</url>
     <description>Maven plugin for the automation of jars wrapping and p2 site generation</description>
 
     <properties>
         <maven.version>3.0.4</maven.version>
-        <tycho.version>0.14.0</tycho.version>
+        <tycho.version>0.15.0</tycho.version>
         <aether.version>1.13.1</aether.version>
         <wagon.version>2.2</wagon.version>
     </properties>
@@ -454,9 +454,9 @@
 
     <distributionManagement>
         <repository>
-            <id>reficio</id>
-            <name>Reficio Maven Repository</name>
-            <url>scp://${reficio.server}/var/www/repo/maven</url>
+            <id>release.intalio.com</id>
+            <name>Intalio Maven Repository</name>
+            <url>http://release.intalio.com:9082/nexus/content/repositories/releases</url>
         </repository>
     </distributionManagement>
 
