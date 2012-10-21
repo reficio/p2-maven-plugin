@@ -357,50 +357,7 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>manually-deploy-site</id>
-                        <phase>deploy</phase>
-                        <configuration>
-                            <tasks>
-                                <echo message="Running ANT for deploying the site..."/>
-                                <property name="project_folder" value="/var/www/projects/${project.artifactId}"/>
-                                <property name="version_folder" value="${project_folder}/${project.version}"/>
-                                <property name="site_tgz" value="${project.artifactId}-${project.version}-site.tgz"/>
-                                <tar destfile="target/${site_tgz}" basedir="target/site" compression="gzip"/>
-                                <echo message="Creating folder for the site ${version_folder}"/>
-                                <sshexec host="${reficio.server}"
-                                         username="${reficio.usr}"
-                                         password="${reficio.pwd}"
-                                         verbose="false"
-                                         command="mkdir -p ${version_folder}"/>
-                                <echo message="Uploading compressed site ${site_tgz}"/>
-                                <scp file="target/${site_tgz}" todir="${reficio.usr}@${reficio.server}:${project_folder}/"
-                                     password="${reficio.pwd}" verbose="false"/>
-                                <echo message="Extracting compressed site and cleaning up"/>
-                                <sshexec host="${reficio.server}"
-                                         username="${reficio.usr}"
-                                         password="${reficio.pwd}"
-                                         verbose="false"
-                                         command="rm -rf ${version_folder}/*; tar -C ${version_folder} -xf ${project_folder}/${site_tgz}; rm ${project_folder}/${project.artifactId}-${project.version}-site.tgz"/>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant-jsch</artifactId>
-                        <version>1.8.4</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.jcraft</groupId>
-                        <artifactId>jsch</artifactId>
-                        <version>0.1.48</version>
-                    </dependency>
-                </dependencies>
             </plugin>
 
 
@@ -433,6 +390,62 @@
     </repositories>
 
     <profiles>
+        <profile>
+            <id>site-deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>manually-deploy-site</id>
+                                <phase>deploy</phase>
+                                <configuration>
+                                    <tasks>
+                                        <echo message="Running ANT for deploying the site..."/>
+                                        <property name="project_folder" value="/var/www/projects/${project.artifactId}"/>
+                                        <property name="version_folder" value="${project_folder}/${project.version}"/>
+                                        <property name="site_tgz" value="${project.artifactId}-${project.version}-site.tgz"/>
+                                        <tar destfile="target/${site_tgz}" basedir="target/site" compression="gzip"/>
+                                        <echo message="Creating folder for the site ${version_folder}"/>
+                                        <sshexec host="${reficio.server}"
+                                                 username="${reficio.usr}"
+                                                 password="${reficio.pwd}"
+                                                 verbose="false"
+                                                 command="mkdir -p ${version_folder}"/>
+                                        <echo message="Uploading compressed site ${site_tgz}"/>
+                                        <scp file="target/${site_tgz}" todir="${reficio.usr}@${reficio.server}:${project_folder}/"
+                                             password="${reficio.pwd}" verbose="false"/>
+                                        <echo message="Extracting compressed site and cleaning up"/>
+                                        <sshexec host="${reficio.server}"
+                                                 username="${reficio.usr}"
+                                                 password="${reficio.pwd}"
+                                                 verbose="false"
+                                                 command="rm -rf ${version_folder}/*; tar -C ${version_folder} -xf ${project_folder}/${site_tgz}; rm ${project_folder}/${project.artifactId}-${project.version}-site.tgz"/>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant-jsch</artifactId>
+                                <version>1.8.4</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.jcraft</groupId>
+                                <artifactId>jsch</artifactId>
+                                <version>0.1.48</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>clover</id>
             <build>
