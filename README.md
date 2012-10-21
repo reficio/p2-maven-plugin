@@ -80,12 +80,12 @@ Here's the code:
             </plugins>
         </build>
     
-        <repositories>
-            <repository>
+        <pluginRepositories>
+            <pluginRepository>
                 <id>reficio</id>
                 <url>http://repo.reficio.org/maven/</url>
-            </repository>
-        </repositories>
+            </pluginRepository>
+        </pluginRepositories>
     
     </project>
 ```
