@@ -465,7 +465,7 @@
                         <executions>
                             <execution>
                                 <id>findbugs</id>
-                                <phase>package</phase>
+                                <phase>process-classes</phase>
                                 <goals>
                                     <goal>findbugs</goal>
                                 </goals>
