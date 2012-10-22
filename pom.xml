@@ -391,7 +391,7 @@
 
     <profiles>
         <profile>
-            <id>site-deploy</id>
+            <id>default-cli</id>
             <build>
                 <plugins>
                     <plugin>
