@@ -400,7 +400,6 @@
                         <executions>
                             <execution>
                                 <id>manually-deploy-site</id>
-                                <phase>deploy</phase>
                                 <configuration>
                                     <tasks>
                                         <echo message="Running ANT for deploying the site..."/>
