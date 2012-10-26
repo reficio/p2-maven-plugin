@@ -391,7 +391,7 @@
 
     <profiles>
         <profile>
-            <id>default-cli</id>
+            <id>site</id>
             <build>
                 <plugins>
                     <plugin>
@@ -399,7 +399,7 @@
                         <version>1.7</version>
                         <executions>
                             <execution>
-                                <id>manually-deploy-site</id>
+                                <id>default-cli</id>
                                 <configuration>
                                     <tasks>
                                         <echo message="Running ANT for deploying the site..."/>
