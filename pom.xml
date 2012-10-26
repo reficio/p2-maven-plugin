@@ -12,7 +12,7 @@
 
     <properties>
         <maven.version>3.0.4</maven.version>
-        <tycho.version>0.14.0</tycho.version>
+        <tycho.version>0.15.0</tycho.version>
         <aether.version>1.13.1</aether.version>
         <wagon.version>2.2</wagon.version>
     </properties>
