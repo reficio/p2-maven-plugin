@@ -30,6 +30,7 @@ import org.sonatype.aether.artifact.Artifact;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.Attributes;
@@ -107,7 +108,9 @@ public class BundleWrapper {
 
     private boolean isAlreadyBundle(File inputJarFile) throws IOException {
         Jar inputJar = new Jar(inputJarFile);
-        return bundleUtils.isBundle(inputJar);
+        boolean isBundle = this.bundleUtils.isBundle(inputJar);
+        inputJar.close();
+        return isBundle;
     }
 
     private void handleBundleJarWrap(File inputFile, File outputFile) throws IOException {
@@ -141,8 +144,11 @@ public class BundleWrapper {
                     continue;
                 }
                 zipOutputStream.putNextEntry(entry);
-                IOUtils.copy(zip.getInputStream(entry), zipOutputStream);
+                InputStream zipInputStream = zip.getInputStream(entry);
+                IOUtils.copy(zipInputStream, zipOutputStream);
+                zipInputStream.close();
             }
+            zip.close();
             zipOutputStream.close();
             FileUtils.copyFile(unsignedJar, jarToUnsign);
             unsignedJar.delete();
