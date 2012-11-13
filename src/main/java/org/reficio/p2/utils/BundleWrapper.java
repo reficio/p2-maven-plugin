@@ -107,7 +107,9 @@ public class BundleWrapper {
 
     private boolean isAlreadyBundle(File inputJarFile) throws IOException {
         Jar inputJar = new Jar(inputJarFile);
-        return bundleUtils.isBundle(inputJar);
+        boolean isBundle = this.bundleUtils.isBundle(inputJar);
+        inputJar.close();
+        return isBundle;
     }
 
     private void handleBundleJarWrap(File inputFile, File outputFile) throws IOException {
