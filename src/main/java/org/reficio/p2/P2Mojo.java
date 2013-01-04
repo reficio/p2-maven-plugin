@@ -248,7 +248,7 @@ public class P2Mojo extends AbstractMojo {
                 plugin(
                         groupId("org.eclipse.tycho.extras"),
                         artifactId("tycho-p2-extras-plugin"),
-                        version("0.14.0")
+                        version("0.16.0")
                 ),
                 goal("publish-features-and-bundles"),
                 configuration(
