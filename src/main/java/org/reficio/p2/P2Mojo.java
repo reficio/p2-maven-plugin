@@ -34,7 +34,6 @@ import org.reficio.p2.log.Logger;
 import org.reficio.p2.utils.ArtifactResolver;
 import org.reficio.p2.utils.BundleWrapper;
 import org.reficio.p2.utils.CategoryPublisher;
-import org.reficio.p2.utils.ResolvedArtifact;
 import org.sonatype.aether.RepositoryException;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
@@ -62,6 +61,8 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
  * @since 1.0.0
  */
 public class P2Mojo extends AbstractMojo {
+
+    private static final String TYCHO_VERSION = "0.16.0";
 
     private static final String BUNDLES_TOP_FOLDER = "/source";
     private static final String BUNDLES_DESTINATION_FOLDER = BUNDLES_TOP_FOLDER + "/plugins";
@@ -212,12 +213,15 @@ public class P2Mojo extends AbstractMojo {
     public void resolveArtifacts() throws RepositoryException {
         ArtifactResolver resolver = new ArtifactResolver(repoSystem, repoSession, projectRepos);
         for (P2Artifact p2Artifact : artifacts) {
-            log.info("Processing " + p2Artifact.getId());
-            List<Artifact> result = resolver.resolve(p2Artifact.getId(), !p2Artifact.shouldIncludeTransitive());
+            log.info("Processing artifacts for " + p2Artifact.getId());
+            List<Artifact> result = resolver.resolve(p2Artifact.getId(), p2Artifact.getExcludes(), !p2Artifact.shouldIncludeTransitive());
             for (Artifact resolved : result) {
-                log.info("\t " + resolved.toString());
+                log.info("\t [JAR] " + resolved.toString());
                 Artifact resolvedSource = resolveSource(p2Artifact, resolver, resolved);
-                p2Artifact.addResolvedArtifact(new ResolvedArtifact(resolved, resolvedSource));
+                if(resolvedSource != null) {
+                    log.info("\t [SRC] " + resolvedSource.toString());
+                }
+                p2Artifact.addResolvedArtifact(resolved, resolvedSource);
             }
         }
     }
@@ -228,7 +232,7 @@ public class P2Mojo extends AbstractMojo {
             try {
                 resolvedSource = resolver.resolveSource(artifact);
             } catch (Exception ex) {
-                log.warn("Cannot resolve source for artifact " + artifact.toString());
+                log.warn("\t [SRC] Failed to resolve for artifact " + artifact.toString());
             }
         }
         return resolvedSource;
@@ -248,7 +252,7 @@ public class P2Mojo extends AbstractMojo {
                 plugin(
                         groupId("org.eclipse.tycho.extras"),
                         artifactId("tycho-p2-extras-plugin"),
-                        version("0.14.0")
+                        version(TYCHO_VERSION)
                 ),
                 goal("publish-features-and-bundles"),
                 configuration(

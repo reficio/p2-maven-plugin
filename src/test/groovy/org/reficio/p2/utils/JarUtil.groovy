@@ -1,5 +1,3 @@
-package org.reficio.p2.utils;
-
 /**
  * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
@@ -18,44 +16,33 @@ package org.reficio.p2.utils;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.reficio.p2.utils
 
-
-import org.sonatype.aether.artifact.Artifact;
+import aQute.lib.osgi.Analyzer
+import aQute.lib.osgi.Jar
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
+ * @author: Tom Bujok (tom.bujok@gmail.com)
+ *
+ * Reficio™ - Reestablish your software!
+ * www.reficio.org
  */
-public class ResolvedArtifact {
-    private boolean root;
-    private final Artifact artifact;
-    private final Artifact sourceArtifact;
+class JarUtil {
 
-    public ResolvedArtifact(Artifact artifact, boolean root) {
-        this.artifact = artifact;
-        this.sourceArtifact = null;
-        this.root = root;
+    def static String symbolicName(Jar jar) {
+        jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.BUNDLE_SYMBOLICNAME)
     }
 
-    public ResolvedArtifact(Artifact artifact, Artifact sourceArtifact, boolean root) {
-        this.artifact = artifact;
-        this.sourceArtifact = sourceArtifact;
-        this.root = root;
+    def static String version(Jar jar) {
+        jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.BUNDLE_VERSION)
     }
 
-    public Artifact getArtifact() {
-        return artifact;
+    def static String tool(Jar jar) {
+        jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.TOOL)
     }
 
-    public Artifact getSourceArtifact() {
-        return sourceArtifact;
-    }
-
-    public boolean isRoot() {
-        return root;
+    def static String eclipseSourceBundle(Jar jar) {
+        jar?.getManifest()?.getMainAttributes()?.getValue(BundleWrapper.ECLIPSE_SOURCE_BUNDLE)
     }
 
 }

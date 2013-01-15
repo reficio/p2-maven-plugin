@@ -22,16 +22,13 @@ import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.maven.plugin.logging.Log;
 import org.reficio.p2.P2Artifact;
 import org.reficio.p2.log.Logger;
-import org.sonatype.aether.artifact.Artifact;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
@@ -47,14 +44,13 @@ import java.util.zip.ZipOutputStream;
  */
 public class BundleWrapper {
 
-    private static final Log log = Logger.getLog();
-    private static final String ECLIPSE_SOURCE_BUNDLE = "Eclipse-SourceBundle";
-    private static final String MANIFEST_VERSION = "Manifest-Version";
-    private static final String IMPLENTATION_TITLE = "Implementation-Title";
-    private static final String SPECIFICATION_TITLE = "Specification-Title";
     private static final String TOOL_KEY = "Tool";
     private static final String TOOL = "p2-maven-plugin (reficio.org)";
 
+    public static final String ECLIPSE_SOURCE_BUNDLE = "Eclipse-SourceBundle";
+    public static final String IMPLEMENTATION_TITLE = "Implementation-Title";
+    public static final String SPECIFICATION_TITLE = "Specification-Title";
+    public static final String MANIFEST_VERSION = "Manifest-Version";
 
     protected final BundleUtils bundleUtils;
     private final boolean pedantic;
@@ -72,59 +68,65 @@ public class BundleWrapper {
 
     private void wrapArtifacts(P2Artifact p2Artifact) throws Exception {
         validateConfig(p2Artifact);
-        for (ResolvedArtifact artifact : p2Artifact.getArtifacts()) {
-            File wrappedArtifact = new File(bundlesDestinationFolder, artifact.getArtifact().getFile().getName());
-            doWrap(p2Artifact, artifact.getArtifact().getFile(), wrappedArtifact);
-            doSourceWrap(artifact);
+        log().info("Executing BND:");
+        for (ResolvedArtifact artifact : p2Artifact.getResolvedArtifacts()) {
+            WrapRequest wrapRequest = populateWrapRequest(p2Artifact, artifact);
+            wrap(wrapRequest);
         }
     }
 
     private void validateConfig(P2Artifact p2Artifact) {
-        if (p2Artifact.shouldOverrideManifest() && p2Artifact.shouldIncludeTransitive()) {
-            String message = "[%s] <override>true</override> cannot be specified together with <transitive>true</transitive> ";
-            message += "If you want to override the original MANIFEST.MF file you have to exclude the transitive dependencies (and add them separately if you wish). ";
-            message += "It's not recommended, however, to override the original MANIFEST.MF file, unless you really know what you are doing! ";
-            throw new RuntimeException(String.format(message, p2Artifact.getId()));
-        }
         if (p2Artifact.shouldIncludeTransitive() && !p2Artifact.getInstructions().isEmpty()) {
-            String message = "Instructions specified together <transitive>true</transitive>; ";
-            message += "Make sure to specify proper wildcards export-packages directives.";
-            log.warn(String.format("[%s] %s", p2Artifact.getId(), message));
+            String message = "BND instructions are NOT applied to the transitive dependencies of ";
+            log().warn(String.format("%s %s", message, p2Artifact.getId()));
         }
     }
 
-    private void doWrap(P2Artifact p2Artifact, File inputFile, File outputFile) throws Exception {
-        if (isAlreadyBundle(inputFile)) {
-            if (p2Artifact.shouldOverrideManifest()) {
-                handleVanillaJarWrap(p2Artifact, inputFile, outputFile);
-            } else {
-                handleBundleJarWrap(inputFile, outputFile);
-            }
+    private WrapRequest populateWrapRequest(P2Artifact p2Artifact, ResolvedArtifact artifact) {
+        File inputFile = artifact.getArtifact().getFile();
+        File outputFile = new File(bundlesDestinationFolder, artifact.getArtifact().getFile().getName());
+        WrapRequest request = new WrapRequest(p2Artifact, artifact, inputFile, outputFile);
+        request.validate();
+        return request;
+    }
+
+    private void wrap(WrapRequest request) throws Exception {
+        doWrap(request);
+        doSourceWrap(request);
+    }
+
+    private void doWrap(WrapRequest request) throws Exception {
+        if (request.isShouldWrap()) {
+            log().info("\t [EXEC] " + request.getInputFile().getName());
+            handleVanillaJarWrap(request);
         } else {
-            handleVanillaJarWrap(p2Artifact, inputFile, outputFile);
+            log().info("\t [SKIP] " + request.getInputFile().getName());
+            handleBundleJarWrap(request);
         }
     }
 
-    private boolean isAlreadyBundle(File inputJarFile) throws IOException {
-        Jar inputJar = new Jar(inputJarFile);
-        return bundleUtils.isBundle(inputJar);
+    private void handleBundleJarWrap(WrapRequest request) throws IOException {
+        FileUtils.copyFile(request.getInputFile(), request.getOutputFile());
     }
 
-    private void handleBundleJarWrap(File inputFile, File outputFile) throws IOException {
-        FileUtils.copyFile(inputFile, outputFile);
-    }
-
-    private void handleVanillaJarWrap(P2Artifact p2Artifact, File inputFile, File outputFile) throws Exception {
-        Analyzer analyzer = initializeAnalyzer(p2Artifact, inputFile);
+    private void handleVanillaJarWrap(WrapRequest request) throws Exception {
+        Analyzer analyzer = initializeAnalyzer(request);
         try {
             analyzer.calcManifest();
-            Jar jar = analyzer.getJar();
-            jar.write(outputFile);
-            jar.close();
+            populateJar(analyzer, request.getOutputFile());
             bundleUtils.reportErrors(analyzer);
         } finally {
             analyzer.close();
-            unsignJar(outputFile);
+            unsignJar(request.getOutputFile());
+        }
+    }
+
+    private void populateJar(Analyzer analyzer, File outputFile) throws Exception {
+        Jar jar = analyzer.getJar();
+        try {
+            jar.write(outputFile);
+        } finally {
+            jar.close();
         }
     }
 
@@ -151,19 +153,19 @@ public class BundleWrapper {
         }
     }
 
-    private Analyzer initializeAnalyzer(P2Artifact p2Artifact, File fileToWrap) throws IOException {
-        Analyzer analyzer = instantiateAnalyzer(fileToWrap);
+    private Analyzer initializeAnalyzer(WrapRequest request) throws IOException {
+        Analyzer analyzer = instantiateAnalyzer(request);
         setAnalyzerOptions(analyzer);
         setPackageOptions(analyzer);
-        setBundleOptions(analyzer, p2Artifact, fileToWrap);
+        setBundleOptions(analyzer, request);
         setManifest(analyzer);
-        setInstructions(analyzer, p2Artifact);
+        setInstructions(analyzer, request);
         return analyzer;
     }
 
-    private Analyzer instantiateAnalyzer(File fileToWrap) throws IOException {
+    private Analyzer instantiateAnalyzer(WrapRequest request) throws IOException {
         Analyzer analyzer = new Analyzer();
-        analyzer.setJar(fileToWrap);
+        analyzer.setJar(request.getInputFile());
         return analyzer;
     }
 
@@ -177,82 +179,41 @@ public class BundleWrapper {
         analyzer.setProperty(Analyzer.EXPORT_PACKAGE, export);
     }
 
-    private void setBundleOptions(Analyzer analyzer, P2Artifact p2Artifact, File fileToWrap) {
-        Artifact artifact = getArtifact(fileToWrap.getName(), p2Artifact.getArtifacts());
-        String version = bundleUtils.calculateBundleVersion(artifact);
-        analyzer.setProperty(Analyzer.BUNDLE_VERSION, version);
-        String symbolicName = bundleUtils.calculateBundleSymbolicName(artifact);
-        analyzer.setProperty(Analyzer.BUNDLE_SYMBOLICNAME, symbolicName);
+    private void setBundleOptions(Analyzer analyzer, WrapRequest request) {
+        analyzer.setProperty(Analyzer.BUNDLE_SYMBOLICNAME, request.getProperties().getSymbolicName());
+        analyzer.setProperty(Analyzer.BUNDLE_NAME, request.getProperties().getName());
+        analyzer.setProperty(Analyzer.BUNDLE_VERSION, request.getProperties().getVersion());
         analyzer.setProperty(TOOL_KEY, TOOL);
     }
 
-    private void setInstructions(Analyzer analyzer, P2Artifact p2Artifact) {
-        if (!p2Artifact.getInstructions().isEmpty()) {
-            analyzer.setProperties(BundleUtils.transformDirectives(p2Artifact.getInstructions()));
-        }
-    }
-
-    private Artifact getArtifact(String jarName, List<ResolvedArtifact> artifacts) {
-        for (ResolvedArtifact artifact : artifacts) {
-            if (artifact.getArtifact().getFile().getName().equals(jarName)) {
-                return artifact.getArtifact();
+    private void setInstructions(Analyzer analyzer, WrapRequest request) {
+        // do not set instructions on transitive artifacts
+        if (request.getResolvedArtifact().isRoot()) {
+            if (!request.getP2artifact().getInstructions().isEmpty()) {
+                analyzer.setProperties(BundleUtils.transformDirectives(request.getP2artifact().getInstructions()));
             }
         }
-        throw new RuntimeException(String.format("Internal error - artifact [%s] not found", jarName));
     }
 
     private void setManifest(Analyzer analyzer) throws IOException {
         analyzer.mergeManifest(analyzer.getJar().getManifest());
     }
 
-    private void doSourceWrap(ResolvedArtifact resolvedArtifact) throws Exception {
-        if (resolvedArtifact.getSourceArtifact() == null) {
+    private void doSourceWrap(WrapRequest request) throws Exception {
+        if (request.getResolvedArtifact().getSourceArtifact() == null) {
             return;
         }
-        File wrappedSource = new File(bundlesDestinationFolder, resolvedArtifact.getSourceArtifact().getFile().getName());
-        String symbolicName = getSymbolicNameForSourceBundle(resolvedArtifact);
-        String version = getVersionForSourceBundle(resolvedArtifact);
-        String name = getNameForSourceBundle(resolvedArtifact, symbolicName);
-        Jar jar = new Jar(resolvedArtifact.getSourceArtifact().getFile());
+        log().info("\t [EXEC] " + request.getResolvedArtifact().getSourceArtifact().getFile().getName());
+        File wrappedSource = new File(bundlesDestinationFolder, request.getResolvedArtifact().getSourceArtifact().getFile().getName());
+        String symbolicName = request.getProperties().getSourceSymbolicName();
+        String version = request.getProperties().getSourceVersion();
+        String name = request.getProperties().getSourceName();
+        Jar jar = new Jar(request.getResolvedArtifact().getSourceArtifact().getFile());
         Manifest manifest = getManifest(jar);
         decorateSourceManifest(manifest, name, symbolicName, version);
         jar.setManifest(manifest);
         jar.write(wrappedSource);
         jar.close();
-    }
-
-
-    private String getSymbolicNameForSourceBundle(ResolvedArtifact resolvedArtifact) throws IOException {
-        String symbolicName = bundleUtils.getBundleSymbolicName(new Jar(resolvedArtifact.getArtifact().getFile()));
-        if (symbolicName == null) {
-            symbolicName = bundleUtils.calculateBundleSymbolicName(resolvedArtifact.getArtifact());
-        }
-        return symbolicName;
-    }
-
-    private String getVersionForSourceBundle(ResolvedArtifact resolvedArtifact) throws IOException {
-        String version = bundleUtils.getBundleVersion(new Jar(resolvedArtifact.getArtifact().getFile()));
-        if (version == null) {
-            version = bundleUtils.calculateBundleVersion(resolvedArtifact.getArtifact());
-        }
-        return version;
-    }
-
-    private String getNameForSourceBundle(ResolvedArtifact resolvedArtifact, String symbolicName) throws IOException {
-        String name = bundleUtils.getBundleName(new Jar(resolvedArtifact.getArtifact().getFile()));
-        if (name == null) {
-            name = symbolicName + ".source";
-        } else {
-            if (name.matches(".*\\s+.*")) {
-                name += " ";
-            }
-            if (name.matches(".*[A-Z].*")) {
-                name += "Source";
-            } else {
-                name += "source";
-            }
-        }
-        return name;
     }
 
     private Manifest getManifest(Jar jar) throws IOException {
@@ -265,16 +226,20 @@ public class BundleWrapper {
 
     private void decorateSourceManifest(Manifest manifest, String name, String symbolicName, String version) {
         Attributes attributes = manifest.getMainAttributes();
-        attributes.putValue(Analyzer.BUNDLE_SYMBOLICNAME, symbolicName + ".source");
+        attributes.putValue(Analyzer.BUNDLE_SYMBOLICNAME, symbolicName);
         attributes.putValue(ECLIPSE_SOURCE_BUNDLE, symbolicName + ";version=\"" + version + "\";roots:=\".\"");
         attributes.putValue(Analyzer.BUNDLE_VERSION, version);
         attributes.putValue(Analyzer.BUNDLE_LOCALIZATION, "plugin");
         attributes.putValue(MANIFEST_VERSION, "1.0");
         attributes.putValue(Analyzer.BUNDLE_MANIFESTVERSION, "2");
         attributes.putValue(Analyzer.BUNDLE_NAME, name);
-        attributes.putValue(IMPLENTATION_TITLE, name);
+        attributes.putValue(IMPLEMENTATION_TITLE, name);
         attributes.putValue(SPECIFICATION_TITLE, name);
         attributes.putValue(TOOL_KEY, TOOL);
+    }
+
+    private Logger log() {
+        return Logger.getLog();
     }
 
 }

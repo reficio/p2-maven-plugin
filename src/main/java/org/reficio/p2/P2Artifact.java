@@ -19,6 +19,7 @@
 package org.reficio.p2;
 
 import org.reficio.p2.utils.ResolvedArtifact;
+import org.sonatype.aether.artifact.Artifact;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -45,7 +46,7 @@ public class P2Artifact {
     private boolean transitive = true;
 
     /**
-     * Indicator to include transitive dependencies
+     * Indicator to override default manifest
      */
     private boolean override = false;
 
@@ -55,10 +56,16 @@ public class P2Artifact {
     private boolean source = false;
 
     /**
+     * Specifies transitive dependencies that should be excluded
+     */
+    private List<String> excludes = new ArrayList<String>();
+
+    /**
      * The BND instructions for the bundle.
      */
     private Map instructions = new LinkedHashMap();
 
+    private ResolvedArtifact rootArtifact;
     private List<ResolvedArtifact> resolvedArtifacts = new ArrayList<ResolvedArtifact>();
 
     public P2Artifact() {
@@ -80,12 +87,25 @@ public class P2Artifact {
         this.instructions = instructions;
     }
 
-    public List<ResolvedArtifact> getArtifacts() {
-        return resolvedArtifacts;
+    public ResolvedArtifact getRootArtifact() {
+        return rootArtifact;
     }
 
-    public void addResolvedArtifact(ResolvedArtifact artifact) {
-        this.resolvedArtifacts.add(artifact);
+    public void addResolvedArtifact(Artifact resolved, Artifact resolvedSource) {
+        String resolvedId = String.format("%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(), resolved.getVersion());
+        ResolvedArtifact resolvedArtifact;
+        if (id.equals(resolvedId)) {
+            resolvedArtifact = new ResolvedArtifact(resolved, resolvedSource, true);
+            rootArtifact = resolvedArtifact;
+        } else {
+            resolvedArtifact = new ResolvedArtifact(resolved, resolvedSource, false);
+        }
+
+        this.resolvedArtifacts.add(resolvedArtifact);
+    }
+
+    public List<ResolvedArtifact> getResolvedArtifacts() {
+        return resolvedArtifacts;
     }
 
     public boolean shouldIncludeTransitive() {
@@ -106,6 +126,14 @@ public class P2Artifact {
 
     public boolean shouldIncludeSources() {
         return source;
+    }
+
+    public List<String> getExcludes() {
+        return excludes;
+    }
+
+    public void setExcludes(List<String> excludes) {
+        this.excludes = excludes;
     }
 
 }

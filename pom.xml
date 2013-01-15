@@ -11,10 +11,16 @@
     <description>Maven plugin for the automation of jars wrapping and p2 site generation</description>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <maven.version>3.0.4</maven.version>
-        <tycho.version>0.15.0</tycho.version>
+        <tycho.version>0.16.0</tycho.version>
         <aether.version>1.13.1</aether.version>
         <wagon.version>2.2</wagon.version>
+        <gmaven.version>1.4</gmaven.version>
+        <gmaven.provider.selection>2.0</gmaven.provider.selection>
+        <groovy.version>2.0.5</groovy.version>
     </properties>
 
     <licenses>
@@ -159,10 +165,55 @@
             <version>1.9.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.gmaven.runtime</groupId>
+            <artifactId>gmaven-runtime-2.0</artifactId>
+            <version>${gmaven.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-all</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
+        </dependency>
     </dependencies>
+
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>${gmaven.version}</version>
+                <configuration>
+                    <source/>
+                    <providerSelection>${gmaven.provider.selection}</providerSelection>
+                    <sourceEncoding>UTF-8</sourceEncoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>generateTestStubs</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>${groovy.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
             <plugin>
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-component-metadata</artifactId>
@@ -445,6 +496,7 @@
                 </plugins>
             </build>
         </profile>
+
         <profile>
             <id>clover</id>
             <build>
@@ -466,6 +518,7 @@
                 </plugins>
             </build>
         </profile>
+
         <profile>
             <id>findbugs</id>
             <build>
@@ -491,7 +544,61 @@
                 </plugins>
             </build>
         </profile>
+
+        <profile>
+            <id>it</id>
+            <activation>
+                <property>
+                    <name>it</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-invoker-plugin</artifactId>
+                        <version>1.8</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.codehaus.groovy</groupId>
+                                <artifactId>groovy-all</artifactId>
+                                <version>${groovy.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <addTestClassPath>true</addTestClassPath>
+                            <projectsDirectory>src/it</projectsDirectory>
+                            <streamLogs>true</streamLogs>
+                            <showErrors>true</showErrors>
+                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                            <pomIncludes>
+                                <pomInclude>*/pom.xml</pomInclude>
+                                <pomInclude>compile/*/pom.xml</pomInclude>
+                                <pomInclude>execute/*/pom.xml</pomInclude>
+                                <pomInclude>sources/*/pom.xml</pomInclude>
+                            </pomIncludes>
+                            <settingsFile>src/it/settings.xml</settingsFile>
+                            <localRepositoryPath>${project.build.directory}/it-repo</localRepositoryPath>
+                            <preBuildHookScript>setup.groovy</preBuildHookScript>
+                            <postBuildHookScript>validate.groovy</postBuildHookScript>
+                            <properties>
+                                <gmaven.logging>TRACE</gmaven.logging>
+                            </properties>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>install</goal>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
+
 
     <distributionManagement>
         <repository>

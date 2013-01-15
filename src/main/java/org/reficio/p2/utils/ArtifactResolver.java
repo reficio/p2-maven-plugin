@@ -18,20 +18,25 @@
  */
 package org.reficio.p2.utils;
 
+import org.apache.commons.lang.StringUtils;
+import org.reficio.p2.log.Logger;
 import org.sonatype.aether.RepositoryException;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.collection.CollectRequest;
 import org.sonatype.aether.graph.Dependency;
+import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.resolution.ArtifactRequest;
 import org.sonatype.aether.resolution.DependencyRequest;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 import org.sonatype.aether.util.artifact.SubArtifact;
+import org.sonatype.aether.util.filter.PatternExclusionsDependencyFilter;
 import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,11 +67,11 @@ public class ArtifactResolver {
         this.scope = scope;
     }
 
-    public List<Artifact> resolve(String artifact, boolean skipTransitive) throws RepositoryException {
+    public List<Artifact> resolve(String artifact, List<String> excludes, boolean skipTransitive) throws RepositoryException {
         if (skipTransitive) {
             return Arrays.asList(resolveNoTransitive(artifact));
         } else {
-            return resolveWithTransitive(artifact);
+            return resolveWithTransitive(artifact, excludes);
         }
     }
 
@@ -81,14 +86,46 @@ public class ArtifactResolver {
         return system.resolveArtifact(session, request).getArtifact();
     }
 
-    private List<Artifact> resolveWithTransitive(String artifact) throws RepositoryException {
+    private List<Artifact> resolveWithTransitive(String artifact, List<String> excludes) throws RepositoryException {
         CollectRequest collectRequest = populateCollectRequest(artifact);
         DependencyNode node = system.collectDependencies(session, collectRequest).getRoot();
         DependencyRequest dependencyRequest = new DependencyRequest(node, null);
+        dependencyRequest.setFilter(getFilter(artifact, transformExcludes(artifact, excludes)));
         system.resolveDependencies(session, dependencyRequest);
         PreorderNodeListGenerator nodeGenerator = new PreorderNodeListGenerator();
         node.accept(nodeGenerator);
         return nodeGenerator.getArtifacts(false);
+    }
+
+    private DependencyFilter getFilter(final String artifact, List<String> excludes) {
+        return new PatternExclusionsDependencyFilter(excludes) {
+            @Override
+            public boolean accept(final DependencyNode node, List<DependencyNode> parents) {
+                boolean result = super.accept(node, parents);
+                if (result == false) {
+                    Artifact art = node.getDependency().getArtifact();
+                    String pattern = String.format("%s:%s:%s", art.getGroupId(), art.getArtifactId(), art.getBaseVersion());
+                    if (pattern.equals(artifact)) {
+                        return true;
+                    }
+                }
+                return result;
+            }
+        };
+    }
+
+    private List<String> transformExcludes(String artifact, List<String> excludes) {
+        List<String> transformedExcludes = new ArrayList<String>();
+        for (String exclude : excludes) {
+            if (StringUtils.isBlank(exclude)) {
+                // aether bug fix
+                Logger.getLog().warn("Empty exclude counts as exclude-all wildcard '*' [" + artifact + "]");
+                transformedExcludes.add("*");
+            } else {
+                transformedExcludes.add(exclude);
+            }
+        }
+        return transformedExcludes;
     }
 
 
@@ -120,5 +157,6 @@ public class ArtifactResolver {
         }
         return artifactRequest;
     }
+
 
 }

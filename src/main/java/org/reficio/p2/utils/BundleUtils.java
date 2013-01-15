@@ -24,6 +24,7 @@ import org.apache.felix.bundleplugin.BundlePlugin;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.sonatype.aether.artifact.Artifact;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
@@ -62,6 +63,20 @@ public class BundleUtils extends BundlePlugin {
 
     public String calculateBundleVersion(Artifact artifact) {
         return super.getMaven2OsgiConverter().getVersion(aetherToMavenArtifactBasic(artifact));
+    }
+
+    public boolean isBundle(File file) {
+        Jar inputJar = null;
+        try {
+            inputJar = new Jar(file);
+            return isBundle(inputJar);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } finally {
+            if (inputJar != null) {
+                inputJar.close();
+            }
+        }
     }
 
     public boolean isBundle(Jar jar) {

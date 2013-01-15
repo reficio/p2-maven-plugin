@@ -34,8 +34,10 @@
             </question>
             <answer>
                 <p>
-                This is an easy-to-use Maven3 plugin responsible for the automation of dependency management in the Eclipse RCP environment.
-                Basically what it does is downloading dependencies, transforming them to OSGi bundles (if required) and generating a P2 update site.
+                    This is an easy-to-use Maven3 plugin responsible for the automation of dependency management in the Eclipse RCP
+                    environment.
+                    Basically what it does is downloading dependencies, transforming them to OSGi bundles (if required) and generating
+                    a P2 update site.
                 </p>
             </answer>
         </faq>
