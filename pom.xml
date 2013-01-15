@@ -499,12 +499,19 @@
 
         <profile>
             <id>clover</id>
+            <dependencies>
+               <dependency>
+                   <groupId>com.cenqua.clover</groupId>
+                   <artifactId>clover</artifactId>
+                   <version>3.1.10</version>
+               </dependency>
+            </dependencies>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>com.atlassian.maven.plugins</groupId>
                         <artifactId>maven-clover2-plugin</artifactId>
-                        <version>3.1.7</version>
+                        <version>3.1.10</version>
                         <executions>
                             <execution>
                                 <id>clover</id>
