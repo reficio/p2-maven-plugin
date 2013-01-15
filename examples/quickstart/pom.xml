@@ -24,14 +24,14 @@
                         Expected behavior:
                           - specified dependencies will be fetched
                           - transitive dependencies will be fetched (no default exclusions)
-                          - sources will NOT be fetched
+                          - jars containing source source code will NOT be fetched
                           - jars that are NOT OSGi bundles will be "bundled" using bnd tool,
                             if you specify instructions for these jars they will be APPLIED
                           - jars that are OSGi bundles will be simply included
                             if you specify instructions for these jars they will be IGNORED (see <override> option)
                           - p2 site will be generated
 
-                        How instructions works:
+                        How the instructions works:
                           - instructions are applied only to the root artifact that you specify!
                           - instructions are not applied to the TRANSITIVE dependencies!
                           - transitive dependencies are never overridden (see <override> option)

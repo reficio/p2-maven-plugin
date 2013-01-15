@@ -207,8 +207,20 @@ What will be the behavior like if we use the configuraiton listed below?
 * jars that are osgi bundles will be simply included, if instructions are specified, they will be IGNORED (see override example)
 * p2 site will be generated
 
+How the instructions works:
+* instructions are applied only to the root artifact that you specify!
+* instructions are not applied to the TRANSITIVE dependencies!
+* transitive dependencies are never overridden (see <override> option)
+* transitive dependencies are bundled using the default instructions:
+      <instructions>
+          <Import-Package>*;resolution:=optional</Import-Package>
+          <Export-Package>*</Export-Package>
+      </instructions>
+*  other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, etc. are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
+*  if you specify any instructions they will be applied only if the jar is not already an OSGi bundle - otherwise you have to use the override option - please see the /examples/override/pom.xml example
+
  
-This definition of an artifact:
+The following definition of an artifact:
 ```xml 
     <artifact>
         <id>commons-io:commons-io:2.1</id>
@@ -220,20 +232,20 @@ is an equivalent of the following definition:
     <artifact>
         <id>commons-io:commons-io:2.1</id>
         <transitive>true</transitive>
+		<source>false</source>
         <override>false</override>
-        <source>false</source>
         <instructions>
             <Import-Package>*;resolution:=optional</Import-Package>
             <Export-Package>*</Export-Package>
         </instructions>
+        <excludes/>
     </artifact>
 ```     
 
-Other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html If you specify any instructions yourself they will be used as the default ones, if
-the bundle is not already an osgi bundle - othwerise you have to use the override option - please see the "override" example located here: /examples/override/pom.xml
-
 ### Source option
-This is the configuration snippet that enables you to include source jars and generate source bundles for all dependencies. <source>true</source> section has to be included to enable this option.
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/source/pom.xml
+
+This is the configuration snippet that enables you to include the source jars and generate the source bundles for all the dependencies. <source>true</source> section has to be included to enable this option.
 
 Example:
 ```xml 
@@ -249,41 +261,22 @@ This example is located here: https://github.com/reficio/p2-maven-plugin/blob/ma
 
 This is the configuration snippet that enables you to exclude transitive dependencies. <transitive>false</transitive> section has to be included to enable this option.
 
-What will be the behavior like if we use the configuraiton listed below?
-
+Expected behavior:
 * specified dependencies will be fetched
 * transitive dependencies will NOT be fetched
-* jars containing source code will NOT be fetched
-* jars that are NOT osgi bundles will be "bundled" using bnd tool; if you specify instructions they will be APPLIED
-* jars that are osgi bundles will be simply included; if you specify instructions they will be IGNORED
-* p2 site will be generated
 
-This definition of an artifact:
+Example usage:
 ```xml
     <artifact>
-        <id>commons-io:commons-io:2.1</id>
+        <id>org.mockito:mockito-core:1.9.0</id>
         <transitive>false</transitive>
-    </artifact>
-```
-
-is an equivalent of the following definition:
-```xml
-    <artifact>
-        <id>commons-io:commons-io:2.1</id>
-        <transitive>false</transitive>
-        <override>false</override>
-        <source>false</source>
-        <instructions>
-            <Import-Package>*;resolution:=optional</Import-Package>
-            <Export-Package>*</Export-Package>
-        </instructions>
     </artifact>
 ```
 
 ### Maven phase binding
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/phase/pom.xml
 
-You can also bind the invocation of the plugin to a Maven option. Just specify the following binding and your p2 plugin will be invoked during the 'mvn compile' phase.
+You can also bind the invocation of the plugin to a Maven phase. Just specify the following binding and your p2-maven-plugin will be invoked during the 'mvn compile' phase.
 ```xml
 	<id>generate-p2-site</id>
     <phase>compile</phase>
@@ -297,17 +290,37 @@ This example is located here: https://github.com/reficio/p2-maven-plugin/blob/ma
 
 This is the configuration snippet that enables you to override the default MANIFEST.MF files in jars that are already OSGi bundles. <override>true</override> section has to be included to enable this opion
 
-If you want to override the default MANIFEST.MF you also have to disable the fetch of the transitive dependencies, otherwise it would not make much sense. When you override the file generated by the provider of the jar you probably know what you are doing - which means you are fine-tuning the MANIFEST.MF options. If transitive dependencies were included your fine-tuning would be applied to all of them, which in our opinion does not make sense and may lead to unexpected behavior. If you do not specify <transitive>false</transitive> along the <override>true</override> an exception will be thrown.
+To manually set the instructions please specify the <instructions> section in the configuration of the artifact.
+If you do not specify any instructions the MANIFEST.MF file will be overridden with the default instructions.
+Please see the examples/quickstart/pom.xml for more info.
 
-If you do not specify bnd instructions the MANIFEST.MF will be overridden using the default instructions. Please see the "default" example located here: src/main/example/default/pom.xml for more info.
+Remember:
+* override flag does not apply to the transitive dependencies
+* instructions are not applied to the transitive dependencies
 
-What will be the behavior like if we use the configuraiton listed below?
+Expected behavior:
+* jars that are OSGi bundles will be "bundled" once more using the bnd tool overriding the default MANIFEST.MF, 
+  if you specify instructions for these jars they will be APPLIED (not to the transitive dependencies though)
 
-* specified dependencies will be fetched
-* transitive dependencies will NOT be fetched
-* jars that are NOT osgi bundles will be "bundled" using bnd tool; if you specify instructions they will be APPLIED
-* jars that are osgi bundles will be "bundled" using bnd tool; if you specify instructions they will be APPLIED
-* p2 site will be generated
+The following example presents how to enable the override option:
+```xml
+    <artifact>
+        <id>commons-io:commons-io:2.1</id>
+        <override>true</override>
+    </artifact>
+```    
+
+The following example presents how to enable the override option specifying the instructions:
+```xml
+    <artifact>
+        <id>commons-io:commons-io:2.1</id>
+        <override>true</override>
+        <instructions>
+            <Import-Package>*;resolution:=optional</Import-Package>
+            <Export-Package>*</Export-Package>
+        </instructions>
+    </artifact>
+```
 
 This definition of an artifact should look like this:
 ```xml
@@ -318,20 +331,44 @@ This definition of an artifact should look like this:
     </artifact>
 ```
 
-you can also specify some instructions (what makes sense with override):
+### Excludes option
+This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/excludes/pom.xml
+This examples presents how to selectively exclude some of the transitive dependencies of an artifact.
+In order to enable this functionality the <excludes> section has to be included
+in the configuration of the artifact.
+If the fetch of the transitive dependencies is disabled through the <transitive>false</transitive> switch
+the <excludes> section will be ignored.
+
+The <excludes> resolver reuses the org.sonatype.aether.util.filter.PatternExclusionsDependencyFilter
+that works in the following way:
+    "PatternExclusionsDependencyFilter is a simple filter to exclude artifacts specified by patterns.
+    The artifact pattern syntax has the following format: [groupId]:[artifactId]:[extension]:[version].
+    Each segment of the pattern is optional and supports 'full' and 'partial' wildcards (*).
+    An empty pattern segment is treated as an implicit wildcard.
+    Version can be a range in case a {@link VersionScheme} is specified."
+
+Examples of <exclude> values:
+* <exclude>org.apache.*</exclude> matches artifacts whose group-id begins with 'org.apache.'
+* <exclude>:::*-SNAPSHOT</exclude> matches all snapshot artifacts
+* <exclude>:objenesis::</exclude> matches artifacts whose artifactId is objenesis
+* <exclude>*</exclude> matches all artifacts
+* <exclude>:::</exclude> (or <exclude>*:*:*:*</exclude>) matches all artifacts
+* <exclude></exclude> matches all artifacts
+
+Expected behavior:
+* selected transitive dependencies will be fetched
+
+Example usage:
 ```xml
     <artifact>
-        <id>commons-io:commons-io:2.1</id>
-        <transitive>false</transitive>
-        <override>true</override>
+        <id>org.mockito:mockito-core:1.9.0</id>
         <source>false</source>
-        <instructions>
-            <Import-Package>*;resolution:=optional</Import-Package>
-            <Export-Package>*</Export-Package>
-        </instructions>
+        <transitive>true</transitive>
+        <excludes>
+            <exclude>org.objenesis:objenesis:jar:1.0</exclude>
+        </excludes>
     </artifact>
 ```
-
 
 ## General configuration options
 There are some other plugin options that you can specify in the configuration:
