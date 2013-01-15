@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.reficio.rcp</groupId>
+    <artifactId>example-p2-site</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.reficio</groupId>
+                <artifactId>p2-maven-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <!-- EXCLUDES EXAMPLE -->
+                        <!--
+                        This examples presents how to selectively exclude some of the transitive dependencies of an artifact.
+                        In order to enable this functionality the <excludes> section has to be included
+                        in the configuration of the artifact.
+                        If the fetch of the transitive dependencies is disabled through the <transitive>false</transitive> switch
+                        the <excludes> section will be ignored.
+
+                        The <excludes> resolver reuses the org.sonatype.aether.util.filter.PatternExclusionsDependencyFilter
+                        that works in the following way:
+                            PatternExclusionsDependencyFilter is a simple filter to exclude artifacts specified by patterns.
+                            The artifact pattern syntax has the following format: [groupId]:[artifactId]:[extension]:[version].
+                            Each segment of the pattern is optional and supports 'full' and 'partial' wildcards (*).
+                            An empty pattern segment is treated as an implicit wildcard.
+                            Version can be a range in case a {@link VersionScheme} is specified.
+
+                        Examples of <exclude> values:
+                          * <exclude>org.apache.*</exclude> matches artifacts whose group-id begins with 'org.apache.'
+                          * <exclude>:::*-SNAPSHOT</exclude> matches all snapshot artifacts
+                          * <exclude>:objenesis::</exclude> matches artifacts whose artifactId is objenesis
+                          * <exclude>*</exclude> matches all artifacts
+                          * <exclude>:::</exclude> (or <exclude>*:*:*:*</exclude>) matches all artifacts
+                          * <exclude></exclude> matches all artifacts
+
+                        Expected behavior:
+                          - selected transitive dependencies will be fetched
+
+                        Example usage:
+                            <artifact>
+                                <id>org.mockito:mockito-core:1.9.0</id>
+                                <source>false</source>
+                                <transitive>true</transitive>
+                                <excludes>
+                                    <exclude>org.objenesis:objenesis:jar:1.0</exclude>
+                                </excludes>
+                            </artifact>
+
+                        To run the example please invoke: mvn p2:site
+                        -->
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <id>org.mockito:mockito-core:1.9.0</id>
+                                    <source>false</source>
+                                    <transitive>true</transitive>
+                                    <excludes>
+                                        <exclude>org.objenesis:objenesis:jar:1.0</exclude>
+                                    </excludes>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>reficio</id>
+            <url>http://repo.reficio.org/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
+
+

@@ -17,20 +17,24 @@
                 <executions>
                     <execution>
                         <id>default-cli</id>
-                        <!-- TRANSITIVE EXAMPLE -->
+                        <!-- SOURCE EXAMPLE -->
                         <!--
-                        This examples presents how to exclude all transitive dependencies of an artifact.
-                        In order to enable this functionality the <transitive>false</transitive> section has to be included
+                        This examples presents how to additionally include the fetch of artifacts containing the sources of
+                        the binary artifacts that are fetched by the plugin.
+                        Sources of both root and transitive artifacts will be fetched if this option is enabled.
+                        If the fetch of the transitive dependencies is disabled only the source of the root artifact will be fetched.
+
+                        In order to enable this functionality the <source>true</source> section has to be included
                         in the configuration of the artifact.
 
                         Expected behavior:
-                          - specified dependencies will be fetched
-                          - transitive dependencies will NOT be fetched
+                          - specified artifacts will be fetched
+                          - sources of the specified artifacts will be fetched
 
                         Example usage:
                             <artifact>
                                 <id>org.mockito:mockito-core:1.9.0</id>
-                                <transitive>false</transitive>
+                                <source>true</source>
                             </artifact>
 
                         To run the example please invoke: mvn p2:site
@@ -39,7 +43,7 @@
                             <artifacts>
                                 <artifact>
                                     <id>org.mockito:mockito-core:1.9.0</id>
-                                    <transitive>false</transitive>
+                                    <source>true</source>
                                 </artifact>
                             </artifacts>
                         </configuration>

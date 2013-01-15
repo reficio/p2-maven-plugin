@@ -16,9 +16,12 @@
                 <version>1.0.0-SNAPSHOT</version>
                 <executions>
                     <execution>
-                        <!-- This plugin invocation is bound to the maven 'compile' phase.
-                             It means that the plugin cannot be invoked using mvn p2:site
-                             as the configuration is not bound to the default-cli execution -->
+                        <!-- PHASE EXAMPLE -->
+                        <!--
+                        This example presents how to bind the invocation of the plugin to the maven 'compile' phase.
+
+                        To run the example please invoke: mvn compile
+                        -->
                         <id>generate-p2-site</id>
                         <phase>compile</phase>
                         <goals>
