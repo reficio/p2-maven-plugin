@@ -232,7 +232,7 @@ public class P2Mojo extends AbstractMojo {
             try {
                 resolvedSource = resolver.resolveSource(artifact);
             } catch (Exception ex) {
-                log.warn("\t [SRC] Failed to resolve for artifact " + artifact.toString());
+                log.warn("\t [SRC] Failed to resolve source for artifact " + artifact.toString());
             }
         }
         return resolvedSource;

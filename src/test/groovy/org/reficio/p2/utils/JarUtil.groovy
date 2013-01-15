@@ -45,4 +45,8 @@ class JarUtil {
         jar?.getManifest()?.getMainAttributes()?.getValue(BundleWrapper.ECLIPSE_SOURCE_BUNDLE)
     }
 
+    def static String attr(Jar jar, String key) {
+        jar?.getManifest()?.getMainAttributes()?.getValue(key)
+    }
+
 }

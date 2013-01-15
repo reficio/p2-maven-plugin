@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.UUID;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
@@ -153,7 +154,7 @@ public class BundleWrapper {
         }
     }
 
-    private Analyzer initializeAnalyzer(WrapRequest request) throws IOException {
+    private Analyzer initializeAnalyzer(WrapRequest request) throws Exception {
         Analyzer analyzer = instantiateAnalyzer(request);
         setAnalyzerOptions(analyzer);
         setPackageOptions(analyzer);
@@ -163,10 +164,23 @@ public class BundleWrapper {
         return analyzer;
     }
 
-    private Analyzer instantiateAnalyzer(WrapRequest request) throws IOException {
+    private Analyzer instantiateAnalyzer(WrapRequest request) throws Exception {
         Analyzer analyzer = new Analyzer();
-        analyzer.setJar(request.getInputFile());
+        analyzer.setJar(getInputJarBlankManifest(request));
         return analyzer;
+    }
+
+    public Jar getInputJarBlankManifest(WrapRequest request) throws Exception {
+        File parentFolder = request.getInputFile().getParentFile();
+        File jarBlankManifest = new File(parentFolder, request.getInputFile().getName() + "." + UUID.randomUUID());
+        Jar jar = new Jar(request.getInputFile());
+        try {
+            jar.setManifest(new Manifest());
+            jar.write(jarBlankManifest);
+            return new Jar(jarBlankManifest);
+        } finally {
+            jar.close();
+        }
     }
 
     private void setAnalyzerOptions(Analyzer analyzer) {
