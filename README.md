@@ -348,12 +348,12 @@ that works in the following way:
     Version can be a range in case a {@link VersionScheme} is specified."
 
 Examples of <exclude> values:
-* <exclude>org.apache.*</exclude> matches artifacts whose group-id begins with 'org.apache.'
-* <exclude>:::*-SNAPSHOT</exclude> matches all snapshot artifacts
-* <exclude>:objenesis::</exclude> matches artifacts whose artifactId is objenesis
-* <exclude>*</exclude> matches all artifacts
-* <exclude>:::</exclude> (or <exclude>*:*:*:*</exclude>) matches all artifacts
-* <exclude></exclude> matches all artifacts
+* ```xml<exclude>org.apache.*</exclude>``` matches artifacts whose group-id begins with 'org.apache.'
+* ```xml<exclude>:::*-SNAPSHOT</exclude>``` matches all snapshot artifacts
+* ```xml<exclude>:objenesis::</exclude>``` matches artifacts whose artifactId is objenesis
+* ```xml<exclude>*</exclude>``` matches all artifacts
+* ```xml<exclude>:::</exclude>``` (or <exclude>*:*:*:*</exclude>) matches all artifacts
+* ```xml<exclude></exclude>``` matches all artifacts
 
 Expected behavior:
 * selected transitive dependencies will be fetched
