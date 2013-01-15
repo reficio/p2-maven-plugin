@@ -352,7 +352,7 @@ Examples of <exclude> values:
 * ```<exclude>:::*-SNAPSHOT</exclude>``` matches all snapshot artifacts
 * ```<exclude>:objenesis::</exclude>``` matches artifacts whose artifactId is objenesis
 * ```<exclude>*</exclude>``` matches all artifacts
-* ```<exclude>:::</exclude>``` (or <exclude>*:*:*:*</exclude>) matches all artifacts
+* ```<exclude>:::</exclude>``` (or ```<exclude>*:*:*:*</exclude>```) matches all artifacts
 * ```<exclude></exclude>``` matches all artifacts
 
 Expected behavior:
