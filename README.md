@@ -210,7 +210,7 @@ What will be the behavior like if we use the configuraiton listed below?
 How the instructions works:
 * instructions are applied only to the root artifact that you specify!
 * instructions are not applied to the TRANSITIVE dependencies!
-* transitive dependencies are never overridden (see <override> option)
+* transitive dependencies are never overridden (see ```<override>``` option)
 * transitive dependencies are bundled using the default instructions:
 ```xml
       <instructions>
@@ -349,7 +349,7 @@ that works in the following way:
     An empty pattern segment is treated as an implicit wildcard.
     Version can be a range in case a {@link VersionScheme} is specified."
 
-Examples of <exclude> values:
+Examples of ```<exclude>``` values:
 * ```<exclude>org.apache.*</exclude>``` matches artifacts whose group-id begins with 'org.apache.'
 * ```<exclude>:::*-SNAPSHOT</exclude>``` matches all snapshot artifacts
 * ```<exclude>:objenesis::</exclude>``` matches artifacts whose artifactId is objenesis
