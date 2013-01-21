@@ -137,14 +137,19 @@ public class BundleWrapper {
             unsignedJar.createNewFile();
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(unsignedJar));
             ZipFile zip = new ZipFile(jarToUnsign);
+            boolean unsigned = false;
             for (Enumeration list = zip.entries(); list.hasMoreElements(); ) {
                 ZipEntry entry = (ZipEntry) list.nextElement();
                 String name = entry.getName();
                 if (entry.isDirectory() || name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
+                    unsigned = true;
                     continue;
                 }
                 zipOutputStream.putNextEntry(entry);
                 IOUtils.copy(zip.getInputStream(entry), zipOutputStream);
+            }
+            if (unsigned) {
+                log().info("\t [UNSIGN] " + jarToUnsign.getName());
             }
             zipOutputStream.close();
             FileUtils.copyFile(unsignedJar, jarToUnsign);
