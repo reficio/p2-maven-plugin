@@ -1,5 +1,3 @@
-package org.reficio.p2.utils;
-
 /**
  * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
@@ -19,37 +17,8 @@ package org.reficio.p2.utils;
  * limitations under the License.
  */
 
+//
+// $Id$
+//
 
-import org.sonatype.aether.artifact.Artifact;
-
-/**
- * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
- */
-public class ResolvedArtifact {
-    private boolean root;
-    private final Artifact artifact;
-    private final Artifact sourceArtifact;
-
-    public ResolvedArtifact(Artifact artifact, Artifact sourceArtifact, boolean root) {
-        this.artifact = artifact;
-        this.sourceArtifact = sourceArtifact;
-        this.root = root;
-    }
-
-    public Artifact getArtifact() {
-        return artifact;
-    }
-
-    public Artifact getSourceArtifact() {
-        return sourceArtifact;
-    }
-
-    public boolean isRoot() {
-        return root;
-    }
-
-}
+// expected to fail

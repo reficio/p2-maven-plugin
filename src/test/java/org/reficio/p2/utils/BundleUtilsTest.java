@@ -18,16 +18,23 @@
  */
 package org.reficio.p2.utils;
 
+import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.internal.matchers.StringContains;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,6 +47,9 @@ import static org.mockito.Mockito.when;
  * http://www.reficio.org
  */
 public class BundleUtilsTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testIsBundleNoJar() {
@@ -82,6 +92,24 @@ public class BundleUtilsTest {
         String name = "Commons Lang";
         assertTrue(name.matches(".*\\s+.*"));
         assertTrue(name.matches(".*[A-Z].*"));
+    }
+
+    @Test
+    public void testIsBundleNoFile() {
+        File file = new File(UUID.randomUUID().toString());
+        BundleUtils utils = new BundleUtils();
+        thrown.expect(RuntimeException.class);
+        thrown.expectMessage(new StringContains("error in opening zip file"));
+        utils.isBundle(file);
+    }
+
+    @Test
+    public void testBundleName() throws IOException {
+        String bundleName = "org.reficio.example.bundle";
+        Jar jar = mock(Jar.class, Mockito.RETURNS_DEEP_STUBS);
+        when(jar.getManifest().getMainAttributes().getValue(new Attributes.Name(Analyzer.BUNDLE_NAME))).thenReturn(bundleName);
+        BundleUtils utils = new BundleUtils();
+        assertEquals(bundleName, utils.getBundleName(jar));
     }
 
 }

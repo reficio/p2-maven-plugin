@@ -55,7 +55,7 @@ public class WrapRequestProperties {
         }
     }
 
-    private String calculateName(String symbolicName) throws IOException {
+    private String calculateName(String symbolicName) {
         return symbolicName;
     }
 
@@ -93,11 +93,11 @@ public class WrapRequestProperties {
         return version;
     }
 
-    private String calculateSourceSymbolicName(String symbolicName) throws IOException {
+    public static  String calculateSourceSymbolicName(String symbolicName) {
         return symbolicName + ".source";
     }
 
-    private String calculateSourceName(String name, String symbolicName) throws IOException {
+    public static String calculateSourceName(String name, String symbolicName) {
         String sourceName = null;
         if (name == null) {
             sourceName = symbolicName + ".source";

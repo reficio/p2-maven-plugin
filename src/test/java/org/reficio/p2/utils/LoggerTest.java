@@ -1,5 +1,3 @@
-package org.reficio.p2.utils;
-
 /**
  * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
@@ -18,38 +16,22 @@ package org.reficio.p2.utils;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.reficio.p2.utils;
 
-
-import org.sonatype.aether.artifact.Artifact;
+import org.junit.Test;
+import org.reficio.p2.log.Logger;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
+ * @author: Tom Bujok (tom.bujok@gmail.com)
+ * <p/>
+ * Reficio™ - Reestablish your software!
+ * www.reficio.org
  */
-public class ResolvedArtifact {
-    private boolean root;
-    private final Artifact artifact;
-    private final Artifact sourceArtifact;
+public class LoggerTest {
 
-    public ResolvedArtifact(Artifact artifact, Artifact sourceArtifact, boolean root) {
-        this.artifact = artifact;
-        this.sourceArtifact = sourceArtifact;
-        this.root = root;
-    }
-
-    public Artifact getArtifact() {
-        return artifact;
-    }
-
-    public Artifact getSourceArtifact() {
-        return sourceArtifact;
-    }
-
-    public boolean isRoot() {
-        return root;
+    @Test(expected = RuntimeException.class)
+    public void uninitializedLogger() {
+        Logger.getLog();
     }
 
 }

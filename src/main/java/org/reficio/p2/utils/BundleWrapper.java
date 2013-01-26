@@ -143,7 +143,9 @@ public class BundleWrapper {
                 for (Enumeration list = zip.entries(); list.hasMoreElements(); ) {
                     ZipEntry entry = (ZipEntry) list.nextElement();
                     String name = entry.getName();
-                    if (entry.isDirectory() || name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
+                    if (entry.isDirectory()) {
+                        continue;
+                    } else if (name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
                         unsigned = true;
                         continue;
                     }

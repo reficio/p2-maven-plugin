@@ -83,7 +83,7 @@ public class CategoryPublisher {
 
         public Factory p2ApplicationLauncher(P2ApplicationLauncher launcher) {
             if (launcher == null) {
-                throw new IllegalArgumentException("launcher cannot be null");
+                throw new IllegalArgumentException("p2ApplicationLauncher cannot be null");
             }
             publisher.launcher = launcher;
             return this;
@@ -108,7 +108,7 @@ public class CategoryPublisher {
 
         public CategoryPublisher create() {
             if (publisher.launcher == null) {
-                throw new RuntimeException("p2ApplicationLauncher cannot be null");
+                throw new IllegalArgumentException("p2ApplicationLauncher cannot be null");
             }
             return publisher;
         }

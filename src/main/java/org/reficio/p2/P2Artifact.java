@@ -65,7 +65,6 @@ public class P2Artifact {
      */
     private Map instructions = new LinkedHashMap();
 
-    private ResolvedArtifact rootArtifact;
     private List<ResolvedArtifact> resolvedArtifacts = new ArrayList<ResolvedArtifact>();
 
     public P2Artifact() {
@@ -87,20 +86,9 @@ public class P2Artifact {
         this.instructions = instructions;
     }
 
-    public ResolvedArtifact getRootArtifact() {
-        return rootArtifact;
-    }
-
     public void addResolvedArtifact(Artifact resolved, Artifact resolvedSource) {
         String resolvedId = String.format("%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(), resolved.getVersion());
-        ResolvedArtifact resolvedArtifact;
-        if (id.equals(resolvedId)) {
-            resolvedArtifact = new ResolvedArtifact(resolved, resolvedSource, true);
-            rootArtifact = resolvedArtifact;
-        } else {
-            resolvedArtifact = new ResolvedArtifact(resolved, resolvedSource, false);
-        }
-
+        ResolvedArtifact resolvedArtifact = new ResolvedArtifact(resolved, resolvedSource, id.equals(resolvedId));
         this.resolvedArtifacts.add(resolvedArtifact);
     }
 

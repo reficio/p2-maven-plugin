@@ -388,6 +388,9 @@
                             <configuration>
                                 <generateHtml>true</generateHtml>
                                 <generateXml>true</generateXml>
+                                <excludes>
+                                    <exclude>**/Logger.java</exclude>
+                                </excludes>
                             </configuration>
                         </plugin>
                     </reportPlugins>
@@ -522,6 +525,9 @@
                         <configuration>
                             <generateHtml>true</generateHtml>
                             <generateXml>true</generateXml>
+                            <excludes>
+                                <exclude>**/Logger.java</exclude>
+                            </excludes>
                         </configuration>
                     </plugin>
                 </plugins>
