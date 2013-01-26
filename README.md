@@ -229,7 +229,7 @@ What will be the behavior like if we use the configuraiton listed below?
 How the instructions works:
 * instructions are applied only to the root artifact that you specify!
 * instructions are not applied to the TRANSITIVE dependencies!
-* transitive dependencies are never overridden (see ```<override>``` option)
+* transitive dependencies are never overridden (see `<override>` option)
 * transitive dependencies are bundled using the default instructions quoted below.
 *  other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, etc. are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
 *  if you specify any instructions they will be applied only if the jar is not already an OSGi bundle - otherwise you have to use the override option - please see the /examples/override/pom.xml example
@@ -267,7 +267,7 @@ is an equivalent of the following definition:
 ### Source option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/source/pom.xml
 
-This is the configuration snippet that enables you to include the source jars and generate the source bundles for all the dependencies. ```<source>true</source>``` section has to be included to enable this option.
+This is the configuration snippet that enables you to include the source jars and generate the source bundles for all the dependencies. `<source>true</source>` section has to be included to enable this option.
 
 Example:
 ```xml 
@@ -281,7 +281,7 @@ Example:
 ### Transitive option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/transitive/pom.xml
 
-This is the configuration snippet that enables you to exclude transitive dependencies. ```<transitive>false</transitive>``` section has to be included to enable this option.
+This is the configuration snippet that enables you to exclude transitive dependencies. `<transitive>false</transitive>` section has to be included to enable this option.
 
 Expected behavior:
 * specified dependencies will be fetched
@@ -310,9 +310,9 @@ You can also bind the invocation of the plugin to a Maven phase. Just specify th
 ### Override option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/override/pom.xml
 
-This is the configuration snippet that enables you to override the default MANIFEST.MF files in jars that are already OSGi bundles. ```<override>true</override>``` section has to be included to enable this option
+This is the configuration snippet that enables you to override the default MANIFEST.MF files in jars that are already OSGi bundles. `<override>true</override>` section has to be included to enable this option
 
-To manually set the instructions please specify the ```<instructions>``` section in the configuration of the artifact.
+To manually set the instructions please specify the `<instructions>` section in the configuration of the artifact.
 If you do not specify any instructions the MANIFEST.MF file will be overridden with the default instructions.
 Please see the examples/quickstart/pom.xml for more info.
 
@@ -356,12 +356,12 @@ This definition of an artifact should look like this:
 ### Excludes option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/excludes/pom.xml
 This examples presents how to selectively exclude some of the transitive dependencies of an artifact.
-In order to enable this functionality the ```<excludes>``` section has to be included
+In order to enable this functionality the `<excludes>` section has to be included
 in the configuration of the artifact.
-If the fetch of the transitive dependencies is disabled through the ```<transitive>false</transitive>``` switch
-the ```<excludes>``` section will be ignored.
+If the fetch of the transitive dependencies is disabled through the `<transitive>false</transitive>` switch
+the `<excludes>` section will be ignored.
 
-The ```<excludes>``` resolver reuses the org.sonatype.aether.util.filter.PatternExclusionsDependencyFilter
+The `<excludes>` resolver reuses the org.sonatype.aether.util.filter.PatternExclusionsDependencyFilter
 that works in the following way:
     "PatternExclusionsDependencyFilter is a simple filter to exclude artifacts specified by patterns.
     The artifact pattern syntax has the following format: [groupId]:[artifactId]:[extension]:[version].
@@ -369,13 +369,13 @@ that works in the following way:
     An empty pattern segment is treated as an implicit wildcard.
     Version can be a range in case a {@link VersionScheme} is specified."
 
-Examples of ```<exclude>``` values:
-* ```<exclude>org.apache.*</exclude>``` matches artifacts whose group-id begins with 'org.apache.'
-* ```<exclude>:::*-SNAPSHOT</exclude>``` matches all snapshot artifacts
-* ```<exclude>:objenesis::</exclude>``` matches artifacts whose artifactId is objenesis
-* ```<exclude>*</exclude>``` matches all artifacts
-* ```<exclude>:::</exclude>``` (or ```<exclude>*:*:*:*</exclude>```) matches all artifacts
-* ```<exclude></exclude>``` matches all artifacts
+Examples of `<exclude>` values:
+* `<exclude>org.apache.*</exclude>` matches artifacts whose group-id begins with 'org.apache.'
+* `<exclude>:::*-SNAPSHOT</exclude>` matches all snapshot artifacts
+* `<exclude>:objenesis::</exclude>` matches artifacts whose artifactId is objenesis
+* `<exclude>*</exclude>` matches all artifacts
+* `<exclude>:::</exclude>` (or `<exclude>*:*:*:*</exclude>`) matches all artifacts
+* `<exclude></exclude>` matches all artifacts
 
 Expected behavior:
 * selected transitive dependencies will be fetched
