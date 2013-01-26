@@ -35,6 +35,7 @@ It is not that difficult, there is a 'bnd' tool written by Peter Kriens that can
 In a P2 update site, you can have three versions of the same dependency, as your bundles may selectively include one class from version X, and a second class from version Y (that's normal in OSGi). In Maven, though, if you specify two version of a dependency only one of them will be fetched as you don't want to have two almost identical dependencies on your classpath (Java simply cannot deal with that). 
 
 So in essence, to solve your problems you have to do three things by yourself:
+
 * download all required dependencies to a folder,
 * recognize which dependencies are not OSGi bundles and bundle them using the 'bnd' tool,
 * take all your bundles and invoke a P2 tool to generate a P2 update site.
@@ -227,6 +228,7 @@ What will be the behavior like if we use the configuraiton listed below?
 * p2 site will be generated
 
 How the instructions works:
+
 * instructions are applied only to the root artifact that you specify!
 * instructions are not applied to the TRANSITIVE dependencies!
 * transitive dependencies are never overridden (see `<override>` option)
@@ -284,6 +286,7 @@ This example is located here: https://github.com/reficio/p2-maven-plugin/blob/ma
 This is the configuration snippet that enables you to exclude transitive dependencies. `<transitive>false</transitive>` section has to be included to enable this option.
 
 Expected behavior:
+
 * specified dependencies will be fetched
 * transitive dependencies will NOT be fetched
 
@@ -317,12 +320,14 @@ If you do not specify any instructions the MANIFEST.MF file will be overridden w
 Please see the examples/quickstart/pom.xml for more info.
 
 Remember:
+
 * override flag does not apply to the transitive dependencies
 * instructions are not applied to the transitive dependencies
 
 Expected behavior:
-* jars that are OSGi bundles will be "bundled" once more using the bnd tool overriding the default MANIFEST.MF, 
-  if you specify instructions for these jars they will be APPLIED (not to the transitive dependencies though)
+
+* jars that are OSGi bundles will be "bundled" once more using the bnd tool overriding the default MANIFEST.MF
+* if you specify instructions for these jars they will be APPLIED (not to the transitive dependencies though)
 
 The following example presents how to enable the override option:
 ```xml
@@ -370,6 +375,7 @@ that works in the following way:
     Version can be a range in case a {@link VersionScheme} is specified."
 
 Examples of `<exclude>` values:
+
 * `<exclude>org.apache.*</exclude>` matches artifacts whose group-id begins with 'org.apache.'
 * `<exclude>:::*-SNAPSHOT</exclude>` matches all snapshot artifacts
 * `<exclude>:objenesis::</exclude>` matches artifacts whose artifactId is objenesis
@@ -378,6 +384,7 @@ Examples of `<exclude>` values:
 * `<exclude></exclude>` matches all artifacts
 
 Expected behavior:
+
 * selected transitive dependencies will be fetched
 
 Example usage:
