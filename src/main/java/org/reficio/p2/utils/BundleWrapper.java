@@ -28,6 +28,7 @@ import org.reficio.p2.log.Logger;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.UUID;
 import java.util.jar.Attributes;
@@ -132,30 +133,40 @@ public class BundleWrapper {
     }
 
     private void unsignJar(File jarToUnsign) {
+        File unsignedJar = new File(jarToUnsign.getParent(), jarToUnsign.getName() + ".tmp");
         try {
-            File unsignedJar = new File(jarToUnsign.getParent(), jarToUnsign.getName() + ".tmp");
             unsignedJar.createNewFile();
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(unsignedJar));
-            ZipFile zip = new ZipFile(jarToUnsign);
-            boolean unsigned = false;
-            for (Enumeration list = zip.entries(); list.hasMoreElements(); ) {
-                ZipEntry entry = (ZipEntry) list.nextElement();
-                String name = entry.getName();
-                if (entry.isDirectory() || name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
-                    unsigned = true;
-                    continue;
+            try {
+                ZipFile zip = new ZipFile(jarToUnsign);
+                boolean unsigned = false;
+                for (Enumeration list = zip.entries(); list.hasMoreElements(); ) {
+                    ZipEntry entry = (ZipEntry) list.nextElement();
+                    String name = entry.getName();
+                    if (entry.isDirectory() || name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
+                        unsigned = true;
+                        continue;
+                    }
+                    zipOutputStream.putNextEntry(entry);
+                    InputStream zipInputStream = zip.getInputStream(entry);
+                    try {
+                        IOUtils.copy(zipInputStream, zipOutputStream);
+                    } finally {
+                        zipInputStream.close();
+                    }
                 }
-                zipOutputStream.putNextEntry(entry);
-                IOUtils.copy(zip.getInputStream(entry), zipOutputStream);
+                if (unsigned) {
+                    log().info("\t [UNSIGN] " + jarToUnsign.getName());
+                }
+                IOUtils.closeQuietly(zipOutputStream);
+                FileUtils.copyFile(unsignedJar, jarToUnsign);
+            } finally {
+                IOUtils.closeQuietly(zipOutputStream);
             }
-            if (unsigned) {
-                log().info("\t [UNSIGN] " + jarToUnsign.getName());
-            }
-            zipOutputStream.close();
-            FileUtils.copyFile(unsignedJar, jarToUnsign);
-            unsignedJar.delete();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            FileUtils.deleteQuietly(unsignedJar);
         }
     }
 
