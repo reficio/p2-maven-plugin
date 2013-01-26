@@ -39,7 +39,7 @@ public class WrapRequestPropertiesTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testIOExceptionTranslation() {
         ResolvedArtifact resolvedArtifact = mock(ResolvedArtifact.class, Mockito.RETURNS_DEEP_STUBS);
         P2Artifact p2Artifact = mock(P2Artifact.class, Mockito.RETURNS_DEEP_STUBS);

@@ -44,7 +44,7 @@ public class CategoryPublisherTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void factoryLauncher() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(new StringContains("p2ApplicationLauncher cannot be null"));
@@ -52,7 +52,7 @@ public class CategoryPublisherTest {
         CategoryPublisher.factory().p2ApplicationLauncher(null);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void factoryEmptyCreate() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(new StringContains("p2ApplicationLauncher cannot be null"));
@@ -60,7 +60,7 @@ public class CategoryPublisherTest {
         CategoryPublisher.factory().create();
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void factoryTimeout() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(new StringContains("forkedProcessTimeoutInSeconds cannot be negative"));
@@ -68,7 +68,7 @@ public class CategoryPublisherTest {
         CategoryPublisher.factory().forkedProcessTimeoutInSeconds(-1);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void factoryAdditionalArgs() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(new StringContains("Unable to translate additional arguments into command line array"));
@@ -76,7 +76,7 @@ public class CategoryPublisherTest {
         CategoryPublisher.factory().additionalArgs("--zcx.vzxc.v§';s.dcxz-1-aods[vzmcxvlkzndofahsdpf");
     }
 
-    @Test
+    @Test(expected = MojoFailureException.class)
     public void execute() throws IOException, AbstractMojoExecutionException {
         thrown.expect(MojoFailureException.class);
         thrown.expectMessage(new StringContains("P2 publisher return code was 137"));

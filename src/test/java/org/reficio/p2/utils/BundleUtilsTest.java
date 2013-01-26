@@ -94,7 +94,7 @@ public class BundleUtilsTest {
         assertTrue(name.matches(".*[A-Z].*"));
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testIsBundleNoFile() {
         File file = new File(UUID.randomUUID().toString());
         BundleUtils utils = new BundleUtils();
