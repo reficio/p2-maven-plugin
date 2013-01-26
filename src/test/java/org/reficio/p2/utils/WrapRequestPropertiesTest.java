@@ -18,9 +18,7 @@
  */
 package org.reficio.p2.utils;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 import org.reficio.p2.P2Artifact;
 
@@ -36,14 +34,10 @@ import static org.reficio.p2.utils.WrapRequestProperties.calculateSourceName;
  */
 public class WrapRequestPropertiesTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test(expected = RuntimeException.class)
     public void testIOExceptionTranslation() {
         ResolvedArtifact resolvedArtifact = mock(ResolvedArtifact.class, Mockito.RETURNS_DEEP_STUBS);
         P2Artifact p2Artifact = mock(P2Artifact.class, Mockito.RETURNS_DEEP_STUBS);
-        thrown.expect(RuntimeException.class);
         new WrapRequestProperties(resolvedArtifact, p2Artifact);
     }
 
