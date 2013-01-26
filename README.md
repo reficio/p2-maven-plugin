@@ -3,29 +3,48 @@
 ## Truly mavenize your Eclipse RCP project!
 
 ### Intro
-Welcome to p2-maven-plugin! This is an easy-to-use Maven3 plugin responsible for the automation of dependency management in the Eclipse RCP environment. It was developed as I practically needed it in one of the commercial projects that I currently work on.
+Welcome to the p2-maven-plugin! This is an easy-to-use Maven3 plugin responsible for the automation of the third-party dependency management in the Eclipse RCP environment. There reason why it was developed was that I actually needed it in on one of the commercial projects that I had worked on.
 
 ### Why should you bother?
-Are you familiar with the automated dependency management like in Maven, Gradle or any other fancy tool? What I mean is that you define a bunch of dependencies in the project descriptor and that is the only thing that you have to take care of. The dependency tree is calculated automatically and all dependencies are resolved and downloaded back-stage, so that you can have a beer while nerdy C++ programmers manually play with their DLLs in the lib folder. Yes, Java Developers like the automated dependency management - it was introduced by Maven more that 8 years ago and it simply revolutionized the build automation. And yes, Java Developers think that the automated dependency management is the de-facto standard, so that they cannot even think of going back in time and doing stuff that should be done by them automagically.
+Are you familiar with the automated dependency management like in Maven, Gradle or any other fancy tool? You just define a project descriptor, add a bunch of dependencies and everything happens "automagically"... Piece of cake huh?!
 
-If you do not believe me read the following blog entry, it perfectly describes the problem: http://bit.ly/PypQEy
-The author presents five different approaches how to configure the dependency management in an Eclipse RCP project and in the end she could not propose a satisfactory solution.
+Well, there are, however, these RCP "unfortunates" for whom it is not quite that easy... Why's that, you might think? 
 
-To better understand what I mean here read this story please: *And now you are thrown into an RCP project. After 5 minutes of excitement you notice that your colleagues on the the project do not use continuous integration and their application is not mavenized. Import of the native eclipse project takes you more than an hour before it compiles successfully. The zip file with the target platform is passed over to you on a pendrive, paths are hardcoded. WTF you think… Between swearing and drinking your 4th coffee you are close to handing in a notice. But, since you are a geek it is not that easy to defeat you. Before you head back home you decide to give it one more shot to enjoy software development once more in your life. Googling around you immediately spot that the bright guys from the Tycho project implemented a set of brilliant plugins to mavenize your RCP app. Your heartbeat increases, your breath becomes nervously shallow, and "voila!" you shout as manage to build your first hello-world example using tycho and maven. But then, something unexpected happens, something that will take all you joy and you will not be the same person any more. You try to add an external dependency to you shiny bright piece of work… How it comes, what the hell is that, or are they all nuttheads - these thoughts penetrate your brain so intensively that you decide to quite your job, move to scala programming and never ever touch the RCP platform again…*
+Firstly, Eclipse RCP is an OSGi environment which extends the Java dependency model, so you can’t simply take a "jar" file and hope that it's going to work; believe me - it will not. Secondly, there are some additional RCP conventions that have to be followed, which makes it even more complex.
 
-Now you probably understand the main goal of this plugin. It tries to bridge the gap between Maven-like and RCP-like dependency management so that all Java developers can easily use all the Maven features in the RCP development. Tycho does a great job here, but as there was missing piece there I decided to contribute this plugin as IMHO it can help a lot! Read further to fully understand why dependency management in RCP is not that easy and why it is not maven-compliant. Enjoy!
+But wait! Isn't Tycho supposed to solve all of these problems? Yeah, well, Tycho can do a lot, but there is definitely "something" missing... What is more, the learning curve is really steep, so it’s very easy to go off down the wrong path wasting a lot of time on simple things.
+
+The following blog entry outlines the problem perfectly: http://bit.ly/PypQEy
+The author presents five different approaches how to configure the build and dependency management in a Tycho / Eclipse RCP project and, in the end, she couldn’t really propose a satisfactory solution! Unfortunately, there is no "one-click" easy solution, but if you stick to some best practices and use the right tools you can relax while Maven does most of the hard work for you.
+
+p2-maven-plugin simply tries to bridge the gap between Maven-like and RCP-like dependency management styles so that all Maven features can be seamlessly used with "No Fear!"
+
+Read further to fully understand why dependency management with Maven and Tycho is not that easy.
 
 ### Java vs. Maven vs. Eclipse RCP - dependency war
-Eclipse RCP dependency management is a bit different than a common java model. It is caused by two facts: on the one hand it is an OSGi environment which extends the Java dependency model, on the other hand there are some Eclipse RCP conventions on the top of it which at the first glance may make an awkward impression. So how does it look like, you think? Nothing simpler - in Eclipse RCP every dependency should be stored in an P2 update site. Eclipse provides a set of update sites and if all popular dependencies were there we would be safe and sound, but guess what, they are not there - which is the problem #1. The problem #2 is that because it's an OSGi environment you are only allowed to use bundles - and guess what?, not all java artifacts are bundles, they are not even close to that. So, let's rewind: I have to have all my artifacts as bundles, but they are not bundles and they have to be located in a P2 site, and I don't have that site. How do I do that, you ask? Yes, it is not that difficult, there is a bnd tool written by Peter Kriens that can transform your jars into bundles. There is also a convenience tool provided by Eclipse that can generate a P2 site (in a cumbersome and painful way). Both tools assume that all your jars/bundles are located in a local folder - which means that you have to download the artifacts yourself. You can use Maven you think. Yes that is true. But there is a significant difference in the way how Maven calculates the dependency tree. In OSGi, in an update site, you can have 3 versions of the same dependency, as your bundles may selectively include one class from version X, and seconds class from version Y. In Maven, though, if you specify 2 version of one dependency only one of them will be fetched as you don't want to have 2 almost identical dependencies on your classpath. This is problem #3. So in essence to solve your problems have to do three things by yourself:
-* download all required dependencies to a folder
-* recognize which dependencies are not OSGi bundles and bundle them using the bnd tool
-* take all your bundles and invoke a P2 tool to generate the P2 site.
-Ufff, that is a manual, cumbersome, repeatable and stupid activity that may take you a few hours.
+In order to add a third-party dependency to an Eclipse RCP project it has to reside in a P2 update site. 
 
-That's where p2-maven plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is… :)
+Eclipse (and other providers) provide a set of public update sites, but not all popular dependencies are there (that is the problem number #1). Pretty often there is also a need to add an internal depenency to your project - and it's not in a public P2 update site - what is pretty obvious. 
+
+Since Eclipse RCP is an OSGi environment in order to add a dependency to a p2 update site the depenedncy has to be a OSGi bundle (that is the problem number #2).
+
+So, let's sum up for now: all my artifacts have to be OSGi bundles, but they are not bundles and they have to be located in a P2 site, but I don't have that site. How do I do that, you ask? 
+
+It is not that difficult, there is a 'bnd' tool written by Peter Kriens that can transform your jars into bundles. There is also a convenience tool provided by Eclipse RCP that can generate a P2 site (in a cumbersome and painful way though). Both tools assume that all your jars/bundles are located in a local folder - which means that you have to download the artifacts yourself. You can use Maven you think. Yes that is true. But there is a significant difference in the way how Maven calculates the dependency tree (that is the problem number #3). 
+
+In a P2 update site, you can have three versions of the same dependency, as your bundles may selectively include one class from version X, and a second class from version Y (that's normal in OSGi). In Maven, though, if you specify two version of a dependency only one of them will be fetched as you don't want to have two almost identical dependencies on your classpath (Java simply cannot deal with that). 
+
+So in essence, to solve your problems you have to do three things by yourself:
+* download all required dependencies to a folder,
+* recognize which dependencies are not OSGi bundles and bundle them using the 'bnd' tool,
+* take all your bundles and invoke a P2 tool to generate a P2 update site.
+
+Ufff, that is a mundane, cumbersome, repeatable and stupid activity that may take you a few hours - imagine that you have to do it multiple times…
+
+That's where p2-maven plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is... :)
 
 ## How to use it in 2 minutes?
-The last thing that you have to know is how to use it. I prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
+The last thing that you have to know is how to use the p2-maven-plugin. I prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
 
 Here's the code:
 
@@ -89,7 +108,7 @@ Here's the code:
     
     </project>
 ```
-There are many more configuration options, but basically that's the thing that you need. Now you only have to invoke mvn p2:site in the folder where the pom.xml file is located and when the process finishes your P2 site is ready!
+There are many more config options, but basically that's the thing that you need for now. in order to generate the site invoke the following command 'mvn p2:site' in the folder where the pom.xml file resides. When the process finishes your P2 site is ready!
 
 You will see the following output:
 ```
@@ -128,7 +147,7 @@ You will see the following output:
     [INFO] ------------------------------------------------------------------------
 ```
 
-Your site will be located in the target/repository folder and will look like this:
+Your is located in the target/repository folder and looks like this:
 ```
 	pom.xml
 	target
@@ -144,7 +163,7 @@ Your site will be located in the target/repository folder and will look like thi
     │       └── org.apache.commons.lang3_3.1.0.jar        
 ```
 
-Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is too expose our newly created repository using an HTTP server. We're gonna use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin configuration. Just type mvn jetty:run and open the following link http://localhost:8080/site Your p2 update site will be there.
+Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is too expose our newly created update site using an HTTP server. We're gonna use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin set-up. Just type 'mvn jetty:run' and open the following link 'http://localhost:8080/site'. Your P2 update site will be there!
 
 Now, simply reference your site in your target definition and play with your Eclipse RCP project like you were in the Plain Old Java Environment.
 
@@ -186,13 +205,13 @@ Now, simply reference your site in your target definition and play with your Ecl
 * DO NOT to use the pomDependencies->consider option as it simply of NO good
 * DO NOT define your external dependencies as standard mvn dependcies in the pom.xml (it will work in the console, but it will not work in the Eclipse IDE when you import the project, since the target configuration knows nothing about them)
 * Use the MANIFEST-FIRST approach - define all your depencies in the MANIFES.MF files.
-* If some of your depencies are not OSGi bundles or are not available in P2 update sites, SIMPLY define them in the p2-maven-plugin config, generate the site and make it available using jetty (or any other mechanism). Then add the URL of the exposed site to the target platform definition. In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP!
-* Whenever you have to add another external dependency, simply re-invoke "mvn p2:site" and jetty will re-fetch the site.
-* You can automatize the generation/exposition of our site using Jenkins and Apache2
+* If some of your depencies are not OSGi bundles or are not available in P2 update sites, SIMPLY define them in the p2-maven-plugin config, generate the site and make it available using jetty (or any other mechanism). Then add the URL of the exposed site to the target platform definition. In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP project!
+* Whenever you have to add another external dependency, simply re-invoke "mvn p2:site" and the site will be regenerated.
+* You can automate the generation/exposition of our site using for example Jenkins and Apache2
 
 
 ## Examples
-There are many more use cases that I am gonna describe here.
+There are many more use examples, just have a look:
 
 ### Default options 
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml
