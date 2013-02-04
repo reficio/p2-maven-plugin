@@ -197,7 +197,8 @@ public class P2Mojo extends AbstractMojo {
             executeBndWrapper();
             executeP2PublisherPlugin();
             executeCategoryPublisher();
-            cleanupEnvironment();
+            final boolean relyOnMvnClean = Boolean.getBoolean("org.reficio.clean.relyOnMaven");
+            if (! relyOnMvnClean) cleanupEnvironment();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
