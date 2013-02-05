@@ -65,7 +65,7 @@ Here's the code:
                 <plugin>
                     <groupId>org.reficio</groupId>
                     <artifactId>p2-maven-plugin</artifactId>
-                    <version>1.0.0-SNAPSHOT</version>
+                    <version>1.0.0</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
@@ -121,7 +121,7 @@ You will see the following output:
     [INFO] Building example-p2-site 1.0.0
     [INFO] ------------------------------------------------------------------------
     [INFO] 
-    [INFO] --- p2-maven-plugin:1.0.0-SNAPSHOT:site (generate-p2-site) @ example-p2-site ---
+    [INFO] --- p2-maven-plugin:1.0.0:site (generate-p2-site) @ example-p2-site ---
     [INFO] Command line:
         /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources && /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/
         Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/
@@ -452,7 +452,7 @@ Sample configuration snippet with the additional options:
 ### How can I hack around?
 * GitHub -> https://github.com/reficio/p2-maven-plugin
 * Jenkins -> https://reficio.ci.cloudbees.com/job/p2-maven-plugin/
-* Site -> http://projects.reficio.org/p2-maven-plugin/1.0.0-SNAPSHOT/manual.html
+* Site -> http://projects.reficio.org/p2-maven-plugin/1.0.0/manual.html
 
 ### Who's behind it?
 Tom Bujok [tom.bujok@gmail.com]
