@@ -58,7 +58,7 @@ Here's the code:
         <groupId>org.reficio.rcp</groupId>
         <artifactId>example-p2-site</artifactId>
         <packaging>pom</packaging>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     
         <build>
             <plugins>
