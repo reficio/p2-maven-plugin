@@ -218,7 +218,7 @@ public class P2Mojo extends AbstractMojo {
             for (Artifact resolved : result) {
                 log.info("\t [JAR] " + resolved.toString());
                 Artifact resolvedSource = resolveSource(p2Artifact, resolver, resolved);
-                if(resolvedSource != null) {
+                if (resolvedSource != null) {
                     log.info("\t [SRC] " + resolvedSource.toString());
                 }
                 p2Artifact.addResolvedArtifact(resolved, resolvedSource);
@@ -291,7 +291,12 @@ public class P2Mojo extends AbstractMojo {
     }
 
     private void cleanupEnvironment() throws IOException {
-        FileUtils.deleteDirectory(new File(buildDirectory, BUNDLES_TOP_FOLDER));
+        File workFolder = new File(buildDirectory, BUNDLES_TOP_FOLDER);
+        try {
+            FileUtils.deleteDirectory(workFolder);
+        } catch (IOException ex) {
+            getLog().warn("Cannot cleanup the work folder " + workFolder.getAbsolutePath());
+        }
     }
 
 }
