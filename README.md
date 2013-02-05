@@ -58,14 +58,14 @@ Here's the code:
         <groupId>org.reficio.rcp</groupId>
         <artifactId>example-p2-site</artifactId>
         <packaging>pom</packaging>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     
         <build>
             <plugins>
                 <plugin>
                     <groupId>org.reficio</groupId>
                     <artifactId>p2-maven-plugin</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.0.1-SNAPSHOT</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
