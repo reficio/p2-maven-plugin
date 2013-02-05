@@ -45,7 +45,7 @@ Ufff, that is a mundane, cumbersome, repeatable and stupid activity that may tak
 That's where p2-maven plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is... :)
 
 ## How to use it in 2 minutes?
-The last thing that you have to know is how to use the p2-maven-plugin. I prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
+The last thing that you have to know is how to use the p2-maven-plugin. I prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/tree/v1.0.0/examples/quickstart/pom.xml 
 
 Here's the code:
 
@@ -215,7 +215,7 @@ Now, simply reference your site in your target definition and play with your Ecl
 There are many more use examples, just have a look:
 
 ### Default options 
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/tree/v1.0.0/examples/quickstart/pom.xml
 
 This is the simplest and the shortest setup. Only the identifiers of the dependencies have to be specified. 
 What will be the behavior like if we use the configuraiton listed below?
@@ -267,7 +267,7 @@ is an equivalent of the following definition:
 ```     
 
 ### Source option
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/source/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/tree/v1.0.0/examples/source/pom.xml
 
 This is the configuration snippet that enables you to include the source jars and generate the source bundles for all the dependencies. `<source>true</source>` section has to be included to enable this option.
 
@@ -281,7 +281,7 @@ Example:
 
 
 ### Transitive option
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/transitive/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/tree/v1.0.0/examples/transitive/pom.xml
 
 This is the configuration snippet that enables you to exclude transitive dependencies. `<transitive>false</transitive>` section has to be included to enable this option.
 
@@ -299,7 +299,7 @@ Example usage:
 ```
 
 ### Maven phase binding
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/phase/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/tree/v1.0.0/examples/phase/pom.xml
 
 You can also bind the invocation of the plugin to a Maven phase. Just specify the following binding and your p2-maven-plugin will be invoked during the 'mvn compile' phase.
 ```xml
@@ -311,7 +311,7 @@ You can also bind the invocation of the plugin to a Maven phase. Just specify th
 ```
 
 ### Override option
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/override/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/tree/v1.0.0/examples/override/pom.xml
 
 This is the configuration snippet that enables you to override the default MANIFEST.MF files in jars that are already OSGi bundles. `<override>true</override>` section has to be included to enable this option
 
@@ -359,7 +359,7 @@ This definition of an artifact should look like this:
 ```
 
 ### Excludes option
-This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/excludes/pom.xml
+This example is located here: https://github.com/reficio/p2-maven-plugin/tree/v1.0.0/examples/excludes/pom.xml
 This examples presents how to selectively exclude some of the transitive dependencies of an artifact.
 In order to enable this functionality the `<excludes>` section has to be included
 in the configuration of the artifact.
