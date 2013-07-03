@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.reficio</groupId>
+        <artifactId>integration</artifactId>
+        <version>@project.version@</version>
+        <relativePath>../integration.xml</relativePath>
+    </parent>
+
+    <artifactId>config</artifactId>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <description>
+        Test the basic config option
+    </description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.reficio</groupId>
+                <artifactId>p2-maven-plugin</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <configuration>
+                            <artifacts>
+
+                                <artifact>
+                                    <id>com.google.guava:guava:14.0.1</id>
+                                </artifact>
+                                <artifact>
+                                    <id>net.sf.trove4j:trove4j:3.0.3</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-Name>Trove: High Performance Collections for Java</Bundle-Name>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.apache.commons:commons-lang3:3.1</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-Name>Lang3: Apache Commons Lang for Java</Bundle-Name>
+                                        <Bundle-SymbolicName>org.apache.commons.lang3</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>commons-io:commons-io:2.4</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-Name>IO: Apache Commons IO for Java</Bundle-Name>
+                                        <Bundle-SymbolicName>org.apache.commons.io</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+
+                                <artifact>
+                                    <id>org.antlr:antlr-runtime:3.5</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-Name>ANTLR: ANother Tool for Language Recognition for Java</Bundle-Name>
+                                        <Bundle-SymbolicName>org.antlr.runtime</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.mockito:mockito-core:1.9.5</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-Name>Mockito: Simpler and Better Mocking for Java</Bundle-Name>
+                                        <Bundle-SymbolicName>org.mockito</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.javassist:javassist:3.15.0-GA</id>
+                                </artifact>
+                                <artifact>
+                                    <id>javax.transaction:jta:1.1</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>javax.transaction</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+
+                                <artifact>
+                                    <id>xerces:xercesImpl:2.11.0</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-Name>Xerces: Apache XML Parser for Java</Bundle-Name>
+                                        <Bundle-SymbolicName>org.apache.xerces</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+
+                                <artifact>
+                                    <id>asm:asm:3.3.1</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.objectweb.asm</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+
+                                <artifact>
+                                    <id>com.h2database:h2:1.3.170</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.h2</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.hibernate:hibernate-core:4.1.10.Final</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.hibernate.core</Bundle-SymbolicName>
+                                        <Bundle-Version>4.1.10</Bundle-Version>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.hibernate.javax.persistence.jpa.api</Bundle-SymbolicName>
+                                        <Bundle-Version>1.0.1</Bundle-Version>
+                                    </instructions>
+                                </artifact>
+
+                                <artifact>
+                                    <id>org.python:jython-standalone:2.5.3</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Eclipse-BundleShape>dir</Eclipse-BundleShape>
+                                        <Eclipse-BuddyPolicy>registered</Eclipse-BuddyPolicy>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>uk.co.flamingpenguin.jewelcli:jewelcli:0.59</id>
+                                </artifact>
+                                <artifact>
+                                    <id>com.lexicalscope.jewelcli:jewelcli:0.8.5</id>
+                                </artifact>
+                                <artifact>
+                                    <id>org.slf4j:slf4j-api:1.7.3</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.slf4j.api</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.slf4j:slf4j-log4j12:1.7.3</id>
+                                    <transitive>false</transitive>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.slf4j.log4j</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.hamcrest:hamcrest-core:1.1</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.hamcrest.core</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.hamcrest:hamcrest-integration:1.1</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.hamcrest.integration</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.hamcrest:hamcrest-library:1.1</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.hamcrest.library</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.hamcrest:hamcrest-generator:1.1</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.hamcrest.generator</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+
+
+                                <artifact>
+                                    <id>org.hamcrest:hamcrest-core:1.3</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.hamcrest.core</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.hamcrest:hamcrest-integration:1.3</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.hamcrest.integration</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.hamcrest:hamcrest-library:1.3</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.hamcrest.library</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+                                <artifact>
+                                    <id>org.hamcrest:hamcrest-generator:1.3</id>
+                                    <override>true</override>
+                                    <instructions>
+                                        <Bundle-SymbolicName>org.hamcrest.generator</Bundle-SymbolicName>
+                                    </instructions>
+                                </artifact>
+
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>reficio</id>
+            <url>http://repo.reficio.org/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

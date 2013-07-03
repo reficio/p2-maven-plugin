@@ -21,21 +21,14 @@ package org.reficio.p2.utils;
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.reficio.p2.P2Artifact;
 import org.reficio.p2.log.Logger;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.UUID;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
@@ -98,12 +91,13 @@ public class BundleWrapper {
     }
 
     private void doWrap(WrapRequest request) throws Exception {
-        if (request.isShouldWrap()) {
-            log().info("\t [EXEC] " + request.getInputFile().getName());
-            handleVanillaJarWrap(request);
-        } else {
+        prepareOutputFile(request);
+        if (request.shouldNotWrap()) {
             log().info("\t [SKIP] " + request.getInputFile().getName());
             handleBundleJarWrap(request);
+        } else {
+            log().info("\t [EXEC] " + request.getInputFile().getName());
+            handleVanillaJarWrap(request);
         }
     }
 
@@ -111,64 +105,29 @@ public class BundleWrapper {
         FileUtils.copyFile(request.getInputFile(), request.getOutputFile());
     }
 
+    private void prepareOutputFile(WrapRequest request) {
+        if (request.getOutputFile().exists()) {
+            FileUtils.deleteQuietly(request.getOutputFile());
+        }
+        try {
+            if (!request.getOutputFile().createNewFile()) {
+                throw new RuntimeException("Cannot create output file " + request.getOutputFile());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot create output file " + request.getOutputFile());
+        }
+    }
+
     private void handleVanillaJarWrap(WrapRequest request) throws Exception {
+        // calculate
         Analyzer analyzer = initializeAnalyzer(request);
         try {
             analyzer.calcManifest();
             populateJar(analyzer, request.getOutputFile());
             bundleUtils.reportErrors(analyzer);
+            unsignJar(request.getInputFile());
         } finally {
             analyzer.close();
-            unsignJar(request.getOutputFile());
-        }
-    }
-
-    private void populateJar(Analyzer analyzer, File outputFile) throws Exception {
-        Jar jar = analyzer.getJar();
-        try {
-            jar.write(outputFile);
-        } finally {
-            jar.close();
-        }
-    }
-
-    private void unsignJar(File jarToUnsign) {
-        File unsignedJar = new File(jarToUnsign.getParent(), jarToUnsign.getName() + ".tmp");
-        try {
-            unsignedJar.createNewFile();
-            ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(unsignedJar));
-            try {
-                ZipFile zip = new ZipFile(jarToUnsign);
-                boolean unsigned = false;
-                for (Enumeration list = zip.entries(); list.hasMoreElements(); ) {
-                    ZipEntry entry = (ZipEntry) list.nextElement();
-                    String name = entry.getName();
-                    if (entry.isDirectory()) {
-                        continue;
-                    } else if (name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
-                        unsigned = true;
-                        continue;
-                    }
-                    zipOutputStream.putNextEntry(entry);
-                    InputStream zipInputStream = zip.getInputStream(entry);
-                    try {
-                        IOUtils.copy(zipInputStream, zipOutputStream);
-                    } finally {
-                        zipInputStream.close();
-                    }
-                }
-                if (unsigned) {
-                    log().info("\t [UNSIGN] " + jarToUnsign.getName());
-                }
-                IOUtils.closeQuietly(zipOutputStream);
-                FileUtils.copyFile(unsignedJar, jarToUnsign);
-            } finally {
-                IOUtils.closeQuietly(zipOutputStream);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            FileUtils.deleteQuietly(unsignedJar);
         }
     }
 
@@ -184,11 +143,11 @@ public class BundleWrapper {
 
     private Analyzer instantiateAnalyzer(WrapRequest request) throws Exception {
         Analyzer analyzer = new Analyzer();
-        analyzer.setJar(getInputJarBlankManifest(request));
+        analyzer.setJar(getInputJarWithBlankManifest(request));
         return analyzer;
     }
 
-    public Jar getInputJarBlankManifest(WrapRequest request) throws Exception {
+    public Jar getInputJarWithBlankManifest(WrapRequest request) throws Exception {
         File parentFolder = request.getInputFile().getParentFile();
         File jarBlankManifest = new File(parentFolder, request.getInputFile().getName() + "." + UUID.randomUUID());
         Jar jar = new Jar(request.getInputFile());
@@ -197,7 +156,8 @@ public class BundleWrapper {
             jar.write(jarBlankManifest);
             return new Jar(jarBlankManifest);
         } finally {
-            jar.close();
+            FileUtils.deleteQuietly(jarBlankManifest);
+            // do not close the newly created jar, analyzer will do it himself
         }
     }
 
@@ -229,6 +189,22 @@ public class BundleWrapper {
 
     private void setManifest(Analyzer analyzer) throws IOException {
         analyzer.mergeManifest(analyzer.getJar().getManifest());
+    }
+
+    private void populateJar(Analyzer analyzer, File outputFile) throws Exception {
+        Jar jar = analyzer.getJar();
+        try {
+            jar.write(outputFile);
+        } finally {
+            jar.close();
+        }
+    }
+
+    private void unsignJar(File jarToUnsign) {
+        if (JarUtils.shouldUnsign(jarToUnsign)) {
+            log().info("\t [UNSIGN] " + jarToUnsign.getName());
+            JarUtils.unsignJar(jarToUnsign);
+        }
     }
 
     private void doSourceWrap(WrapRequest request) throws Exception {

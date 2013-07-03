@@ -46,8 +46,8 @@ public class WrapRequest {
         this.properties = new WrapRequestProperties(resolvedArtifact, p2artifact);
     }
 
-    public boolean isShouldWrap() {
-        return shouldWrap;
+    public boolean shouldNotWrap() {
+        return !shouldWrap;
     }
 
     private boolean shouldWrap() {

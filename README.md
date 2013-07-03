@@ -205,8 +205,8 @@ Now, simply reference your site in your target definition and play with your Ecl
 ```
 
 ## Best Practices
-* DO NOT to use the pomDependencies->consider option as it simply of NO good
-* DO NOT define your external dependencies as standard mvn dependcies in the pom.xml (it will work in the console, but it will not work in the Eclipse IDE when you import the project, since the target configuration knows nothing about them)
+* DO NOT to use the Tycho's pomDependencies->consider option as it simply of NO good
+* DO NOT define your external dependencies in the `dependencies` section of the pom.xml (mvn compilation will work in the console, but it will not work in the Eclipse IDE when you import the project, since the 'Target Configuration' knows nothing about the dependencies defined there)
 * Use the MANIFEST-FIRST approach - define all your depencies in the MANIFES.MF files.
 * If some of your depencies are not OSGi bundles or are not available in P2 update sites, SIMPLY define them in the p2-maven-plugin config, generate the site and make it available using jetty (or any other mechanism). Then add the URL of the exposed site to the target platform definition. In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP project!
 * Whenever you have to add another external dependency, simply re-invoke "mvn p2:site" and the site will be regenerated.
