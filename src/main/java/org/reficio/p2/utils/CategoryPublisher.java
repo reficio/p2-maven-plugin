@@ -58,8 +58,8 @@ public class CategoryPublisher {
 
         launcher.setWorkingDirectory(metadataRepositoryDir);
         launcher.setApplicationName(CATEGORY_PUBLISHER_APP_NAME);
-        launcher.addArguments("-categoryDefinition", categoryDefinitionFileTarget.toURI().toString());
-        launcher.addArguments("-metadataRepository", metadataRepositoryDir.toURI().toString());
+        launcher.addArguments("-categoryDefinition", categoryDefinitionFileTarget.getAbsolutePath());
+        launcher.addArguments("-metadataRepository", metadataRepositoryDir.getAbsolutePath());
         launcher.addArguments(additionalArgs);
     }
 
