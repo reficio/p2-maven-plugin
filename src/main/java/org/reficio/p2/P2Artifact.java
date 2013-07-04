@@ -87,8 +87,9 @@ public class P2Artifact {
     }
 
     public void addResolvedArtifact(Artifact resolved, Artifact resolvedSource) {
-        String resolvedId = String.format("%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(), resolved.getVersion());
-        ResolvedArtifact resolvedArtifact = new ResolvedArtifact(resolved, resolvedSource, id.equals(resolvedId));
+        String resolvedId = String.format("%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(), resolved.getBaseVersion());
+        boolean rootArtifact = id.equals(resolvedId);
+        ResolvedArtifact resolvedArtifact = new ResolvedArtifact(resolved, resolvedSource, rootArtifact);
         this.resolvedArtifacts.add(resolvedArtifact);
     }
 
