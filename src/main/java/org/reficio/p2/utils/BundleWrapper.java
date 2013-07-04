@@ -125,7 +125,7 @@ public class BundleWrapper {
             analyzer.calcManifest();
             populateJar(analyzer, request.getOutputFile());
             bundleUtils.reportErrors(analyzer);
-            unsignJar(request.getInputFile());
+            removeSignature(request.getOutputFile());
         } finally {
             analyzer.close();
         }
@@ -200,10 +200,10 @@ public class BundleWrapper {
         }
     }
 
-    private void unsignJar(File jarToUnsign) {
-        if (JarUtils.shouldUnsign(jarToUnsign)) {
-            log().info("\t [UNSIGN] " + jarToUnsign.getName());
-            JarUtils.unsignJar(jarToUnsign);
+    private void removeSignature(File jar) {
+        if (JarUtils.containsSignature(jar)) {
+            log().info("\t [UNSIGN] " + jar.getName());
+            JarUtils.removeSignature(jar);
         }
     }
 

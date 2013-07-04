@@ -38,12 +38,12 @@ import java.util.zip.ZipOutputStream;
  */
 public class JarUtils {
 
-    public static void unsignJar(File jarToUnsign) {
-        File unsignedJar = new File(jarToUnsign.getParent(), jarToUnsign.getName() + ".tmp");
+    public static void removeSignature(File jar) {
+        File unsignedJar = new File(jar.getParent(), jar.getName() + ".tmp");
         try {
             if (unsignedJar.exists()) {
                 FileUtils.deleteQuietly(unsignedJar);
-                unsignedJar = new File(jarToUnsign.getParent(), jarToUnsign.getName() + ".tmp");
+                unsignedJar = new File(jar.getParent(), jar.getName() + ".tmp");
             }
             if (!unsignedJar.createNewFile()) {
                 throw new RuntimeException("Cannot create file " + unsignedJar);
@@ -51,7 +51,7 @@ public class JarUtils {
 
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(unsignedJar));
             try {
-                ZipFile zip = new ZipFile(jarToUnsign);
+                ZipFile zip = new ZipFile(jar);
                 for (Enumeration list = zip.entries(); list.hasMoreElements(); ) {
                     ZipEntry entry = (ZipEntry) list.nextElement();
                     String name = entry.getName();
@@ -70,7 +70,7 @@ public class JarUtils {
                     }
                 }
                 IOUtils.closeQuietly(zipOutputStream);
-                FileUtils.copyFile(unsignedJar, jarToUnsign);
+                FileUtils.copyFile(unsignedJar, jar);
             } finally {
                 IOUtils.closeQuietly(zipOutputStream);
             }
@@ -81,7 +81,7 @@ public class JarUtils {
         }
     }
 
-    public static boolean shouldUnsign(File jarToUnsign) {
+    public static boolean containsSignature(File jarToUnsign) {
         try {
             ZipFile zip = new ZipFile(jarToUnsign);
             try {
