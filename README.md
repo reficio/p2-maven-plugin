@@ -67,7 +67,7 @@ Here's the pom.xml:
                 <plugin>
                     <groupId>org.reficio</groupId>
                     <artifactId>p2-maven-plugin</artifactId>
-                    <version>1.0.1</version>
+                    <version>1.0.2-SNAPSHOT</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
