@@ -37,6 +37,59 @@ class JarUtil {
         jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.BUNDLE_VERSION)
     }
 
+    def static void validateVersion(Jar jar, String versionString) {
+        assert version(jar) == versionString
+    }
+
+    def static void validateSnapshotVersionPrefix(Jar jar, String versionStringPrefix) {
+        assert version(jar).startsWith(versionStringPrefix)
+    }
+
+    def static boolean isVersionOriginalSnapshot(String version) {
+        return version.matches(".*\\.[0-9]{14}-[0-9]{3}")
+    }
+
+    def static boolean isVersionOriginalSnapshot(Jar jar) {
+        String version = version(jar)
+        return isVersionOriginalSnapshot(version)
+    }
+
+    def static boolean isVersionRepackedSnapshot(String version) {
+        return version.matches(".*\\.[0-9]{14}")
+    }
+
+    def static boolean isVersionRepackedSnapshot(Jar jar) {
+        String version = version(jar)
+        return isVersionRepackedSnapshot(version)
+    }
+
+    def static void validateOriginalSnapshot(Jar jar, String versionPrefix) {
+        if (!isVersionOriginalSnapshot(jar) || isVersionRepackedSnapshot(jar)) {
+            throw new RuntimeException("validateOriginalSnapshot failed; version=" + version(jar) + " " + jar)
+        }
+        if (!version(jar).startsWith(versionPrefix)) {
+            throw new RuntimeException("validateOriginalSnapshot failed; version prefix do not match=" + version(jar) + " " + jar)
+        }
+    }
+
+    def static void validateRepackedSnapshot(Jar jar, String versionPrefix) {
+        if (isVersionOriginalSnapshot(jar) || !isVersionRepackedSnapshot(jar)) {
+            throw new RuntimeException("validateRepackedSnapshot failed version=" + version(jar) + " " + jar)
+        }
+        if (!version(jar).startsWith(versionPrefix)) {
+            throw new RuntimeException("validateOriginalSnapshot failed; version prefix do not match=" + version(jar) + " " + jar)
+        }
+    }
+
+    def static Jar jar(File target, String fileNamePrefix) {
+        def files = target.listFiles()
+        File file = files.find { file -> file.name.startsWith(fileNamePrefix) }
+        if (!file || !file.exists()) {
+            throw new RuntimeException("No file like " + fileNamePrefix + " in target folder")
+        }
+        return new Jar(file)
+    }
+
     def static String tool(Jar jar) {
         jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.TOOL)
     }

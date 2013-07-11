@@ -49,7 +49,7 @@ public class WrapRequestProperties {
 
             this.sourceSymbolicName = calculateSourceSymbolicName(symbolicName);
             this.sourceName = calculateSourceName(name, symbolicName);
-            this.sourceVersion = calculateSourceVersion(version);
+            this.sourceVersion = version;
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -86,11 +86,7 @@ public class WrapRequestProperties {
         if (version == null) {
             version = bundleUtils.calculateBundleVersion(resolvedArtifact.getArtifact());
         }
-        return version;
-    }
-
-    private String calculateSourceVersion(String version) {
-        return version;
+        return JarUtils.tweakVersion(resolvedArtifact, version);
     }
 
     public static  String calculateSourceSymbolicName(String symbolicName) {

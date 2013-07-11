@@ -52,4 +52,8 @@ public class ResolvedArtifact {
         return root;
     }
 
+    public boolean isSnapshot() {
+        return artifact.isSnapshot();
+    }
+
 }

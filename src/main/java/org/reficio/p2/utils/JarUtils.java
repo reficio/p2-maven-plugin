@@ -18,6 +18,9 @@
  */
 package org.reficio.p2.utils;
 
+import aQute.lib.osgi.Analyzer;
+import aQute.lib.osgi.Jar;
+import clover.org.apache.commons.lang.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -25,7 +28,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -37,6 +44,31 @@ import java.util.zip.ZipOutputStream;
  * www.reficio.org
  */
 public class JarUtils {
+
+    private static final String SNAPSHOT_POSTFIX = "SNAPSHOT";
+
+    public static void adjustOutputVersion(ResolvedArtifact artifact, File inputFile, File outputFile) {
+        if (artifact.isSnapshot()) {
+            Jar jar = null;
+            try {
+                jar = new Jar(inputFile);
+                Manifest manifest = jar.getManifest();
+                Attributes attributes = manifest.getMainAttributes();
+                String version = attributes.getValue(Analyzer.BUNDLE_VERSION);
+                version = tweakVersion(artifact, version);
+                attributes.putValue(Analyzer.BUNDLE_VERSION, version);
+                jar.write(outputFile);
+            } catch (IOException e) {
+                throw new RuntimeException("Cannot open jar " + outputFile);
+            } catch (Exception e) {
+                throw new RuntimeException("Cannot open jar " + outputFile);
+            } finally {
+                if (jar != null) {
+                    jar.close();
+                }
+            }
+        }
+    }
 
     public static void removeSignature(File jar) {
         File unsignedJar = new File(jar.getParent(), jar.getName() + ".tmp");
@@ -99,6 +131,40 @@ public class JarUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String getTimeStamp() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        return format.format(new Date());
+    }
+
+    public static String tweakVersion(ResolvedArtifact artifact, String version) {
+        String tweakedVersion = version;
+        if (version.contains(SNAPSHOT_POSTFIX)) {
+            String postfix = getSnapshotPostfix(artifact);
+            if (StringUtils.isBlank(postfix)) {
+                postfix = getTimeStamp();
+            }
+            tweakedVersion = tweakedVersion.replace("-" + SNAPSHOT_POSTFIX, "." + postfix);
+            tweakedVersion = tweakedVersion.replace("." + SNAPSHOT_POSTFIX, "." + postfix);
+        }
+        return tweakedVersion;
+    }
+
+    private static String getSnapshotPostfix(ResolvedArtifact artifact) {
+        if (artifact.isSnapshot()) {
+            String version = artifact.getArtifact().getVersion();
+            int dashIndex = version.indexOf("-");
+            if (dashIndex > 0) {
+                String postfix = version.substring(dashIndex + 1);
+                postfix = postfix.replace(".", "");
+                if (postfix.contains(SNAPSHOT_POSTFIX)) {
+                    return "";
+                }
+                return postfix;
+            }
+        }
+        return "";
     }
 
 }

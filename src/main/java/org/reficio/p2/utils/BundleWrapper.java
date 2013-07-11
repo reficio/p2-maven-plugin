@@ -103,6 +103,7 @@ public class BundleWrapper {
 
     private void handleBundleJarWrap(WrapRequest request) throws IOException {
         FileUtils.copyFile(request.getInputFile(), request.getOutputFile());
+        JarUtils.adjustOutputVersion(request.getResolvedArtifact(), request.getInputFile(), request.getOutputFile());
     }
 
     private void prepareOutputFile(WrapRequest request) {
@@ -183,6 +184,8 @@ public class BundleWrapper {
         if (request.getResolvedArtifact().isRoot()) {
             if (!request.getP2artifact().getInstructions().isEmpty()) {
                 analyzer.setProperties(BundleUtils.transformDirectives(request.getP2artifact().getInstructions()));
+                String version = analyzer.getProperty(Analyzer.BUNDLE_VERSION);
+                analyzer.setProperty(Analyzer.BUNDLE_VERSION, JarUtils.tweakVersion(request.getResolvedArtifact(), version));
             }
         }
     }
@@ -217,11 +220,14 @@ public class BundleWrapper {
         String version = request.getProperties().getSourceVersion();
         String name = request.getProperties().getSourceName();
         Jar jar = new Jar(request.getResolvedArtifact().getSourceArtifact().getFile());
-        Manifest manifest = getManifest(jar);
-        decorateSourceManifest(manifest, name, symbolicName, version);
-        jar.setManifest(manifest);
-        jar.write(wrappedSource);
-        jar.close();
+        try {
+            Manifest manifest = getManifest(jar);
+            decorateSourceManifest(manifest, name, symbolicName, version);
+            jar.setManifest(manifest);
+            jar.write(wrappedSource);
+        } finally {
+            jar.close();
+        }
     }
 
     private Manifest getManifest(Jar jar) throws IOException {
