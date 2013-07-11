@@ -135,7 +135,7 @@
 
     <pluginRepositories>
         <pluginRepository>
-            <id>reficio</id>
+            <id>plugin-reficio</id>
             <url>http://repo.reficio.org/maven</url>
         </pluginRepository>
     </pluginRepositories>
@@ -144,6 +144,10 @@
         <repository>
             <id>hibernate-snapshots</id>
             <url>http://snapshots.jboss.org/maven2</url>
+        </repository>
+        <repository>
+            <id>reficio</id>
+            <url>http://repo.reficio.org/maven</url>
         </repository>
     </repositories>
 
