@@ -3,7 +3,7 @@
 ## Truly mavenize your Eclipse RCP project!
 
 ### Intro
-Welcome to the p2-maven-plugin! This is an easy-to-use Maven3 plugin responsible for the automation of the third-party dependency management in the Eclipse RCP environment. There reason why it was developed was that I actually needed it in on one of the commercial projects that I had worked on.
+Welcome to the p2-maven-plugin! This is an easy-to-use Maven3 plugin responsible for the automation of the third-party dependency management in the Eclipse RCP environment.
 
 ### Why should you bother?
 Are you familiar with the automated dependency management like in Maven, Gradle or any other fancy tool? You just define a project descriptor, add a bunch of dependencies and everything happens "automagically"... Piece of cake huh?!
@@ -22,30 +22,30 @@ p2-maven-plugin simply tries to bridge the gap between Maven-like and RCP-like d
 Read further to fully understand why dependency management with Maven and Tycho is not that easy.
 
 ### Java vs. Maven vs. Eclipse RCP - dependency war
-In order to add a third-party dependency to an Eclipse RCP project it has to reside in a P2 update site. 
+In order to add a third-party dependency to an Eclipse RCP project the dependency has to reside in a P2 update site. 
 
-Eclipse (and other providers) provide a set of public update sites, but not all popular dependencies are there (that is the problem number #1). Pretty often there is also a need to add an internal depenency to your project - and it's not in a public P2 update site - what is pretty obvious. 
+Eclipse (and other providers) provide a set of public update sites, but obviously not all popular and publicly available dependencies are there (that is the problem number #1). Pretty often you would also like to add a corporate / internal depenency - and you do not have to be a genius to figure out that it is not somewhere on the web… 
 
-Since Eclipse RCP is an OSGi environment in order to add a dependency to a p2 update site the depenedncy has to be a OSGi bundle (that is the problem number #2).
+Since Eclipse RCP is an OSGi environment in order to add a dependency to a p2 update site the depenedncy has to be an OSGi bundle (that is the problem number #2).
 
-So, let's sum up for now: all my artifacts have to be OSGi bundles, but they are not bundles and they have to be located in a P2 site, but I don't have that site. How do I do that, you ask? 
+So, let's sum up for now: all our artifacts have to be OSGi bundles, but they are not always bundles and they have to be located in a P2 site, but we do not have that site. How do we proceed then? 
 
-It is not that difficult, there is a 'bnd' tool written by Peter Kriens that can transform your jars into bundles. There is also a convenience tool provided by Eclipse RCP that can generate a P2 site (in a cumbersome and painful way though). Both tools assume that all your jars/bundles are located in a local folder - which means that you have to download the artifacts yourself. You can use Maven you think. Yes that is true. But there is a significant difference in the way how Maven calculates the dependency tree (that is the problem number #3). 
+It is not that difficult, there is a 'bnd' tool written by Peter Kriens that can transform your jars into bundles. There is also a convenience tool provided by Eclipse RCP that can generate a P2 site (in a cumbersome and painful way though). Both tools assume that all your jars/bundles are located in a local folder - which means that you have to download them by-hand. You could use Maven to automate it a bit, but there is a significant difference in the way how Maven calculates a dependency tree and this is not alwyas compatible with the OSGi way (that is the problem number #3). Let us elaborate on it a bit more.
 
-In a P2 update site, you can have three versions of the same dependency, as your bundles may selectively include one class from version X, and a second class from version Y (that's normal in OSGi). In Maven, though, if you specify two version of a dependency only one of them will be fetched as you don't want to have two almost identical dependencies on your classpath (Java simply cannot deal with that). 
+In a P2 update site, there may be three versions of the same dependency, as bundles may selectively include one class from version X, and a second class from version Y (that is normal in the world of OSGi). In Maven, though, if you specify two version of a dependency only one of them will be fetched as you don't want to have two almost identical dependencies on your classpath (Java simply cannot deal with that). 
 
-So in essence, to solve your problems you have to do three things by yourself:
+So in essence, to solve all problems mentioned above you have to do three things by-hand:
 
 * download all required dependencies to a folder,
 * recognize which dependencies are not OSGi bundles and bundle them using the 'bnd' tool,
 * take all your bundles and invoke a P2 tool to generate a P2 update site.
 
-Ufff, that is a mundane, cumbersome, repeatable and stupid activity that may take you a few hours - imagine that you have to do it multiple times…
+Ufff, that is a mundane, cumbersome, repeatable and stupid activity that may take you a few hours - imagine now that you have to do it multiple times…
 
 That's where p2-maven plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is... :)
 
 ## How to use it in 2 minutes?
-The last thing that you have to know is how to use the p2-maven-plugin. I prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
+Using p2-maven-plugin is really simple. I have prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using the jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
 
 Here's the repo location where you can check the newest version id: http://repo.reficio.org/maven/org/reficio/p2-maven-plugin/
 
@@ -166,9 +166,9 @@ Your is located in the target/repository folder and looks like this:
     │       └── org.apache.commons.lang3_3.1.0.jar        
 ```
 
-Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is too expose our newly created update site using an HTTP server. We're gonna use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin set-up. Just type 'mvn jetty:run' and open the following link 'http://localhost:8080/site'. Your P2 update site will be there!
+Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is too expose our newly created update site using an HTTP server. We're gonna use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin set-up. Just type 'mvn jetty:run' and open the following link http://localhost:8080/site. Your P2 update site will be there!
 
-Now, simply reference your site in your target definition and play with your Eclipse RCP project like you were in the Plain Old Java Environment.
+Now, simply reference your site in your target definition and play with your Eclipse RCP project like you were in the Plain Old Java Environment. Remember to enable the "Group items by category" option, otherwise you will not see any bundles.
 
 ```
 	$ mvn jetty:run
@@ -400,6 +400,9 @@ Example usage:
         </excludes>
     </artifact>
 ```
+
+### Other features
+* p2-maven-plugin will tweak the version of a snapshot dependency replacing the SNAPSHOT string with a timestamp in the following format "yyyyMMddHHmmss" (feature #14)
 
 ## General configuration options
 There are some other plugin options that you can specify in the configuration:
