@@ -217,12 +217,13 @@ public class BundleWrapper {
         log().info("\t [EXEC] " + request.getResolvedArtifact().getSourceArtifact().getFile().getName());
         File wrappedSource = new File(bundlesDestinationFolder, request.getResolvedArtifact().getSourceArtifact().getFile().getName());
         String symbolicName = request.getProperties().getSourceSymbolicName();
+        String refrencedBundleSymbolicName = request.getProperties().getSymbolicName();
         String version = request.getProperties().getSourceVersion();
         String name = request.getProperties().getSourceName();
         Jar jar = new Jar(request.getResolvedArtifact().getSourceArtifact().getFile());
         try {
             Manifest manifest = getManifest(jar);
-            decorateSourceManifest(manifest, name, symbolicName, version);
+            decorateSourceManifest(manifest, name, refrencedBundleSymbolicName, symbolicName, version);
             jar.setManifest(manifest);
             jar.write(wrappedSource);
         } finally {
@@ -238,10 +239,10 @@ public class BundleWrapper {
         return manifest;
     }
 
-    private void decorateSourceManifest(Manifest manifest, String name, String symbolicName, String version) {
+    private void decorateSourceManifest(Manifest manifest, String name, String refrencedBundleSymbolicName, String symbolicName, String version) {
         Attributes attributes = manifest.getMainAttributes();
         attributes.putValue(Analyzer.BUNDLE_SYMBOLICNAME, symbolicName);
-        attributes.putValue(ECLIPSE_SOURCE_BUNDLE, symbolicName + ";version=\"" + version + "\";roots:=\".\"");
+        attributes.putValue(ECLIPSE_SOURCE_BUNDLE, refrencedBundleSymbolicName + ";version=\"" + version + "\";roots:=\".\"");
         attributes.putValue(Analyzer.BUNDLE_VERSION, version);
         attributes.putValue(Analyzer.BUNDLE_LOCALIZATION, "plugin");
         attributes.putValue(MANIFEST_VERSION, "1.0");
