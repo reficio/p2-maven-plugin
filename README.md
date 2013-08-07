@@ -111,6 +111,13 @@ Here's the pom.xml:
     
     </project>
 ```
+
+The artifacts may be specified using the following notation:
+
+```
+    <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
+```
+
 There are many more config options, but basically that's the thing that you need for now. in order to generate the site invoke the following command 'mvn p2:site' in the folder where the pom.xml file resides. When the process finishes your P2 site is ready!
 
 You will see the following output:

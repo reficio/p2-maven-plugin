@@ -55,10 +55,10 @@ public class P2Artifact {
      */
     private boolean source = false;
 
-	/**
-	 * Indicator to generate a singleton bundle
-	 */
-	private boolean singleton = false;
+    /**
+     * Indicator to generate a singleton bundle
+     */
+    private boolean singleton = false;
 
     /**
      * Specifies transitive dependencies that should be excluded
@@ -92,19 +92,30 @@ public class P2Artifact {
     }
 
     public void addResolvedArtifact(Artifact resolved, Artifact resolvedSource) {
-		// <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
-		// <groupId>:<artifactId>:<version>
-		String resolvedId = String.format("%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(),
-				resolved.getBaseVersion());
-		// <groupId>:<artifactId>:<extension>:<version>
-		String resolved2Id = String.format("%s:%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(),
-				resolved.getExtension(), resolved.getBaseVersion());
-		// <groupId>:<artifactId>:<extension>:<classifier>:<version>
-		String resolved3Id = String.format("%s:%s:%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(),
-				resolved.getExtension(), resolved.getClassifier(), resolved.getBaseVersion());
-		boolean rootArtifact = id.equals(resolvedId) || id.equals(resolved2Id) || id.equals(resolved3Id);
+        // <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
+        boolean rootArtifact = id.equals(getShortId(resolved))
+                || id.equals(getExtendedId(resolved))
+                || id.equals(getLongId(resolved));
         ResolvedArtifact resolvedArtifact = new ResolvedArtifact(resolved, resolvedSource, rootArtifact);
         this.resolvedArtifacts.add(resolvedArtifact);
+    }
+
+    private String getShortId(Artifact artifact) {
+        // <groupId>:<artifactId>:<version>
+        return String.format("%s:%s:%s", artifact.getGroupId(), artifact.getArtifactId(),
+                artifact.getBaseVersion());
+    }
+
+    private String getExtendedId(Artifact artifact) {
+        // <groupId>:<artifactId>:<extension>:<version>
+        return String.format("%s:%s:%s:%s", artifact.getGroupId(), artifact.getArtifactId(),
+                artifact.getExtension(), artifact.getBaseVersion());
+    }
+
+    private String getLongId(Artifact artifact) {
+        // <groupId>:<artifactId>:<extension>:<classifier>:<version>
+        return String.format("%s:%s:%s:%s:%s", artifact.getGroupId(), artifact.getArtifactId(),
+                artifact.getExtension(), artifact.getClassifier(), artifact.getBaseVersion());
     }
 
     public List<ResolvedArtifact> getResolvedArtifacts() {
@@ -127,13 +138,13 @@ public class P2Artifact {
         this.override = override;
     }
 
-	public void setSingleton(boolean singleton) {
-		this.singleton = singleton;
-	}
+    public void setSingleton(boolean singleton) {
+        this.singleton = singleton;
+    }
 
-	public boolean isSingleton() {
-		return singleton;
-	}
+    public boolean isSingleton() {
+        return singleton;
+    }
 
     public boolean shouldIncludeSources() {
         return source;
