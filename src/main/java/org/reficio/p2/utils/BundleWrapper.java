@@ -18,17 +18,18 @@
  */
 package org.reficio.p2.utils;
 
-import aQute.lib.osgi.Analyzer;
-import aQute.lib.osgi.Jar;
-import org.apache.commons.io.FileUtils;
-import org.reficio.p2.P2Artifact;
-import org.reficio.p2.log.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+
+import org.apache.commons.io.FileUtils;
+import org.reficio.p2.P2Artifact;
+import org.reficio.p2.log.Logger;
+
+import aQute.lib.osgi.Analyzer;
+import aQute.lib.osgi.Jar;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
@@ -222,7 +223,7 @@ public class BundleWrapper {
         Jar jar = new Jar(request.getResolvedArtifact().getSourceArtifact().getFile());
         try {
             Manifest manifest = getManifest(jar);
-            decorateSourceManifest(manifest, name, symbolicName, version);
+			decorateSourceManifest(manifest, name, symbolicName, request.getProperties().getSymbolicName(), version);
             jar.setManifest(manifest);
             jar.write(wrappedSource);
         } finally {
@@ -238,10 +239,12 @@ public class BundleWrapper {
         return manifest;
     }
 
-    private void decorateSourceManifest(Manifest manifest, String name, String symbolicName, String version) {
+	private void decorateSourceManifest(Manifest manifest, String name, String symbolicName,
+			String sourceOfSymbolicName, String version) {
         Attributes attributes = manifest.getMainAttributes();
         attributes.putValue(Analyzer.BUNDLE_SYMBOLICNAME, symbolicName);
-        attributes.putValue(ECLIPSE_SOURCE_BUNDLE, symbolicName + ";version=\"" + version + "\";roots:=\".\"");
+		// refer to the symbolic name of the bundle that this bundles contains the source
+		attributes.putValue(ECLIPSE_SOURCE_BUNDLE, sourceOfSymbolicName + ";version=\"" + version + "\";roots:=\".\"");
         attributes.putValue(Analyzer.BUNDLE_VERSION, version);
         attributes.putValue(Analyzer.BUNDLE_LOCALIZATION, "plugin");
         attributes.putValue(MANIFEST_VERSION, "1.0");
