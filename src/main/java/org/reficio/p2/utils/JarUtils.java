@@ -20,9 +20,9 @@ package org.reficio.p2.utils;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
-import clover.org.apache.commons.lang.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;

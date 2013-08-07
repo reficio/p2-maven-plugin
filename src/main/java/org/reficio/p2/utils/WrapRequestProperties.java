@@ -21,7 +21,7 @@ package org.reficio.p2.utils;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
-import clover.org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.reficio.p2.P2Artifact;
 
 import java.io.IOException;
