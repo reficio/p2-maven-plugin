@@ -18,13 +18,13 @@
  */
 package org.reficio.p2;
 
-import org.reficio.p2.utils.ResolvedArtifact;
-import org.sonatype.aether.artifact.Artifact;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.reficio.p2.utils.ResolvedArtifact;
+import org.sonatype.aether.artifact.Artifact;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
@@ -87,8 +87,17 @@ public class P2Artifact {
     }
 
     public void addResolvedArtifact(Artifact resolved, Artifact resolvedSource) {
-        String resolvedId = String.format("%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(), resolved.getBaseVersion());
-        boolean rootArtifact = id.equals(resolvedId);
+		// <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
+		// <groupId>:<artifactId>:<version>
+		String resolvedId = String.format("%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(),
+				resolved.getBaseVersion());
+		// <groupId>:<artifactId>:<extension>:<version>
+		String resolved2Id = String.format("%s:%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(),
+				resolved.getExtension(), resolved.getBaseVersion());
+		// <groupId>:<artifactId>:<extension>:<classifier>:<version>
+		String resolved3Id = String.format("%s:%s:%s:%s:%s", resolved.getGroupId(), resolved.getArtifactId(),
+				resolved.getExtension(), resolved.getClassifier(), resolved.getBaseVersion());
+		boolean rootArtifact = id.equals(resolvedId) || id.equals(resolved2Id) || id.equals(resolved3Id);
         ResolvedArtifact resolvedArtifact = new ResolvedArtifact(resolved, resolvedSource, rootArtifact);
         this.resolvedArtifacts.add(resolvedArtifact);
     }
