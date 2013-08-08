@@ -174,7 +174,7 @@ public class BundleWrapper {
     }
 
     private void setBundleOptions(Analyzer analyzer, WrapRequest request) {
-        analyzer.setProperty(Analyzer.BUNDLE_SYMBOLICNAME, request.getProperties().getSymbolicName());
+		analyzer.setProperty(Analyzer.BUNDLE_SYMBOLICNAME, request.getProperties().getFullSymbolicName());
         analyzer.setProperty(Analyzer.BUNDLE_NAME, request.getProperties().getName());
         analyzer.setProperty(Analyzer.BUNDLE_VERSION, request.getProperties().getVersion());
         analyzer.setProperty(TOOL_KEY, TOOL);

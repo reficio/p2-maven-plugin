@@ -19,11 +19,12 @@
 package org.reficio.p2.utils;
 
 
-import aQute.lib.osgi.Analyzer;
-import aQute.lib.osgi.Jar;
+import java.io.IOException;
+
 import org.reficio.p2.P2Artifact;
 
-import java.io.IOException;
+import aQute.lib.osgi.Analyzer;
+import aQute.lib.osgi.Jar;
 
 public class WrapRequestProperties {
 
@@ -136,4 +137,13 @@ public class WrapRequestProperties {
     public String getSourceVersion() {
         return sourceVersion;
     }
+
+	/**
+	 * @return
+	 */
+	public String getFullSymbolicName() {
+		if (!this.p2artifact.isSingleton())
+			return getSymbolicName();
+		return getSymbolicName() + ";singleton:=true";
+	}
 }
