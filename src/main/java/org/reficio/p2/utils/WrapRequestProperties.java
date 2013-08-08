@@ -142,4 +142,10 @@ public class WrapRequestProperties {
     public String getSourceVersion() {
         return sourceVersion;
     }
+
+	public String getFullSymbolicName() {
+		if (!this.p2artifact.isSingleton())
+			return getSymbolicName();
+		return getSymbolicName() + ";singleton:=true";
+	}
 }

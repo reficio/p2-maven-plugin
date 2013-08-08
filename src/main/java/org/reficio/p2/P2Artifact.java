@@ -55,6 +55,11 @@ public class P2Artifact {
      */
     private boolean source = false;
 
+	/**
+	 * Indicator to generate a singleton bundle
+	 */
+	private boolean singleton = false;
+
     /**
      * Specifies transitive dependencies that should be excluded
      */
@@ -112,6 +117,21 @@ public class P2Artifact {
     public void setOverride(boolean override) {
         this.override = override;
     }
+
+	/**
+	 * @param singleton
+	 *            setter, see {@link singleton}
+	 */
+	public void setSingleton(boolean singleton) {
+		this.singleton = singleton;
+	}
+
+	/**
+	 * @return the singleton, see {@link #singleton}
+	 */
+	public boolean isSingleton() {
+		return singleton;
+	}
 
     public boolean shouldIncludeSources() {
         return source;
