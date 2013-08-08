@@ -91,6 +91,18 @@ public class P2Artifact {
         this.instructions = instructions;
     }
 
+	/**
+	 * merge the given global instruction to the underlying by by ignoring already existing entries
+	 * 
+	 * @param instructions2
+	 */
+	public void mergeInstructions(Map instructions2) {
+		for (Object key : instructions2.keySet()) {
+			if (!instructions.containsKey(key))
+				instructions.put(key, instructions2.get(key));
+		}
+	}
+
     public void addResolvedArtifact(Artifact resolved, Artifact resolvedSource) {
 		// <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
 		// <groupId>:<artifactId>:<version>

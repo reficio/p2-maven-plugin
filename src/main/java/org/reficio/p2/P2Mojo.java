@@ -18,6 +18,25 @@
  */
 package org.reficio.p2;
 
+import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -39,14 +58,6 @@ import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.repository.RemoteRepository;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 
 /**
@@ -187,12 +198,21 @@ public class P2Mojo extends AbstractMojo {
      */
     private List<P2Artifact> artifacts;
 
+	/**
+	 * The BND instructions for the bundle.
+	 *
+	 * @parameter
+	 */
+	private Map instructions = new LinkedHashMap();
+
     protected Log log = getLog();
     private File bundlesDestinationFolder;
 
-    public void execute() {
+    @Override
+	public void execute() {
         try {
             initializeEnvironment();
+			mergeInstructions();
             resolveArtifacts();
             executeBndWrapper();
             executeP2PublisherPlugin();
@@ -203,7 +223,16 @@ public class P2Mojo extends AbstractMojo {
         }
     }
 
-    private void initializeEnvironment() throws IOException {
+	/**
+	 *
+	 */
+	private void mergeInstructions() {
+		for (P2Artifact artifact : artifacts) {
+			artifact.mergeInstructions(instructions);
+		}
+	}
+
+	private void initializeEnvironment() throws IOException {
         Logger.initialize(getLog());
         bundlesDestinationFolder = new File(buildDirectory, BUNDLES_DESTINATION_FOLDER);
         FileUtils.deleteDirectory(new File(buildDirectory, BUNDLES_TOP_FOLDER));
@@ -298,5 +327,13 @@ public class P2Mojo extends AbstractMojo {
             getLog().warn("Cannot cleanup the work folder " + workFolder.getAbsolutePath());
         }
     }
+
+	public Map getInstructions() {
+		return instructions;
+	}
+
+	public void setInstructions(Map instructions) {
+		this.instructions = instructions;
+	}
 
 }
