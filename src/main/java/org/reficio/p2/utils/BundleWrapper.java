@@ -184,9 +184,24 @@ public class BundleWrapper {
         if (request.getResolvedArtifact().isRoot()) {
             if (!request.getP2artifact().getInstructions().isEmpty()) {
                 analyzer.setProperties(BundleUtils.transformDirectives(request.getP2artifact().getInstructions()));
-                String version = analyzer.getProperty(Analyzer.BUNDLE_VERSION);
-                analyzer.setProperty(Analyzer.BUNDLE_VERSION, JarUtils.tweakVersion(request.getResolvedArtifact(), version));
+                tweakSnapshotVersion(analyzer, request);
+                handleSingletonBundle(analyzer, request);
             }
+        }
+    }
+
+    private void tweakSnapshotVersion(Analyzer analyzer, WrapRequest request) {
+        String version = analyzer.getProperty(Analyzer.BUNDLE_VERSION);
+        analyzer.setProperty(Analyzer.BUNDLE_VERSION, JarUtils.tweakVersion(request.getResolvedArtifact(), version));
+    }
+
+    private void handleSingletonBundle(Analyzer analyzer, WrapRequest request) {
+        if(request.getP2artifact().isSingleton()) {
+            String bundleSymbolicName = analyzer.getProperty(Analyzer.BUNDLE_SYMBOLICNAME);
+            if(!bundleSymbolicName.contains(WrapRequestProperties.SINGLETON)) {
+                bundleSymbolicName += ";" + WrapRequestProperties.SINGLETON;
+            }
+            analyzer.setProperty(Analyzer.BUNDLE_SYMBOLICNAME, bundleSymbolicName);
         }
     }
 

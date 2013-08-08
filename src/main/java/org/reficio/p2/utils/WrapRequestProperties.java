@@ -28,6 +28,8 @@ import java.io.IOException;
 
 public class WrapRequestProperties {
 
+    public static final String SINGLETON = "singleton:=true";
+
     private final String name;
     private final String symbolicName;
     private final String version;
@@ -74,7 +76,7 @@ public class WrapRequestProperties {
         }
         // bug28 - handle classifiers
         String classifier = resolvedArtifact.getArtifact().getClassifier();
-        if(StringUtils.isNotBlank(classifier)) {
+        if (StringUtils.isNotBlank(classifier)) {
             symbolicName += "." + classifier;
         }
         return symbolicName;
@@ -95,7 +97,7 @@ public class WrapRequestProperties {
         return JarUtils.tweakVersion(resolvedArtifact, version);
     }
 
-    public static  String calculateSourceSymbolicName(String symbolicName) {
+    public static String calculateSourceSymbolicName(String symbolicName) {
         return symbolicName + ".source";
     }
 
@@ -143,9 +145,14 @@ public class WrapRequestProperties {
         return sourceVersion;
     }
 
-	public String getFullSymbolicName() {
-		if (!this.p2artifact.isSingleton())
-			return getSymbolicName();
-		return getSymbolicName() + ";singleton:=true";
-	}
+    public String getFullSymbolicName() {
+        String fullSymbolicName = getSymbolicName();
+        if (resolvedArtifact.isRoot() && this.p2artifact.isSingleton()) {
+            // singleton may be also specified manually by the user
+            if (!fullSymbolicName.contains(SINGLETON)) {
+                fullSymbolicName = fullSymbolicName + ";" + SINGLETON;
+            }
+        }
+        return fullSymbolicName;
+    }
 }

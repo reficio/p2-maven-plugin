@@ -118,17 +118,10 @@ public class P2Artifact {
         this.override = override;
     }
 
-	/**
-	 * @param singleton
-	 *            setter, see {@link singleton}
-	 */
 	public void setSingleton(boolean singleton) {
 		this.singleton = singleton;
 	}
 
-	/**
-	 * @return the singleton, see {@link #singleton}
-	 */
 	public boolean isSingleton() {
 		return singleton;
 	}

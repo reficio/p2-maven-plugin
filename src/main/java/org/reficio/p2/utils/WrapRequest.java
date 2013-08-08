@@ -84,11 +84,21 @@ public class WrapRequest {
 
     public void validate() {
         if (resolvedArtifact.isRoot() && bundle) {
+            // artifact is a bundle and somebody specified instructions without override
             if (!p2artifact.shouldOverrideManifest() && !p2artifact.getInstructions().isEmpty()) {
                 String message = String.format("p2-maven-plugin misconfiguration" +
-                        "\n\n\tJar %s is already a bundle. " +
+                        "\n\n\tJar [%s] is already a bundle. " +
                         "\n\tBND instructions are specified, but the <override> flag is set to false." +
-                        "\n\tEither remove the instructions or set the <override> flag to true.", resolvedArtifact.getArtifact().toString());
+                        "\n\tEither remove the instructions or set the <override> flag to true." +
+                        "\n\tWATCH OUT! Setting <override> to true will re-bundle the artifact!\n", resolvedArtifact.getArtifact().toString());
+                throw new RuntimeException(message);
+            }
+            if (!p2artifact.shouldOverrideManifest() && p2artifact.isSingleton()) {
+                String message = String.format("p2-maven-plugin misconfiguration" +
+                        "\n\n\tJar [%s] is already a bundle. " +
+                        "\n\tsingleton is set to true, but the <override> flag is set to false." +
+                        "\n\tEither set the singleton flag to false or set the <override> flag to true." +
+                        "\n\tWATCH OUT! Setting <override> to true will re-bundle the artifact!\n", resolvedArtifact.getArtifact().toString());
                 throw new RuntimeException(message);
             }
         }

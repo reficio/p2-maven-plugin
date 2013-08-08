@@ -260,6 +260,7 @@ is an equivalent of the following definition:
         <transitive>true</transitive>
 		<source>false</source>
         <override>false</override>
+        <singleton>false</singleton>
         <instructions>
             <Import-Package>*;resolution:=optional</Import-Package>
             <Export-Package>*</Export-Package>
@@ -344,6 +345,7 @@ The following example presents how to enable the override option specifying the 
     <artifact>
         <id>commons-io:commons-io:2.1</id>
         <override>true</override>
+        <singleton>false</singleton>
         <instructions>
             <Import-Package>*;resolution:=optional</Import-Package>
             <Export-Package>*</Export-Package>
@@ -400,6 +402,23 @@ Example usage:
         </excludes>
     </artifact>
 ```
+
+### Singleton option
+This is the configuration snippet that enables you to generate singleton bundles. `<singleton>true</singleton>` section has to be included to enable this option.
+
+Expected behavior:
+
+* bundle will have a "singleton:=true" string added to its symbolic name
+* remember that the build may fail if the artifact is already a bundle and the singleton is set to true and the override option is skipped or set to false.
+
+Example usage:
+```xml
+    <artifact>
+        <id>org.mockito:mockito-core:1.9.0</id>
+        <singleton>true</singleton>
+    </artifact>
+```
+
 
 ### Other features
 * p2-maven-plugin will tweak the version of a snapshot dependency replacing the SNAPSHOT string with a timestamp in the following format "yyyyMMddHHmmss" (feature #14)
