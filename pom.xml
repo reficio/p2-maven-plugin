@@ -131,15 +131,15 @@
             <version>1.50.0</version>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>biz.aQute.bnd</groupId>-->
-            <!--<artifactId>bnd</artifactId>-->
-            <!--<version>2.1.0</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.osgi</groupId>-->
-                    <!--<artifactId>org.osgi.core</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
+        <!--<groupId>biz.aQute.bnd</groupId>-->
+        <!--<artifactId>bnd</artifactId>-->
+        <!--<version>2.1.0</version>-->
+        <!--<exclusions>-->
+        <!--<exclusion>-->
+        <!--<groupId>org.osgi</groupId>-->
+        <!--<artifactId>org.osgi.core</artifactId>-->
+        <!--</exclusion>-->
+        <!--</exclusions>-->
         <!--</dependency>-->
 
         <dependency>
@@ -618,6 +618,14 @@
         </profile>
     </profiles>
 
+
+    <repositories>
+        <!-- required to get the reficio-skin -->
+        <repository>
+            <id>reficio</id>
+            <url>http://repo.reficio.org/maven/</url>
+        </repository>
+    </repositories>
 
     <distributionManagement>
         <repository>
