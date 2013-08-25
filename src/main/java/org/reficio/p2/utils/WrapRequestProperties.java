@@ -21,6 +21,7 @@ package org.reficio.p2.utils;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
+import clover.org.apache.commons.lang.StringUtils;
 import org.reficio.p2.P2Artifact;
 
 import java.io.IOException;
@@ -70,6 +71,11 @@ public class WrapRequestProperties {
         }
         if (symbolicName == null) {
             symbolicName = bundleUtils.calculateBundleSymbolicName(resolvedArtifact.getArtifact());
+        }
+        // bug28 - handle classifiers
+        String classifier = resolvedArtifact.getArtifact().getClassifier();
+        if(StringUtils.isNotBlank(classifier)) {
+            symbolicName += "." + classifier;
         }
         return symbolicName;
     }
