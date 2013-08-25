@@ -107,7 +107,7 @@ public class BundleUtils extends BundlePlugin {
                 return null;
             }
             return attributes.getValue(symbolicName);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }

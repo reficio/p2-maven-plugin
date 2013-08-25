@@ -52,7 +52,7 @@ public class BundleUtilsTest {
     }
 
     @Test
-    public void testIsBundleIOException() throws IOException {
+    public void testIsBundleIOException() throws Exception {
         Jar jar = mock(Jar.class, Mockito.RETURNS_DEEP_STUBS);
         when(jar.getManifest()).thenThrow(new IOException());
         BundleUtils utils = new BundleUtils();
@@ -60,7 +60,7 @@ public class BundleUtilsTest {
     }
 
     @Test
-    public void testIsBundleNoAttributes() throws IOException {
+    public void testIsBundleNoAttributes() throws Exception {
         Jar jar = mock(Jar.class, Mockito.RETURNS_DEEP_STUBS);
         when(jar.getManifest().getMainAttributes()).thenReturn(null);
         BundleUtils utils = new BundleUtils();
@@ -68,7 +68,7 @@ public class BundleUtilsTest {
     }
 
     @Test
-    public void testIsBundleManifestContainsKey() throws IOException {
+    public void testIsBundleManifestContainsKey() throws Exception {
         Jar jar = mock(Jar.class, Mockito.RETURNS_DEEP_STUBS);
         when(jar.getManifest().getMainAttributes().getValue(any(Attributes.Name.class))).thenReturn("org.apache.commons");
         BundleUtils utils = new BundleUtils();
@@ -95,7 +95,7 @@ public class BundleUtilsTest {
     }
 
     @Test
-    public void testBundleName() throws IOException {
+    public void testBundleName() throws Exception {
         String bundleName = "org.reficio.example.bundle";
         Jar jar = mock(Jar.class, Mockito.RETURNS_DEEP_STUBS);
         when(jar.getManifest().getMainAttributes().getValue(new Attributes.Name(Analyzer.BUNDLE_NAME))).thenReturn(bundleName);

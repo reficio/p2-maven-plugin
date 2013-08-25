@@ -190,7 +190,7 @@ public class BundleWrapper {
         }
     }
 
-    private void setManifest(Analyzer analyzer) throws IOException {
+    private void setManifest(Analyzer analyzer) throws Exception {
         analyzer.mergeManifest(analyzer.getJar().getManifest());
     }
 
@@ -230,7 +230,7 @@ public class BundleWrapper {
         }
     }
 
-    private Manifest getManifest(Jar jar) throws IOException {
+    private Manifest getManifest(Jar jar) throws Exception {
         Manifest manifest = jar.getManifest();
         if (manifest == null) {
             manifest = new Manifest();
