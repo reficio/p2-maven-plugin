@@ -23,7 +23,7 @@
         <gmaven.provider.selection>2.0</gmaven.provider.selection>
         <groovy.version>2.1.7</groovy.version>
 
-        <clover.version>3.1.12.1</clover.version>
+        <clover.version>3.1.12</clover.version>
         <clover.license>/private/reficio/clover.license</clover.license>
     </properties>
 
@@ -618,7 +618,6 @@
             </build>
         </profile>
     </profiles>
-
 
     <repositories>
         <!-- required to get the reficio-skin -->
