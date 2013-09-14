@@ -69,6 +69,6 @@ assert Util.attr(jar, "Specification-Version") == "specification.version"
 String jarSourceName = "org.test.bundle.source_1.2.3.jar"
 assert files.contains(jarSourceName)
 Jar jarSourceJar = new Jar(new File(target, jarSourceName));
-assert Util.eclipseSourceBundle(jarSourceJar) == "org.test.bundle.source;version=\"1.2.3\";roots:=\".\""
+assert Util.eclipseSourceBundle(jarSourceJar) == "org.test.bundle;version=\"1.2.3\";roots:=\".\""
 assert Util.symbolicName(jarSourceJar) == "org.test.bundle.source"
 assert Util.version(jarSourceJar) == "1.2.3"

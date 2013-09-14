@@ -50,7 +50,7 @@ assert Util.version(hamcrestJar) == "1.1.0"
 String hamcrestSourceName = "org.hamcrest.core.source_1.1.0.jar"
 assert files.contains(hamcrestSourceName)
 Jar hamcrestSourceJar = new Jar(new File(target, hamcrestSourceName));
-assert Util.eclipseSourceBundle(hamcrestSourceJar) == "org.hamcrest.core.source;version=\"1.1.0\";roots:=\".\""
+assert Util.eclipseSourceBundle(hamcrestSourceJar) == "org.hamcrest.core;version=\"1.1.0\";roots:=\".\""
 assert Util.symbolicName(hamcrestSourceJar) == "org.hamcrest.core.source"
 assert Util.version(hamcrestSourceJar) == "1.1.0"
 
@@ -86,6 +86,6 @@ assert Util.attr(jar, "Specification-Version") == "specification.version"
 String jarSourceName = "org.test.bundle.source_1.2.3.jar"
 assert files.contains(jarSourceName)
 Jar jarSourceJar = new Jar(new File(target, jarSourceName));
-assert Util.eclipseSourceBundle(jarSourceJar) == "org.test.bundle.source;version=\"1.2.3\";roots:=\".\""
+assert Util.eclipseSourceBundle(jarSourceJar) == "org.test.bundle;version=\"1.2.3\";roots:=\".\""
 assert Util.symbolicName(jarSourceJar) == "org.test.bundle.source"
 assert Util.version(jarSourceJar) == "1.2.3"

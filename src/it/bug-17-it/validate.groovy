@@ -44,6 +44,6 @@ assert Util.version(hibernateJar) == "2.3.4"
 String hibernateSourceName = "org.hibernate.symbolic.source_2.3.4.jar"
 assert files.contains(hibernateSourceName)
 Jar hibernateSourceJar = new Jar(new File(target, hibernateSourceName));
-assert Util.eclipseSourceBundle(hibernateSourceJar) == "org.hibernate.symbolic.source;version=\"2.3.4\";roots:=\".\""
+assert Util.eclipseSourceBundle(hibernateSourceJar) == "org.hibernate.symbolic;version=\"2.3.4\";roots:=\".\""
 assert Util.symbolicName(hibernateSourceJar) == "org.hibernate.symbolic.source"
 assert Util.version(hibernateSourceJar) == "2.3.4"
