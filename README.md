@@ -403,6 +403,8 @@ Example usage:
 
 ### Other features
 * p2-maven-plugin will tweak the version of a snapshot dependency replacing the SNAPSHOT string with a timestamp in the following format "yyyyMMddHHmmss" (feature #14)
+* It's possible to add a classifier to the artifact definition (for example to include a tests jar)  `<id>groupid:artifactid:jar:tests:version</id>` (feature #28)
+</artifact>
 
 ## General configuration options
 There are some other plugin options that you can specify in the configuration:
@@ -459,8 +461,22 @@ Sample configuration snippet with the additional options:
 * Jenkins -> https://reficio.ci.cloudbees.com/job/p2-maven-plugin/
 * Site -> http://projects.reficio.org/p2-maven-plugin/1.0.0/manual.html
 
+### Reporting bugs
+Please describe the bug thouroughly. A bug report should contain a self-contained pom.xml file that enables reproducing the problem.
+
+### Pull requests
+If you change something make sure that you submit an integration test case that covers this feature along with the code changes. Pull requests without test coverage may not be pulled at all. Integration tests are located in the src/it folder.
+
+### Running integration tests
+Invoke the following command to run the integration tests suite:
+
+```
+	$ mvn integration-test -Pit
+```	
+
 ### Who's behind it?
-Tom Bujok [tom.bujok@gmail.com]
+Do you like the project? Star it on github and follow me on Twitter! Thanks!
+http://twitter.com/tombujok
 
 Reficio™ - Reestablish your software!
 www.reficio.org
