@@ -49,5 +49,5 @@ assert Util.symbolicName(source) == "org.mockito.mockito-core.source"
 assert Util.version(source) == "1.9.0"
 assert Util.tool(source) == "p2-maven-plugin (reficio.org)"
 assert Util.eclipseSourceBundle(source) ==
-    "org.mockito.mockito-core.source;version=\"1.9.0\";roots:=\".\"";
+    "org.mockito.mockito-core;version=\"1.9.0\";roots:=\".\"";
 
