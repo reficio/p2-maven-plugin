@@ -62,7 +62,7 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
  */
 public class P2Mojo extends AbstractMojo {
 
-    private static final String TYCHO_VERSION = "0.18.0";
+    private static final String TYCHO_VERSION = "0.18.1";
 
     private static final String BUNDLES_TOP_FOLDER = "/source";
     private static final String BUNDLES_DESTINATION_FOLDER = BUNDLES_TOP_FOLDER + "/plugins";
