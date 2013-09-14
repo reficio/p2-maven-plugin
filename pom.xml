@@ -36,6 +36,7 @@
     </licenses>
 
     <inceptionYear>2012</inceptionYear>
+
     <developers>
         <developer>
             <id>tom.bujok</id>
@@ -66,7 +67,6 @@
         <system>jenkins</system>
         <url>https://reficio.ci.cloudbees.com/job/p2-maven-plugin/</url>
     </ciManagement>
-
 
     <dependencies>
         <dependency>
@@ -131,18 +131,6 @@
             <artifactId>bnd</artifactId>
             <version>1.50.0</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>biz.aQute.bnd</groupId>-->
-        <!--<artifactId>bnd</artifactId>-->
-        <!--<version>2.1.0</version>-->
-        <!--<exclusions>-->
-        <!--<exclusion>-->
-        <!--<groupId>org.osgi</groupId>-->
-        <!--<artifactId>org.osgi.core</artifactId>-->
-        <!--</exclusion>-->
-        <!--</exclusions>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
@@ -156,7 +144,6 @@
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>maven-bundle-plugin</artifactId>
-            <!--<version>2.4.0</version>-->
             <version>2.3.6</version>
             <exclusions>
                 <exclusion>
@@ -205,7 +192,6 @@
         </dependency>
     </dependencies>
 
-
     <build>
         <plugins>
             <plugin>
@@ -235,7 +221,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
             <plugin>
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-component-metadata</artifactId>
@@ -439,8 +424,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
         </plugins>
 
         <extensions>
@@ -535,6 +518,28 @@
                             </excludes>
                             <licenseLocation>${clover.license}</licenseLocation>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>gpg</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
