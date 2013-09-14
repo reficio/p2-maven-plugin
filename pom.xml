@@ -567,9 +567,7 @@
         <profile>
             <id>it</id>
             <activation>
-                <property>
-                    <name>it</name>
-                </property>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <build>
                 <plugins>
@@ -606,6 +604,7 @@
                         </configuration>
                         <executions>
                             <execution>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>install</goal>
                                     <goal>run</goal>
