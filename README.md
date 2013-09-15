@@ -485,19 +485,20 @@ Sample configuration snippet with the additional options:
 ### How can I hack around?
 * GitHub -> https://github.com/reficio/p2-maven-plugin
 * Jenkins -> https://reficio.ci.cloudbees.com/job/p2-maven-plugin/
-* Site -> http://projects.reficio.org/p2-maven-plugin/1.0.0/manual.html
+* Site -> http://projects.reficio.org/p2-maven-plugin/1.0.3-SNAPSHOT/manual.html
+* Coverage -> http://projects.reficio.org/p2-maven-plugin/1.0.3-SNAPSHOT/clover/index.html
 
 ### Reporting bugs
-Please describe the bug thoroughly. A bug report should contain a self-contained pom.xml file that enables reproducing the problem.
+Please describe the issue thoroughly. Please include a minimal pom.xml file that enables reproducing the problem.
 
 ### Pull requests
-If you change something make sure that you submit an integration test case that covers this feature along with the code changes. Pull requests without test coverage may not be pulled at all. Integration tests are located in the src/it folder.
+If you submit a pull request please make sure to an unit/integreation test case that covers the feature. Pull requests without a proper test coverage may not be pulled at all.
 
 ### Running integration tests
 Invoke the following command to run the integration tests suite:
 
 ```
-	$ mvn integration-test -Pit
+	$ mvn integration-test
 ```	
 
 ### Who's behind it?
