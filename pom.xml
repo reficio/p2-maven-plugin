@@ -393,6 +393,7 @@
                                 <excludes>
                                     <exclude>**/Logger.java</exclude>
                                 </excludes>
+                                <licenseLocation>${clover.license}</licenseLocation>
                             </configuration>
                         </plugin>
                     </reportPlugins>
