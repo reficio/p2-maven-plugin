@@ -23,7 +23,7 @@
         <wagon.version>2.2</wagon.version>
         <gmaven.version>1.5</gmaven.version>
         <gmaven.provider.selection>2.0</gmaven.provider.selection>
-        <groovy.version>2.1.7</groovy.version>
+        <groovy.version>2.2.1</groovy.version>
 
         <clover.version>3.1.12</clover.version>
         <clover.license>/private/reficio/clover.license</clover.license>
@@ -161,7 +161,7 @@
         <dependency>
             <groupId>org.twdata.maven</groupId>
             <artifactId>mojo-executor</artifactId>
-            <version>2.1.0</version>
+            <version>2.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
