@@ -22,7 +22,7 @@
 //
 
 import aQute.lib.osgi.Jar
-import org.reficio.p2.utils.JarUtil as Util;
+import org.reficio.p2.utils.TestUtils as Util;
 
 File target = new File(basedir, 'target/repository/plugins')
 assert target.exists()
@@ -111,8 +111,6 @@ assert Util.attr(jar, "Bundle-Name").startsWith("Mockito Mock Library for Java. 
 assert Util.attr(jar, "Bundle-ManifestVersion") == "2"
 assert Util.attr(jar, "Created-By") == "1.6.0_26 (Apple Inc.)"
 assert Util.attr(jar, "Bundle-SymbolicName") == "org.mockito.mockito-core"
-
-
 
 // check the root jar source
 String jarSourceName = "org.mockito.mockito-core.source_1.9.0.jar"

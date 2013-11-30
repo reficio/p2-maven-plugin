@@ -20,10 +20,6 @@
 //
 // $Id$
 //
-
-import aQute.lib.osgi.Jar
-import org.reficio.p2.utils.JarUtil as Util;
-
 // verify target
 File target = new File(basedir, 'target/repository/plugins')
 assert target.exists()

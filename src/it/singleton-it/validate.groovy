@@ -22,7 +22,7 @@
 //
 
 import aQute.lib.osgi.Jar
-import org.reficio.p2.utils.JarUtil as Util;
+import org.reficio.p2.utils.TestUtils as Util;
 
 File target = new File(basedir, 'target/repository/plugins')
 assert target.exists()
@@ -37,7 +37,6 @@ Jar jar = new Jar(new File(target, jarName));
 assert Util.symbolicName(jar) == "org.mockito.mockito-core;singleton:=true"
 assert Util.version(jar) == "1.9.5"
 
-
 // verify singleton with override
 jarName = "org.mockito.mockito-core_1.9.0.jar"
 assert files.contains(jarName)
@@ -45,7 +44,6 @@ assert files.contains(jarName)
 jar = new Jar(new File(target, jarName));
 assert Util.symbolicName(jar) == "org.mockito.mockito-core;singleton:=true"
 assert Util.version(jar) == "1.9.0"
-
 
 // verify manual singleton without override
 jarName = "org.mockito.mockito-core_1.8.5.jar"

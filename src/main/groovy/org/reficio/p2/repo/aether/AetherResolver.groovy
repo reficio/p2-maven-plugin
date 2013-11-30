@@ -54,16 +54,16 @@ class AetherResolver implements ArtifactResolver {
     }
 
     @Override
-    List<Artifact> resolve(String artifact, List<String> excludes, boolean skipTransitive) {
+    List<Artifact> resolve(String artifactId, List<String> excludes, boolean skipTransitive) {
         if (skipTransitive) {
-            return translateArtifactsAetherToGeneric(Arrays.asList(resolveNoTransitive(artifact)))
+            return translateArtifactsAetherToGeneric(Arrays.asList(resolveNoTransitive(artifactId)))
         } else {
-            return translateArtifactsAetherToGeneric(resolveWithTransitive(artifact, excludes))
+            return translateArtifactsAetherToGeneric(resolveWithTransitive(artifactId, excludes))
         }
     }
 
     @Override
-    Artifact resolveSource(Artifact artifact) {
+    Artifact resolveSourceForArtifact(Artifact artifact) {
         def artifactRequest = populateSourceRequest(artifact)
         def artifactResult = repositorySystem.resolveArtifact(repositorySystemSession, artifactRequest).artifact
         return aether.translateArtifactAetherToGeneric(artifactResult)

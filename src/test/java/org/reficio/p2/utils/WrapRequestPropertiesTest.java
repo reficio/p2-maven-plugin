@@ -53,5 +53,4 @@ public class WrapRequestPropertiesTest {
         assertEquals("org.reficio.p2.source", calculateSourceName("org.reficio.p2", "org.reficio.p2"));
     }
 
-
 }

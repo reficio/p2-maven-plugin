@@ -28,7 +28,7 @@ import aQute.lib.osgi.Jar
  *        Reficio (TM) - Reestablish your software!</br>
  *        http://www.reficio.org
  */
-class JarUtil {
+class TestUtils {
 
     static String symbolicName(Jar jar) {
         jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.BUNDLE_SYMBOLICNAME)

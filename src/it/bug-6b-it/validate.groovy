@@ -22,7 +22,7 @@
 //
 
 import aQute.lib.osgi.Jar
-import org.reficio.p2.utils.JarUtil as Util;
+import org.reficio.p2.utils.TestUtils as Util;
 
 // verify target
 File target = new File(basedir, 'target/repository/plugins')

@@ -22,7 +22,7 @@
 //
 
 import aQute.lib.osgi.Jar
-import org.reficio.p2.utils.JarUtil as Util;
+import org.reficio.p2.utils.TestUtils as Util;
 
 File target = new File(basedir, 'target/repository/plugins')
 assert target.exists()
@@ -80,7 +80,6 @@ assert Util.attr(jar, "Implementation-Version") == "implementation.version"
 assert Util.attr(jar, "Specification-Vendor") == "specification.vendor"
 assert Util.attr(jar, "Specification-Title") == "specification.title"
 assert Util.attr(jar, "Specification-Version") == "specification.version"
-
 
 // check the root jar source
 String jarSourceName = "org.test.bundle.source_1.2.3.jar"

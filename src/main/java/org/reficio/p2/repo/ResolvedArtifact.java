@@ -1,5 +1,3 @@
-package org.reficio.p2.repo;
-
 /**
  * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
@@ -18,7 +16,7 @@ package org.reficio.p2.repo;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+package org.reficio.p2.repo;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
@@ -28,6 +26,7 @@ package org.reficio.p2.repo;
  *        http://www.reficio.org
  */
 public class ResolvedArtifact {
+
     private boolean root;
     private final Artifact artifact;
     private final Artifact sourceArtifact;

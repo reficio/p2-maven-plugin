@@ -29,8 +29,8 @@ import java.util.List;
  */
 public interface ArtifactResolver {
 
-    List<Artifact> resolve(String artifact, List<String> excludes, boolean skipTransitive);
+    List<Artifact> resolve(String artifactId, List<String> excludes, boolean skipTransitive);
 
-    Artifact resolveSource(Artifact artifact);
+    Artifact resolveSourceForArtifact(Artifact artifact);
 
 }

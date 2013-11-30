@@ -258,7 +258,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         Artifact resolvedSource = null;
         if (p2Artifact.shouldIncludeSources()) {
             try {
-                resolvedSource = resolver.resolveSource(artifact);
+                resolvedSource = resolver.resolveSourceForArtifact(artifact);
             } catch (Exception ex) {
                 log.warn("\t [SRC] Failed to resolve source for artifact " + artifact.toString());
             }
