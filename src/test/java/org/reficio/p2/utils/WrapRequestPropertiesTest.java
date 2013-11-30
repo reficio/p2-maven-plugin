@@ -21,16 +21,18 @@ package org.reficio.p2.utils;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.reficio.p2.P2Artifact;
+import org.reficio.p2.repo.ResolvedArtifact;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.reficio.p2.utils.WrapRequestProperties.calculateSourceName;
 
 /**
- * @author: Tom Bujok (tom.bujok@gmail.com)
- * <p/>
- * Reficio™ - Reestablish your software!
- * www.reficio.org
+ * @author Tom Bujok (tom.bujok@gmail.com)
+ * @since 1.0.0
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
  */
 public class WrapRequestPropertiesTest {
 

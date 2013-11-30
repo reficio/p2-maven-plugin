@@ -1,5 +1,3 @@
-package org.reficio.p2.utils;
-
 /**
  * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
@@ -18,42 +16,39 @@ package org.reficio.p2.utils;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.reficio.p2.repo.aether.facade
 
-
-import org.sonatype.aether.artifact.Artifact;
+import org.reficio.p2.repo.Artifact
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.0.0
+ * @since 1.1.0
  *        <p/>
  *        Reficio (TM) - Reestablish your software!</br>
  *        http://www.reficio.org
  */
-public class ResolvedArtifact {
-    private boolean root;
-    private final Artifact artifact;
-    private final Artifact sourceArtifact;
+interface AetherFacade {
 
-    public ResolvedArtifact(Artifact artifact, Artifact sourceArtifact, boolean root) {
-        this.artifact = artifact;
-        this.sourceArtifact = sourceArtifact;
-        this.root = root;
-    }
+    def newDependengyRequest(dependencyNode, dependencyFilter)
 
-    public Artifact getArtifact() {
-        return artifact;
-    }
+    def newPreorderNodeListGenerator()
 
-    public Artifact getSourceArtifact() {
-        return sourceArtifact;
-    }
+    def newCollectRequest()
 
-    public boolean isRoot() {
-        return root;
-    }
+    def newDependency(defaultArtifact, String scope)
 
-    public boolean isSnapshot() {
-        return artifact.isSnapshot();
-    }
+    def newDefaultArtifact(artifact)
+
+    def newArtifactRequest()
+
+    def newSubArtifact(artifact, String classifier, String extension)
+
+    def newPatternExclusionsDependencyFilter(List<String> excludes)
+
+    def newDependencyFilter(filterClosure)
+
+    Artifact translateArtifactAetherToGeneric(artifact)
+
+    def translateArtifactGenericToAether(Artifact artifact)
 
 }

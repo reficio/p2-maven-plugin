@@ -16,23 +16,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.utils;
+package org.reficio.p2.repo.aether
 
-import org.junit.Test;
-import org.reficio.p2.log.Logger;
+import org.reficio.p2.repo.aether.facade.AetherEclipseFacade
+import org.reficio.p2.repo.aether.facade.AetherFacade
+import org.reficio.p2.repo.aether.facade.AetherSonatypeFacade
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.0.0
+ * @since 1.1.0
  *        <p/>
  *        Reficio (TM) - Reestablish your software!</br>
  *        http://www.reficio.org
  */
-public class LoggerTest {
+class Aether {
 
-    @Test(expected = RuntimeException.class)
-    public void uninitializedLogger() {
-        Logger.getLog();
+    static AetherFacade facade(def repositorySystemSession) {
+        if (repositorySystemSession.getClass().getCanonicalName().contains("org.eclipse")) {
+            return new AetherEclipseFacade()
+        } else if (repositorySystemSession.getClass().getCanonicalName().contains("org.sonatype")) {
+            return new AetherSonatypeFacade()
+        } else {
+            throw new RuntimeException("Fuck you Maven!")
+        }
     }
 
 }

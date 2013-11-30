@@ -16,23 +16,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.utils;
+package org.reficio.p2.repo;
 
-import org.junit.Test;
-import org.reficio.p2.log.Logger;
+import java.util.List;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.0.0
+ * @since 1.1.0
  *        <p/>
  *        Reficio (TM) - Reestablish your software!</br>
  *        http://www.reficio.org
  */
-public class LoggerTest {
+public interface ArtifactResolver {
 
-    @Test(expected = RuntimeException.class)
-    public void uninitializedLogger() {
-        Logger.getLog();
-    }
+    List<Artifact> resolve(String artifact, List<String> excludes, boolean skipTransitive);
+
+    Artifact resolveSource(Artifact artifact);
 
 }

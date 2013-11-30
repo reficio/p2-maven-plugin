@@ -31,10 +31,11 @@ import java.util.UUID;
 import static org.mockito.Mockito.when;
 
 /**
- * @author: Tom Bujok (tom.bujok@gmail.com)
- * <p/>
- * Reficio™ - Reestablish your software!
- * www.reficio.org
+ * @author Tom Bujok (tom.bujok@gmail.com)
+ * @since 1.0.0
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
  */
 public class CategoryPublisherTest {
 
@@ -65,7 +66,8 @@ public class CategoryPublisherTest {
 
         CategoryPublisher publisher = CategoryPublisher.factory().p2ApplicationLauncher(launcher).create();
         File file = File.createTempFile(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-        file.deleteOnExit();;
+        file.deleteOnExit();
+        ;
         publisher.execute(file.getPath(), Mockito.anyString());
     }
 

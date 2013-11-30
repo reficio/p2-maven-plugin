@@ -18,8 +18,8 @@
  */
 package org.reficio.p2;
 
-import org.reficio.p2.utils.ResolvedArtifact;
-import org.sonatype.aether.artifact.Artifact;
+import org.reficio.p2.repo.Artifact;
+import org.reficio.p2.repo.ResolvedArtifact;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

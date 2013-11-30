@@ -22,48 +22,49 @@ import aQute.lib.osgi.Analyzer
 import aQute.lib.osgi.Jar
 
 /**
- * @author: Tom Bujok (tom.bujok@gmail.com)
- *
- * Reficio™ - Reestablish your software!
- * www.reficio.org
+ * @author Tom Bujok (tom.bujok@gmail.com)
+ * @since 1.0.0
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
  */
 class JarUtil {
 
-    def static String symbolicName(Jar jar) {
+    static String symbolicName(Jar jar) {
         jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.BUNDLE_SYMBOLICNAME)
     }
 
-    def static String version(Jar jar) {
+    static String version(Jar jar) {
         jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.BUNDLE_VERSION)
     }
 
-    def static void validateVersion(Jar jar, String versionString) {
+    static void validateVersion(Jar jar, String versionString) {
         assert version(jar) == versionString
     }
 
-    def static void validateSnapshotVersionPrefix(Jar jar, String versionStringPrefix) {
+    static void validateSnapshotVersionPrefix(Jar jar, String versionStringPrefix) {
         assert version(jar).startsWith(versionStringPrefix)
     }
 
-    def static boolean isVersionOriginalSnapshot(String version) {
+    static boolean isVersionOriginalSnapshot(String version) {
         return version.matches(".*\\.[0-9]{14}-[0-9]{3}")
     }
 
-    def static boolean isVersionOriginalSnapshot(Jar jar) {
+    static boolean isVersionOriginalSnapshot(Jar jar) {
         String version = version(jar)
         return isVersionOriginalSnapshot(version)
     }
 
-    def static boolean isVersionRepackedSnapshot(String version) {
+    static boolean isVersionRepackedSnapshot(String version) {
         return version.matches(".*\\.[0-9]{14}")
     }
 
-    def static boolean isVersionRepackedSnapshot(Jar jar) {
+    static boolean isVersionRepackedSnapshot(Jar jar) {
         String version = version(jar)
         return isVersionRepackedSnapshot(version)
     }
 
-    def static void validateOriginalSnapshot(Jar jar, String versionPrefix) {
+    static void validateOriginalSnapshot(Jar jar, String versionPrefix) {
         if (!isVersionOriginalSnapshot(jar) || isVersionRepackedSnapshot(jar)) {
             throw new RuntimeException("validateOriginalSnapshot failed; version=" + version(jar) + " " + jar)
         }
@@ -72,7 +73,7 @@ class JarUtil {
         }
     }
 
-    def static void validateRepackedSnapshot(Jar jar, String versionPrefix) {
+    static void validateRepackedSnapshot(Jar jar, String versionPrefix) {
         if (isVersionOriginalSnapshot(jar) || !isVersionRepackedSnapshot(jar)) {
             throw new RuntimeException("validateRepackedSnapshot failed version=" + version(jar) + " " + jar)
         }
@@ -81,7 +82,7 @@ class JarUtil {
         }
     }
 
-    def static Jar jar(File target, String fileNamePrefix) {
+    static Jar jar(File target, String fileNamePrefix) {
         def files = target.listFiles()
         File file = files.find { file -> file.name.startsWith(fileNamePrefix) }
         if (!file || !file.exists()) {
@@ -90,15 +91,15 @@ class JarUtil {
         return new Jar(file)
     }
 
-    def static String tool(Jar jar) {
+    static String tool(Jar jar) {
         jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.TOOL)
     }
 
-    def static String eclipseSourceBundle(Jar jar) {
+    static String eclipseSourceBundle(Jar jar) {
         jar?.getManifest()?.getMainAttributes()?.getValue(BundleWrapper.ECLIPSE_SOURCE_BUNDLE)
     }
 
-    def static String attr(Jar jar, String key) {
+    static String attr(Jar jar, String key) {
         jar?.getManifest()?.getMainAttributes()?.getValue(key)
     }
 

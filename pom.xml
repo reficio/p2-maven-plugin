@@ -14,9 +14,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <maven.version>3.1.0</maven.version>
+        <maven.version>3.1.1</maven.version>
         <tycho.version>0.18.1</tycho.version>
-        <aether.version>1.13.1</aether.version>
+
+        <sonatype.aether.version>1.13.1</sonatype.aether.version>
+        <eclipse.aether.version>0.9.0.M3</eclipse.aether.version>
 
         <wagon.version>2.2</wagon.version>
         <gmaven.version>1.5</gmaven.version>
@@ -93,18 +95,33 @@
             <version>${maven.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- org.sonatype.aether artifacts ARE provided by Maven 3.0.x -->
         <dependency>
             <groupId>org.sonatype.aether</groupId>
             <artifactId>aether-api</artifactId>
-            <version>${aether.version}</version>
+            <version>${sonatype.aether.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.sonatype.aether</groupId>
             <artifactId>aether-util</artifactId>
-            <version>${aether.version}</version>
+            <version>${sonatype.aether.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- org eclipse.aether artifacts are NOT provided by Maven 3.1.x -->
+        <dependency>
+            <groupId>org.eclipse.aether</groupId>
+            <artifactId>aether-api</artifactId>
+            <version>${eclipse.aether.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.aether</groupId>
+            <artifactId>aether-util</artifactId>
+            <version>${eclipse.aether.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-compat</artifactId>
@@ -125,6 +142,11 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>15.0</version>
         </dependency>
         <dependency>
             <groupId>biz.aQute</groupId>

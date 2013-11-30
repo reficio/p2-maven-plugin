@@ -23,6 +23,7 @@ import aQute.lib.osgi.Jar;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.reficio.p2.repo.ResolvedArtifact;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,10 +39,11 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
- * @author: Tom Bujok (tom.bujok@gmail.com)
- * <p/>
- * Reficio™ - Reestablish your software!
- * www.reficio.org
+ * @author Tom Bujok (tom.bujok@gmail.com)
+ * @since 1.0.0
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
  */
 public class JarUtils {
 

@@ -23,9 +23,17 @@ import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
 import org.apache.commons.lang.StringUtils;
 import org.reficio.p2.P2Artifact;
+import org.reficio.p2.repo.ResolvedArtifact;
 
 import java.io.IOException;
 
+/**
+ * @author Tom Bujok (tom.bujok@gmail.com)
+ * @since 1.0.0
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
+ */
 public class WrapRequestProperties {
 
     public static final String SINGLETON = "singleton:=true";

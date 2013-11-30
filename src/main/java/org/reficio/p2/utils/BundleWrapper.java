@@ -23,6 +23,7 @@ import aQute.lib.osgi.Jar;
 import org.apache.commons.io.FileUtils;
 import org.reficio.p2.P2Artifact;
 import org.reficio.p2.log.Logger;
+import org.reficio.p2.repo.ResolvedArtifact;
 
 import java.io.File;
 import java.io.IOException;
@@ -173,7 +174,7 @@ public class BundleWrapper {
     }
 
     private void setBundleOptions(Analyzer analyzer, WrapRequest request) {
-		analyzer.setProperty(Analyzer.BUNDLE_SYMBOLICNAME, request.getProperties().getFullSymbolicName());
+        analyzer.setProperty(Analyzer.BUNDLE_SYMBOLICNAME, request.getProperties().getFullSymbolicName());
         analyzer.setProperty(Analyzer.BUNDLE_NAME, request.getProperties().getName());
         analyzer.setProperty(Analyzer.BUNDLE_VERSION, request.getProperties().getVersion());
         analyzer.setProperty(TOOL_KEY, TOOL);
@@ -196,9 +197,9 @@ public class BundleWrapper {
     }
 
     private void handleSingletonBundle(Analyzer analyzer, WrapRequest request) {
-        if(request.getP2artifact().isSingleton()) {
+        if (request.getP2artifact().isSingleton()) {
             String bundleSymbolicName = analyzer.getProperty(Analyzer.BUNDLE_SYMBOLICNAME);
-            if(!bundleSymbolicName.contains(WrapRequestProperties.SINGLETON)) {
+            if (!bundleSymbolicName.contains(WrapRequestProperties.SINGLETON)) {
                 bundleSymbolicName += ";" + WrapRequestProperties.SINGLETON;
             }
             analyzer.setProperty(Analyzer.BUNDLE_SYMBOLICNAME, bundleSymbolicName);

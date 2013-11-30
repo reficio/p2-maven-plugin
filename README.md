@@ -219,6 +219,8 @@ Now, simply reference your site in your target definition and play with your Ecl
 * Whenever you have to add another external dependency, simply re-invoke "mvn p2:site" and the site will be regenerated.
 * You can automate the generation/exposition of our site using for example Jenkins and Apache2
 
+## Maven compatibility
+p2-maven-plugin is compatible with Maven 3.x
 
 ## Examples
 There are many more use examples, just have a look:

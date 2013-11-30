@@ -19,9 +19,17 @@
 package org.reficio.p2.utils;
 
 import org.reficio.p2.P2Artifact;
+import org.reficio.p2.repo.ResolvedArtifact;
 
 import java.io.File;
 
+/**
+ * @author Tom Bujok (tom.bujok@gmail.com)
+ * @since 1.0.0
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
+ */
 public class WrapRequest {
 
     private final P2Artifact p2artifact;

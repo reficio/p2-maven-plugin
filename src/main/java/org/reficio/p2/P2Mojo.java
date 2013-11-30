@@ -18,6 +18,7 @@
  */
 package org.reficio.p2;
 
+import com.google.common.base.Preconditions;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -28,17 +29,20 @@ import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.eclipse.sisu.equinox.EquinoxServiceFactory;
 import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
 import org.reficio.p2.log.Logger;
-import org.reficio.p2.utils.ArtifactResolver;
+import org.reficio.p2.repo.Artifact;
+import org.reficio.p2.repo.ArtifactResolver;
+import org.reficio.p2.repo.aether.AetherResolver;
 import org.reficio.p2.utils.BundleWrapper;
 import org.reficio.p2.utils.CategoryPublisher;
-import org.sonatype.aether.RepositoryException;
-import org.sonatype.aether.RepositorySystem;
-import org.sonatype.aether.RepositorySystemSession;
-import org.sonatype.aether.artifact.Artifact;
-import org.sonatype.aether.repository.RemoteRepository;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -48,19 +52,18 @@ import java.util.List;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
-
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
  * @goal site
  * @phase compile
  * @requiresDependencyResolution
- * @requiresDependencyCollection <br/>
- * <p/>
- * Reficio (TM) - Reestablish your software!</br>
- * http://www.reficio.org
- * @since 1.0.0
+ * @requiresDependencyCollection
+ * @since 1.1.0
+ *        <p/>
+ *        Reficio (TM) - Reestablish your software!</br>
+ *        http://www.reficio.org
  */
-public class P2Mojo extends AbstractMojo {
+public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     private static final String TYCHO_VERSION = "0.18.1";
 
@@ -107,8 +110,6 @@ public class P2Mojo extends AbstractMojo {
      */
     private EquinoxServiceFactory p2;
 
-    // private TargetPlatformBuilder platformBuilder;
-
     /**
      * @component
      * @required
@@ -152,15 +153,18 @@ public class P2Mojo extends AbstractMojo {
      */
     private String additionalArgs;
 
+    /**
+     * Dependency injection container - used to get some components programatically
+     */
+    private PlexusContainer container;
 
     /**
-     * The entry point to Aether, i.e. the component doing all the work.
-     *
-     * @component
-     * @required
-     * @readonly
+     * Aether Repository System
+     * Declared as raw Object type as different objects are injected in different Maven versions:
+     * * 3.0.0 and above -> org.sonatype.aether...
+     * * 3.1.0 and above -> org.eclipse.aether...
      */
-    private RepositorySystem repoSystem;
+    private Object repoSystem;
 
     /**
      * The current repository/network configuration of Maven.
@@ -169,7 +173,7 @@ public class P2Mojo extends AbstractMojo {
      * @required
      * @readonly
      */
-    private RepositorySystemSession repoSession;
+    private Object repoSession;
 
     /**
      * The project's remote repositories to use for the resolution of project dependencies.
@@ -178,7 +182,7 @@ public class P2Mojo extends AbstractMojo {
      * @required
      * @readonly
      */
-    private List<RemoteRepository> projectRepos;
+    private List<Object> projectRepos;
 
     /**
      * @parameter
@@ -188,11 +192,13 @@ public class P2Mojo extends AbstractMojo {
     private List<P2Artifact> artifacts;
 
     protected Log log = getLog();
+
     private File bundlesDestinationFolder;
 
     public void execute() {
         try {
             initializeEnvironment();
+            initializeRepositorySystem();
             resolveArtifacts();
             executeBndWrapper();
             executeP2PublisherPlugin();
@@ -210,8 +216,26 @@ public class P2Mojo extends AbstractMojo {
         bundlesDestinationFolder.mkdirs();
     }
 
-    public void resolveArtifacts() throws RepositoryException {
-        ArtifactResolver resolver = new ArtifactResolver(repoSystem, repoSession, projectRepos);
+    private void initializeRepositorySystem() {
+        if (repoSystem == null) {
+            repoSystem = lookup("org.eclipse.aether.RepositorySystem");
+        }
+        if (repoSystem == null) {
+            repoSystem = lookup("org.sonatype.aether.RepositorySystem");
+        }
+        Preconditions.checkNotNull(repoSystem, "Could not initialize RepositorySystem");
+    }
+
+    private Object lookup(String role) {
+        try {
+            return container.lookup(role);
+        } catch (ComponentLookupException ex) {
+        }
+        return null;
+    }
+
+    public void resolveArtifacts() {
+        ArtifactResolver resolver = getArtifactResolver();
         for (P2Artifact p2Artifact : artifacts) {
             log.info("Processing artifacts for " + p2Artifact.getId());
             List<Artifact> result = resolver.resolve(p2Artifact.getId(), p2Artifact.getExcludes(), !p2Artifact.shouldIncludeTransitive());
@@ -224,6 +248,10 @@ public class P2Mojo extends AbstractMojo {
                 p2Artifact.addResolvedArtifact(resolved, resolvedSource);
             }
         }
+    }
+
+    private ArtifactResolver getArtifactResolver() {
+        return new AetherResolver(repoSystem, repoSession, projectRepos);
     }
 
     public Artifact resolveSource(P2Artifact p2Artifact, ArtifactResolver resolver, Artifact artifact) {
@@ -297,6 +325,11 @@ public class P2Mojo extends AbstractMojo {
         } catch (IOException ex) {
             getLog().warn("Cannot cleanup the work folder " + workFolder.getAbsolutePath());
         }
+    }
+
+    @Override
+    public void contextualize(Context context) throws ContextException {
+        this.container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
     }
 
 }

@@ -22,7 +22,7 @@ import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
 import org.apache.felix.bundleplugin.BundlePlugin;
 import org.apache.maven.artifact.DefaultArtifact;
-import org.sonatype.aether.artifact.Artifact;
+import org.reficio.p2.repo.Artifact;
 
 import java.io.File;
 import java.io.IOException;
