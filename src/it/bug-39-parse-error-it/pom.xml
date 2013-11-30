@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.reficio</groupId>
+        <artifactId>integration</artifactId>
+        <version>@project.version@</version>
+        <relativePath>../integration.xml</relativePath>
+    </parent>
+
+    <artifactId>config</artifactId>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <description>
+        Test the basic config option
+    </description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.reficio</groupId>
+                <artifactId>p2-maven-plugin</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <configuration>
+                            <artifacts>
+                                <!--<artifact>-->
+                                <!--<id>ca.infodata:util1.restful:1.0.0</id>-->
+                                <!--</artifact>-->
+                                <!--<artifact>-->
+                                <!--<id>ca.infodata:util1.common:1.0.0</id>-->
+                                <!--</artifact>-->
+                                <!--<artifact>-->
+                                <!--<id>ca.infodata:util1.group:1.0.0</id>-->
+                                <!--</artifact>-->
+                                <!--<artifact>-->
+                                <!--<id>ca.infodata:util1.encryption:1.0.0</id>-->
+                                <!--</artifact>-->
+                                <!--<artifact>-->
+                                <!--<id>ca.infodata:apple.finder.search:1.0.0</id>-->
+                                <!--</artifact>-->
+                                <!--<artifact>-->
+                                <!--<id>ca.infodata:ofys.data.middle.dataobjects_client:0.0.1-SNAPSHOT</id>-->
+                                <!--</artifact>-->
+                                <artifact>
+                                    <id>com.sun.jersey:jersey-client:1.17.1</id>
+                                    <transitive>true</transitive>
+                                </artifact>
+                                <artifact>
+                                    <id>net.java.dev.jna:jna:3.3.0</id>
+                                </artifact>
+                                <artifact>
+                                    <id>net.java.dev.jna:jna::platform:3.3.0</id>
+                                </artifact>
+                                <!--<artifact>-->
+                                <!--<id>org.mb.listeners:listeners:1.0.0</id>-->
+                                <!--</artifact>-->
+                                <!--<artifact>-->
+                                <!--<id>ca.infodata:stats2.minimalog.client:1.0.0</id>-->
+                                <!--</artifact>-->
+                                <artifact>
+                                    <id>jfree:jfreechart:1.0.13</id>
+                                </artifact>
+                                <artifact>
+                                    <id>jfree:jfreechart-swt:1.0.9</id>
+                                </artifact>
+                                <artifact>
+                                    <id>org.glassfish:javax.jms:3.1.1</id>
+                                </artifact>
+
+                                <artifact>
+                                    <id>com.miglayout:miglayout-swt:4.2</id>
+                                </artifact>
+                                <artifact>
+                                    <id>commons-collections:commons-collections:3.2.1</id>
+                                </artifact>
+                                <artifact>
+                                    <id>commons-codec:commons-codec:1.6</id>
+                                </artifact>
+                                <artifact>
+                                    <id>commons-io:commons-io:2.3</id>
+                                </artifact>
+                                <artifact>
+                                    <id>commons-lang:commons-lang:2.5</id>
+                                </artifact>
+                                <artifact>
+                                    <id>org.apache.commons:commons-lang3:3.1</id>
+                                </artifact>
+
+                                <!--<artifact>-->
+                                <!--<id>ca.infodata:readhl7:1.0.0</id>-->
+                                <!--</artifact>-->
+                                <artifact>
+                                    <id>com.google.code.gson:gson:2.2.4</id>
+                                </artifact>
+                                <artifact>
+                                    <id>javassist:javassist:3.12.1.GA</id>
+                                </artifact>
+                                <artifact>
+                                    <id>org.bouncycastle:bcmail-jdk16:1.46</id>
+                                </artifact>
+                                <artifact>
+                                    <id>org.bouncycastle:bcprov-jdk16:1.46</id>
+                                </artifact>
+                                <artifact>
+                                    <id>log4j:log4j:1.2.17</id>
+                                </artifact>
+                                <artifact>
+                                    <id>org.swinglabs:pdf-renderer:1.0.5</id>
+                                </artifact>
+                                <artifact>
+                                    <id>com.googlecode.jatl:jatl:0.2.2</id>
+                                </artifact>
+                                <artifact>
+                                    <id>xmlrpc:xmlrpc:2.0.1</id>
+                                </artifact>
+                                <artifact>
+                                    <id>com.lowagie:itext:2.1.7</id>
+                                </artifact>
+                                <artifact>
+                                    <id>org.apache.pdfbox:pdfbox:1.8.2</id>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>reficio</id>
+            <url>http://repo.reficio.org/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
