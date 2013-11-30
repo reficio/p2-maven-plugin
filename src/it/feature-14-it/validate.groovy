@@ -20,7 +20,7 @@
 //
 // $Id$
 //
-import static org.reficio.p2.utils.JarUtil.*;
+import static org.reficio.p2.utils.TestUtils.*;
 
 File target = new File(basedir, 'target/repository/plugins')
 assert target.exists()
