@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.1.0
+ * @since 1.0.3
  *        <p/>
  *        Reficio (TM) - Reestablish your software!</br>
  *        http://www.reficio.org
