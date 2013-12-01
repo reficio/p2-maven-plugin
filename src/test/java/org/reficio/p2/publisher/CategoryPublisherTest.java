@@ -16,14 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.utils;
+package org.reficio.p2.publisher;
 
 import org.apache.maven.plugin.AbstractMojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.reficio.p2.publisher.CategoryPublisher;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,11 +31,10 @@ import java.util.UUID;
 import static org.mockito.Mockito.when;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
  * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
  */
 public class CategoryPublisherTest {
 

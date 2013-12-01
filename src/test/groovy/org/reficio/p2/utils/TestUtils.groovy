@@ -23,11 +23,10 @@ import aQute.lib.osgi.Jar
 import org.reficio.p2.bundler.impl.AquteBundler
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
  * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
  */
 class TestUtils {
 

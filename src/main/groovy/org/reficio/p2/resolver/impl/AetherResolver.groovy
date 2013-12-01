@@ -97,7 +97,7 @@ class AetherResolver implements ArtifactResolver {
     private List<?> resolveWithTransitive(String artifact, List<String> excludes) {
         def collectRequest = populateCollectRequest(artifact)
         def dependencyNode = repositorySystem.collectDependencies(repositorySystemSession, collectRequest).root
-        def dependencyRequest = aether.newDependengyRequest(dependencyNode, null)
+        def dependencyRequest = aether.newDependencyRequest(dependencyNode, null)
         dependencyRequest.filter = getFilter(artifact, transformExcludes(artifact, excludes))
         repositorySystem.resolveDependencies(repositorySystemSession, dependencyRequest)
         def preorderNodeListGenerator = aether.newPreorderNodeListGenerator()

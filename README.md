@@ -42,7 +42,7 @@ So in essence, to solve all problems mentioned above you have to do three things
 
 Ufff, that is a mundane, cumbersome, repeatable and stupid activity that may take you a few hours - imagine now that you have to do it multiple times…
 
-That's where p2-maven plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is... :)
+That's where p2-maven-plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is... :)
 
 ## How to use it in 2 minutes?
 Using p2-maven-plugin is really simple. I have prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using the jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
@@ -501,7 +501,7 @@ If you submit a pull request please make sure to an unit/integreation test case 
 Invoke the following command to run the integration tests suite:
 
 ```
-	$ mvn integration-test
+	$ mvn package
 ```	
 
 ### Who's behind it?

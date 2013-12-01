@@ -26,7 +26,7 @@ import org.reficio.p2.resolver.impl.facade.AetherSonatypeFacade
  * @author Tom Bujok (tom.bujok@gmail.com)<br/>
  *         Reficio (TM) - Reestablish your software!<br/>
  *         http://www.reficio.org
- * @since 1.0.3
+ * @since 1.1.0
  */
 class Aether {
 

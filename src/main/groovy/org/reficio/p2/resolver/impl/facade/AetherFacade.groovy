@@ -24,11 +24,11 @@ import org.reficio.p2.resolver.Artifact
  * @author Tom Bujok (tom.bujok@gmail.com)<br/>
  *         Reficio (TM) - Reestablish your software!<br/>
  *         http://www.reficio.org
- * @since 1.0.3
+ * @since 1.1.0
  */
 interface AetherFacade {
 
-    def newDependengyRequest(dependencyNode, dependencyFilter)
+    def newDependencyRequest(dependencyNode, dependencyFilter)
 
     def newPreorderNodeListGenerator()
 

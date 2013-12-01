@@ -23,11 +23,10 @@ import org.reficio.p2.resolver.ResolvedArtifact;
 import org.reficio.p2.utils.BundleUtils;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.0.3
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
+ * @since 1.1.0
  */
 public class P2Validator {
 

@@ -33,7 +33,7 @@ import java.util.jar.Manifest;
  * @author Tom Bujok (tom.bujok@gmail.com)<br/>
  *         Reficio (TM) - Reestablish your software!<br/>
  *         http://www.reficio.org
- * @since 1.0.3
+ * @since 1.1.0
  */
 public class AquteHelper {
 

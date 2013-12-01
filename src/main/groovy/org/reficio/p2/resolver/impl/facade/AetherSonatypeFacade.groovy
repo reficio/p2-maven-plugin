@@ -34,12 +34,12 @@ import org.sonatype.aether.util.graph.PreorderNodeListGenerator
  * @author Tom Bujok (tom.bujok@gmail.com)<br/>
  *         Reficio (TM) - Reestablish your software!<br/>
  *         http://www.reficio.org
- * @since 1.0.3
+ * @since 1.1.0
  */
 class AetherSonatypeFacade implements AetherFacade {
 
     @Override
-    def newDependengyRequest(dependencyNode, dependencyFilter) {
+    def newDependencyRequest(dependencyNode, dependencyFilter) {
         new DependencyRequest((DependencyNode) dependencyNode, (DependencyFilter) dependencyFilter)
     }
 

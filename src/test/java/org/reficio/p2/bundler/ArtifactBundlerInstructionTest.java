@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.utils;
+package org.reficio.p2.bundler;
 
 import org.junit.Test;
 
@@ -24,13 +24,12 @@ import static org.junit.Assert.assertEquals;
 import static org.reficio.p2.P2Helper.calculateSourceName;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
  * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
  */
-public class WrapRequestPropertiesTest {
+public class ArtifactBundlerInstructionTest {
 
     @Test
     public void calculateSourceName_specTest() {
