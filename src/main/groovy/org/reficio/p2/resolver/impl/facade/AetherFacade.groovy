@@ -16,23 +16,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.utils;
+package org.reficio.p2.resolver.impl.facade
 
-import org.junit.Test;
-import org.reficio.p2.logger.Logger;
+import org.reficio.p2.resolver.Artifact
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
+ * @since 1.0.3
  */
-public class LoggerTest {
+interface AetherFacade {
 
-    @Test(expected = RuntimeException.class)
-    public void getLog_uninitializedLogger_exceptionThrown() {
-        Logger.getLog();
-    }
+    def newDependengyRequest(dependencyNode, dependencyFilter)
+
+    def newPreorderNodeListGenerator()
+
+    def newCollectRequest()
+
+    def newDependency(defaultArtifact, String scope)
+
+    def newDefaultArtifact(artifact)
+
+    def newArtifactRequest()
+
+    def newSubArtifact(artifact, String classifier, String extension)
+
+    def newPatternExclusionsDependencyFilter(List<String> excludes)
+
+    def newDependencyFilter(filterClosure)
+
+    Artifact translateArtifactAetherToGeneric(artifact)
+
+    def translateArtifactGenericToAether(Artifact artifact)
 
 }

@@ -20,6 +20,7 @@ package org.reficio.p2.utils;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -44,63 +45,90 @@ import static org.mockito.Mockito.when;
 
 public class BundleUtilsTest {
 
-    @Test
-    public void testIsBundleNoJar() {
-        Jar jar = new Jar("non-existing.jar");
-        BundleUtils utils = new BundleUtils();
-        assertFalse(utils.isBundle(jar));
+    private BundleUtils utils;
+
+    @Before
+    public void setup() {
+        utils = new BundleUtils();
     }
 
     @Test
-    public void testIsBundleIOException() throws Exception {
+    public void isBundle_nonExistingJar() {
+        // given
+        Jar jar = new Jar("non-existing.jar");
+
+        // when
+        boolean isBundle = utils.isBundle(jar);
+
+        // then
+        assertFalse(isBundle);
+    }
+
+    @Test
+    public void isBundle_cannotOpenManifest() throws Exception {
+        // given
         Jar jar = mock(Jar.class, Mockito.RETURNS_DEEP_STUBS);
         when(jar.getManifest()).thenThrow(new IOException());
-        BundleUtils utils = new BundleUtils();
-        assertFalse(utils.isBundle(jar));
+
+        // when
+        boolean isBundle = utils.isBundle(jar);
+
+        // then
+        assertFalse(isBundle);
     }
 
     @Test
-    public void testIsBundleNoAttributes() throws Exception {
+    public void isBundle_emptyManifest() throws Exception {
+        // given
         Jar jar = mock(Jar.class, Mockito.RETURNS_DEEP_STUBS);
         when(jar.getManifest().getMainAttributes()).thenReturn(null);
-        BundleUtils utils = new BundleUtils();
-        assertFalse(utils.isBundle(jar));
+
+        // when
+        boolean isBundle = utils.isBundle(jar);
+
+        // then
+        assertFalse(isBundle);
     }
 
     @Test
-    public void testIsBundleManifestContainsKey() throws Exception {
+    public void isBundle_manifestWithAttributes() throws Exception {
+        // given
         Jar jar = mock(Jar.class, Mockito.RETURNS_DEEP_STUBS);
         when(jar.getManifest().getMainAttributes().getValue(any(Attributes.Name.class))).thenReturn("org.apache.commons");
-        BundleUtils utils = new BundleUtils();
-        assertTrue(utils.isBundle(jar));
+
+        // when
+        boolean isBundle = utils.isBundle(jar);
+
+        // then
+        assertTrue(isBundle);
     }
 
     @Test
-    public void testManifestAttributes() {
+    public void newManifest_hasMainAttributes() {
         assertNotNull(new Manifest().getMainAttributes());
     }
 
-    @Test
-    public void testMatches() {
-        String name = "Commons Lang";
-        assertTrue(name.matches(".*\\s+.*"));
-        assertTrue(name.matches(".*[A-Z].*"));
-    }
-
     @Test(expected = RuntimeException.class)
-    public void testIsBundleNoFile() {
+    public void isBundle_nonExistingFile() {
+        // given
         File file = new File(UUID.randomUUID().toString());
-        BundleUtils utils = new BundleUtils();
+
+        // when
         utils.isBundle(file);
     }
 
     @Test
-    public void testBundleName() throws Exception {
+    public void getBundleName_correctBundleNameFromMainAttribuets() throws Exception {
+        // given
         String bundleName = "org.reficio.example.bundle";
         Jar jar = mock(Jar.class, Mockito.RETURNS_DEEP_STUBS);
         when(jar.getManifest().getMainAttributes().getValue(new Attributes.Name(Analyzer.BUNDLE_NAME))).thenReturn(bundleName);
-        BundleUtils utils = new BundleUtils();
-        assertEquals(bundleName, utils.getBundleName(jar));
+
+        // when
+        String bundleNameFromManifest = utils.getBundleName(jar);
+
+        // then
+        assertEquals(bundleName, bundleNameFromManifest);
     }
 
 }

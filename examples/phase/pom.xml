@@ -30,9 +30,15 @@
 
                         <configuration>
                             <artifacts>
-                                <artifact><id>commons-lang:commons-lang:2.4</id></artifact>
-                                <artifact><id>commons-lang:commons-lang:2.5</id></artifact>
-                                <artifact><id>commons-lang:commons-lang:2.6</id></artifact>
+                                <artifact>
+                                    <id>commons-lang:commons-lang:2.4</id>
+                                </artifact>
+                                <artifact>
+                                    <id>commons-lang:commons-lang:2.5</id>
+                                </artifact>
+                                <artifact>
+                                    <id>commons-lang:commons-lang:2.6</id>
+                                </artifact>
                             </artifacts>
                         </configuration>
 

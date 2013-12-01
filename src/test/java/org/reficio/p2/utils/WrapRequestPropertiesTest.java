@@ -19,13 +19,9 @@
 package org.reficio.p2.utils;
 
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.reficio.p2.P2Artifact;
-import org.reficio.p2.repo.ResolvedArtifact;
 
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.reficio.p2.utils.WrapRequestProperties.calculateSourceName;
+import static org.junit.Assert.assertEquals;
+import static org.reficio.p2.P2Helper.calculateSourceName;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
@@ -36,15 +32,8 @@ import static org.reficio.p2.utils.WrapRequestProperties.calculateSourceName;
  */
 public class WrapRequestPropertiesTest {
 
-    @Test(expected = RuntimeException.class)
-    public void testIOExceptionTranslation() {
-        ResolvedArtifact resolvedArtifact = mock(ResolvedArtifact.class, Mockito.RETURNS_DEEP_STUBS);
-        P2Artifact p2Artifact = mock(P2Artifact.class, Mockito.RETURNS_DEEP_STUBS);
-        new WrapRequestProperties(resolvedArtifact, p2Artifact);
-    }
-
     @Test
-    public void testCalculateSourceName() {
+    public void calculateSourceName_specTest() {
         assertEquals("org.reficio.p2.source", calculateSourceName(null, "org.reficio.p2"));
         assertEquals("org.reficio.P2.source", calculateSourceName(null, "org.reficio.P2"));
         assertEquals("Reficio P2 Source", calculateSourceName("Reficio P2", "org.reficio.p2"));

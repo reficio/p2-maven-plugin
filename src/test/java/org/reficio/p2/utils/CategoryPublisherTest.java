@@ -23,6 +23,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.reficio.p2.publisher.CategoryPublisher;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,37 +40,42 @@ import static org.mockito.Mockito.when;
  */
 public class CategoryPublisherTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void factoryLauncher() {
-        CategoryPublisher.factory().p2ApplicationLauncher(null);
+    @Test(expected = NullPointerException.class)
+    public void nullLauncher() {
+        CategoryPublisher.builder().p2ApplicationLauncher(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void emptyBuilder() {
+        CategoryPublisher.builder().build();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void factoryEmptyCreate() {
-        CategoryPublisher.factory().create();
+    public void wrongTimeout() {
+        CategoryPublisher.builder().forkedProcessTimeoutInSeconds(-1);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void factoryTimeout() {
-        CategoryPublisher.factory().forkedProcessTimeoutInSeconds(-1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void factoryAdditionalArgs() {
-        CategoryPublisher.factory().additionalArgs("--zcx.vzxc.v§';s.dcxz-1-aods[vzmcxvlkzndofahsdpf");
+    public void wrongArgs() {
+        CategoryPublisher.builder().additionalArgs("--zcx.vzxc.v§';s.dcxz-1-aods[vzmcxvlkzndofahsdpf");
     }
 
     @Test(expected = MojoFailureException.class)
-    public void execute() throws IOException, AbstractMojoExecutionException {
+    public void exceptionThrownInCaseOfLauncherFailure() throws IOException, AbstractMojoExecutionException {
+        // given
         P2ApplicationLauncher launcher = Mockito.mock(P2ApplicationLauncher.class, Mockito.RETURNS_DEEP_STUBS);
         when(launcher.execute(Mockito.anyInt())).thenReturn(137);
-
-        CategoryPublisher publisher = CategoryPublisher.factory().p2ApplicationLauncher(launcher).create();
         File file = File.createTempFile(UUID.randomUUID().toString(), UUID.randomUUID().toString());
         file.deleteOnExit();
-        ;
-        publisher.execute(file.getPath(), Mockito.anyString());
-    }
 
+        // when
+        CategoryPublisher publisher = CategoryPublisher.builder()
+                .p2ApplicationLauncher(launcher)
+                .categoryFileLocation(file.getPath())
+                .additionalArgs("-args")
+                .metadataRepositoryLocation("target/tmp")
+                .build();
+        publisher.execute();
+    }
 
 }

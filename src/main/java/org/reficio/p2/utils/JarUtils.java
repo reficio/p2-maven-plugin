@@ -22,8 +22,6 @@ import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.reficio.p2.repo.ResolvedArtifact;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,37 +37,48 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
  * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
  */
 public class JarUtils {
 
-    private static final String SNAPSHOT_POSTFIX = "SNAPSHOT";
+    private static final String JAR_SNAPSHOT_POSTFIX = "-SNAPSHOT";
+    private static final String OSGI_SNAPSHOT_POSTFIX = ".SNAPSHOT";
 
-    public static void adjustOutputVersion(ResolvedArtifact artifact, File inputFile, File outputFile) {
-        if (artifact.isSnapshot()) {
-            Jar jar = null;
-            try {
-                jar = new Jar(inputFile);
-                Manifest manifest = jar.getManifest();
-                Attributes attributes = manifest.getMainAttributes();
-                String version = attributes.getValue(Analyzer.BUNDLE_VERSION);
-                version = tweakVersion(artifact, version);
-                attributes.putValue(Analyzer.BUNDLE_VERSION, version);
-                jar.write(outputFile);
-            } catch (IOException e) {
-                throw new RuntimeException("Cannot open jar " + outputFile);
-            } catch (Exception e) {
-                throw new RuntimeException("Cannot open jar " + outputFile);
-            } finally {
-                if (jar != null) {
-                    jar.close();
-                }
+    public static void adjustSnapshotOutputVersion(File inputFile, File outputFile, String version) {
+        Jar jar = null;
+        try {
+            jar = new Jar(inputFile);
+            Manifest manifest = jar.getManifest();
+            Attributes attributes = manifest.getMainAttributes();
+            attributes.putValue(Analyzer.BUNDLE_VERSION, version);
+            jar.write(outputFile);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot open jar " + outputFile);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot open jar " + outputFile);
+        } finally {
+            if (jar != null) {
+                jar.close();
             }
         }
+    }
+
+    public static String replaceSnapshotWithTimestamp(String version) {
+        String tweakedVersion = version;
+        if (version.contains(JAR_SNAPSHOT_POSTFIX)) {
+            tweakedVersion = tweakedVersion.replace(JAR_SNAPSHOT_POSTFIX, "-" + getTimeStamp());
+        } else if (version.contains(OSGI_SNAPSHOT_POSTFIX)) {
+            tweakedVersion = tweakedVersion.replace(OSGI_SNAPSHOT_POSTFIX, "." + getTimeStamp());
+        }
+        return tweakedVersion;
+    }
+
+    private static String getTimeStamp() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        return format.format(new Date());
     }
 
     public static void removeSignature(File jar) {
@@ -133,40 +142,6 @@ public class JarUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private static String getTimeStamp() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        return format.format(new Date());
-    }
-
-    public static String tweakVersion(ResolvedArtifact artifact, String version) {
-        String tweakedVersion = version;
-        if (version.contains(SNAPSHOT_POSTFIX)) {
-            String postfix = getSnapshotPostfix(artifact);
-            if (StringUtils.isBlank(postfix)) {
-                postfix = getTimeStamp();
-            }
-            tweakedVersion = tweakedVersion.replace("-" + SNAPSHOT_POSTFIX, "." + postfix);
-            tweakedVersion = tweakedVersion.replace("." + SNAPSHOT_POSTFIX, "." + postfix);
-        }
-        return tweakedVersion;
-    }
-
-    private static String getSnapshotPostfix(ResolvedArtifact artifact) {
-        if (artifact.isSnapshot()) {
-            String version = artifact.getArtifact().getVersion();
-            int dashIndex = version.indexOf("-");
-            if (dashIndex > 0) {
-                String postfix = version.substring(dashIndex + 1);
-                postfix = postfix.replace(".", "");
-                if (postfix.contains(SNAPSHOT_POSTFIX)) {
-                    return "";
-                }
-                return postfix;
-            }
-        }
-        return "";
     }
 
 }

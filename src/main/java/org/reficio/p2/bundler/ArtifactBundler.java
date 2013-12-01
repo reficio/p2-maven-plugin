@@ -16,23 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.utils;
-
-import org.junit.Test;
-import org.reficio.p2.logger.Logger;
+package org.reficio.p2.bundler;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
+ * @since 1.0.3
  */
-public class LoggerTest {
+public interface ArtifactBundler {
 
-    @Test(expected = RuntimeException.class)
-    public void getLog_uninitializedLogger_exceptionThrown() {
-        Logger.getLog();
-    }
+    void execute(ArtifactBundlerRequest request, ArtifactBundlerInstructions instructions);
 
 }

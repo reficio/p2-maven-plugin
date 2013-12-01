@@ -18,20 +18,19 @@
  */
 package org.reficio.p2;
 
-import org.reficio.p2.repo.Artifact;
-import org.reficio.p2.repo.ResolvedArtifact;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
+ * Represents one <artifact> section in the plugin configuration.
+ * This class is mutable only because the values are set by Maven using the setters.
+ *
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
  * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
  */
 public class P2Artifact {
 
@@ -70,8 +69,6 @@ public class P2Artifact {
      */
     private Map instructions = new LinkedHashMap();
 
-    private List<ResolvedArtifact> resolvedArtifacts = new ArrayList<ResolvedArtifact>();
-
     public P2Artifact() {
     }
 
@@ -89,37 +86,6 @@ public class P2Artifact {
 
     public void setInstructions(Map instructions) {
         this.instructions = instructions;
-    }
-
-    public void addResolvedArtifact(Artifact resolved, Artifact resolvedSource) {
-        // <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
-        boolean rootArtifact = id.equals(getShortId(resolved))
-                || id.equals(getExtendedId(resolved))
-                || id.equals(getLongId(resolved));
-        ResolvedArtifact resolvedArtifact = new ResolvedArtifact(resolved, resolvedSource, rootArtifact);
-        this.resolvedArtifacts.add(resolvedArtifact);
-    }
-
-    private String getShortId(Artifact artifact) {
-        // <groupId>:<artifactId>:<version>
-        return String.format("%s:%s:%s", artifact.getGroupId(), artifact.getArtifactId(),
-                artifact.getBaseVersion());
-    }
-
-    private String getExtendedId(Artifact artifact) {
-        // <groupId>:<artifactId>:<extension>:<version>
-        return String.format("%s:%s:%s:%s", artifact.getGroupId(), artifact.getArtifactId(),
-                artifact.getExtension(), artifact.getBaseVersion());
-    }
-
-    private String getLongId(Artifact artifact) {
-        // <groupId>:<artifactId>:<extension>:<classifier>:<version>
-        return String.format("%s:%s:%s:%s:%s", artifact.getGroupId(), artifact.getArtifactId(),
-                artifact.getExtension(), artifact.getClassifier(), artifact.getBaseVersion());
-    }
-
-    public List<ResolvedArtifact> getResolvedArtifacts() {
-        return resolvedArtifacts;
     }
 
     public boolean shouldIncludeTransitive() {

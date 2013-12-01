@@ -19,6 +19,8 @@
 package org.reficio.p2;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -37,12 +39,18 @@ import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.eclipse.sisu.equinox.EquinoxServiceFactory;
 import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
-import org.reficio.p2.log.Logger;
-import org.reficio.p2.repo.Artifact;
-import org.reficio.p2.repo.ArtifactResolver;
-import org.reficio.p2.repo.aether.AetherResolver;
-import org.reficio.p2.utils.BundleWrapper;
-import org.reficio.p2.utils.CategoryPublisher;
+import org.reficio.p2.bundler.ArtifactBundler;
+import org.reficio.p2.bundler.ArtifactBundlerInstructions;
+import org.reficio.p2.bundler.ArtifactBundlerRequest;
+import org.reficio.p2.bundler.impl.AquteBundler;
+import org.reficio.p2.logger.Logger;
+import org.reficio.p2.publisher.BundlePublisher;
+import org.reficio.p2.publisher.CategoryPublisher;
+import org.reficio.p2.resolver.ArtifactResolutionRequest;
+import org.reficio.p2.resolver.ArtifactResolutionResult;
+import org.reficio.p2.resolver.ArtifactResolver;
+import org.reficio.p2.resolver.ResolvedArtifact;
+import org.reficio.p2.resolver.impl.AetherResolver;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -50,22 +58,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
-
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
+ * Main plugin class
+ *
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
  * @goal site
  * @phase compile
  * @requiresDependencyResolution
  * @requiresDependencyCollection
- * @since 1.0.3
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
+ * @since 1.0.0
  */
 public class P2Mojo extends AbstractMojo implements Contextualizable {
-
-    private static final String TYCHO_VERSION = "0.18.1";
 
     private static final String BUNDLES_TOP_FOLDER = "/source";
     private static final String BUNDLES_DESTINATION_FOLDER = BUNDLES_TOP_FOLDER + "/plugins";
@@ -77,26 +82,26 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
      * @required
      * @readonly
      */
-    protected MavenProject project;
+    private MavenProject project;
 
     /**
      * @parameter expression="${session}"
      * @required
      * @readonly
      */
-    protected MavenSession session;
+    private MavenSession session;
 
     /**
      * @component
      * @required
      */
-    protected BuildPluginManager pluginManager;
+    private BuildPluginManager pluginManager;
 
     /**
      * @parameter expression="${project.build.directory}"
      * @required
      */
-    protected String buildDirectory;
+    private String buildDirectory;
 
     /**
      * @parameter expression="${project.build.directory}/repository"
@@ -191,16 +196,27 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
      */
     private List<P2Artifact> artifacts;
 
-    protected Log log = getLog();
+    /**
+     * Logger retrieved from the Maven internals.
+     * It's the recommended way to do it...
+     */
+    private Log log = getLog();
 
+    /**
+     * Folder which the jar files bundled by the ArtifactBundler will be copied to
+     */
     private File bundlesDestinationFolder;
 
+    /**
+     * Processing entry point.
+     * Method that orchestrates the execution of the plugin.
+     */
+    @Override
     public void execute() {
         try {
             initializeEnvironment();
             initializeRepositorySystem();
-            resolveArtifacts();
-            executeBndWrapper();
+            processArtifacts();
             executeP2PublisherPlugin();
             executeCategoryPublisher();
             cleanupEnvironment();
@@ -210,7 +226,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     }
 
     private void initializeEnvironment() throws IOException {
-        Logger.initialize(getLog());
+        Logger.initialize(log);
         bundlesDestinationFolder = new File(buildDirectory, BUNDLES_DESTINATION_FOLDER);
         FileUtils.deleteDirectory(new File(buildDirectory, BUNDLES_TOP_FOLDER));
         bundlesDestinationFolder.mkdirs();
@@ -234,75 +250,97 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         return null;
     }
 
-    public void resolveArtifacts() {
-        ArtifactResolver resolver = getArtifactResolver();
+    private void processArtifacts() {
+        // first resolve all artifacts
+        Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = resolveArtifacts();
+        // then bundle the artifacts including the transitive dependencies (if specified so)
         for (P2Artifact p2Artifact : artifacts) {
-            log.info("Processing artifacts for " + p2Artifact.getId());
-            List<Artifact> result = resolver.resolve(p2Artifact.getId(), p2Artifact.getExcludes(), !p2Artifact.shouldIncludeTransitive());
-            for (Artifact resolved : result) {
-                log.info("\t [JAR] " + resolved.toString());
-                Artifact resolvedSource = resolveSource(p2Artifact, resolver, resolved);
-                if (resolvedSource != null) {
-                    log.info("\t [SRC] " + resolvedSource.toString());
-                }
-                p2Artifact.addResolvedArtifact(resolved, resolvedSource);
+            for (ResolvedArtifact resolvedArtifact : resolvedArtifacts.get(p2Artifact)) {
+                bundleArtifact(p2Artifact, resolvedArtifact);
             }
         }
+    }
+
+    private Multimap<P2Artifact, ResolvedArtifact> resolveArtifacts() {
+        Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = ArrayListMultimap.create();
+        for (P2Artifact p2Artifact : artifacts) {
+            logResolving(p2Artifact);
+            ArtifactResolutionResult resolutionResult = resolveArtifact(p2Artifact);
+            resolvedArtifacts.putAll(p2Artifact, resolutionResult.getResolvedArtifacts());
+        }
+        return resolvedArtifacts;
+    }
+
+    private void logResolving(P2Artifact p2) {
+        log.info(String.format("Resolving artifact=[%s] transitive=[%s] source=[%s]", p2.getId(), p2.shouldIncludeTransitive(),
+                p2.shouldIncludeSources()));
+    }
+
+    private ArtifactResolutionResult resolveArtifact(P2Artifact p2Artifact) {
+        ArtifactResolutionRequest resolutionRequest = ArtifactResolutionRequest.builder()
+                .rootArtifactId(p2Artifact.getId())
+                .resolveSource(p2Artifact.shouldIncludeSources())
+                .resolveTransitive(p2Artifact.shouldIncludeTransitive())
+                .excludes(p2Artifact.getExcludes())
+                .build();
+        ArtifactResolutionResult resolutionResult = getArtifactResolver().resolve(resolutionRequest);
+        logResolved(resolutionRequest, resolutionResult);
+        return resolutionResult;
     }
 
     private ArtifactResolver getArtifactResolver() {
         return new AetherResolver(repoSystem, repoSession, projectRepos);
     }
 
-    public Artifact resolveSource(P2Artifact p2Artifact, ArtifactResolver resolver, Artifact artifact) {
-        Artifact resolvedSource = null;
-        if (p2Artifact.shouldIncludeSources()) {
-            try {
-                resolvedSource = resolver.resolveSourceForArtifact(artifact);
-            } catch (Exception ex) {
-                log.warn("\t [SRC] Failed to resolve source for artifact " + artifact.toString());
+    private void logResolved(ArtifactResolutionRequest resolutionRequest, ArtifactResolutionResult resolutionResult) {
+        for (ResolvedArtifact resolvedArtifact : resolutionResult.getResolvedArtifacts()) {
+            log.info("\t [JAR] " + resolvedArtifact.getArtifact());
+            if (resolvedArtifact.getSourceArtifact() != null) {
+                log.info("\t [SRC] " + resolvedArtifact.getSourceArtifact().toString());
+            } else if (resolutionRequest.isResolveSource()) {
+                log.warn("\t [SRC] Failed to resolve source for artifact " + resolvedArtifact.getArtifact().toString());
             }
         }
-        return resolvedSource;
     }
 
-    protected void executeBndWrapper() throws Exception {
-        BundleWrapper wrapper = new BundleWrapper(pedantic, bundlesDestinationFolder);
-        for (P2Artifact artifact : artifacts) {
-            wrapper.execute(artifact);
-        }
+    private void bundleArtifact(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) {
+        P2Validator.validateBundleRequest(p2Artifact, resolvedArtifact);
+        ArtifactBundler bundler = getArtifactBundler();
+        ArtifactBundlerInstructions bundlerInstructions = P2Helper.createBundlerInstructions(p2Artifact, resolvedArtifact);
+        ArtifactBundlerRequest bundlerRequest = P2Helper.createBundlerRequest(p2Artifact, resolvedArtifact, bundlesDestinationFolder);
+        bundler.execute(bundlerRequest, bundlerInstructions);
     }
 
-    protected void executeP2PublisherPlugin() throws MojoExecutionException, IOException {
-        File repositoryDirectory = new File(destinationDirectory);
-        FileUtils.deleteDirectory(repositoryDirectory);
-        executeMojo(
-                plugin(
-                        groupId("org.eclipse.tycho.extras"),
-                        artifactId("tycho-p2-extras-plugin"),
-                        version(TYCHO_VERSION)
-                ),
-                goal("publish-features-and-bundles"),
-                configuration(
-                        element(name("compress"), Boolean.toString(compressSite)),
-                        element(name("additionalArgs"), additionalArgs)
-                ),
-                executionEnvironment(
-                        project,
-                        session,
-                        pluginManager
-                )
-        );
+    private ArtifactBundler getArtifactBundler() {
+        return new AquteBundler(pedantic);
+    }
+
+    private void executeP2PublisherPlugin() throws IOException, MojoExecutionException {
+        prepareDestinationDirectory();
+        BundlePublisher publisher = BundlePublisher.builder()
+                .mavenProject(project)
+                .mavenSession(session)
+                .buildPluginManager(pluginManager)
+                .compressSite(compressSite)
+                .additionalArgs(additionalArgs)
+                .build();
+        publisher.execute();
+    }
+
+    private void prepareDestinationDirectory() throws IOException {
+        FileUtils.deleteDirectory(new File(destinationDirectory));
     }
 
     private void executeCategoryPublisher() throws AbstractMojoExecutionException, IOException {
         prepareCategoryLocationFile();
-        CategoryPublisher publisher = CategoryPublisher.factory()
+        CategoryPublisher publisher = CategoryPublisher.builder()
                 .p2ApplicationLauncher(launcher)
                 .additionalArgs(additionalArgs)
                 .forkedProcessTimeoutInSeconds(forkedProcessTimeoutInSeconds)
-                .create();
-        publisher.execute(categoryFileURL, destinationDirectory);
+                .categoryFileLocation(categoryFileURL)
+                .metadataRepositoryLocation(destinationDirectory)
+                .build();
+        publisher.execute();
     }
 
     private void prepareCategoryLocationFile() throws IOException {
@@ -323,7 +361,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         try {
             FileUtils.deleteDirectory(workFolder);
         } catch (IOException ex) {
-            getLog().warn("Cannot cleanup the work folder " + workFolder.getAbsolutePath());
+            log.warn("Cannot cleanup the work folder " + workFolder.getAbsolutePath());
         }
     }
 

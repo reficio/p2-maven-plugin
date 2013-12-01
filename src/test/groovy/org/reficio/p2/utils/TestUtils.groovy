@@ -20,6 +20,7 @@ package org.reficio.p2.utils
 
 import aQute.lib.osgi.Analyzer
 import aQute.lib.osgi.Jar
+import org.reficio.p2.bundler.impl.AquteBundler
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)
@@ -47,7 +48,7 @@ class TestUtils {
     }
 
     static boolean isVersionOriginalSnapshot(String version) {
-        return version.matches(".*\\.[0-9]{14}-[0-9]{3}")
+        return version.matches(".*\\.[0-9_]{13,15}-[0-9]{3}")
     }
 
     static boolean isVersionOriginalSnapshot(Jar jar) {
@@ -96,7 +97,7 @@ class TestUtils {
     }
 
     static String eclipseSourceBundle(Jar jar) {
-        jar?.getManifest()?.getMainAttributes()?.getValue(BundleWrapper.ECLIPSE_SOURCE_BUNDLE)
+        jar?.getManifest()?.getMainAttributes()?.getValue(AquteBundler.ECLIPSE_SOURCE_BUNDLE)
     }
 
     static String attr(Jar jar, String key) {

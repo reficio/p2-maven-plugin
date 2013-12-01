@@ -16,23 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.utils;
 
-import org.junit.Test;
-import org.reficio.p2.logger.Logger;
+//
+// $Id$
+//
+// verify target
+File target = new File(basedir, 'target/repository/plugins')
+assert target.exists()
+assert target.listFiles().size() == 1
 
-/**
- * @author Tom Bujok (tom.bujok@gmail.com)
- * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
- */
-public class LoggerTest {
+// verify number of artifacts
+def files = target.listFiles().collect { it.name }
 
-    @Test(expected = RuntimeException.class)
-    public void getLog_uninitializedLogger_exceptionThrown() {
-        Logger.getLog();
-    }
-
-}
+assert files.contains("org.mockito.mockito-core_1.9.0.jar")
+assert !files.contains("org.hamcrest.core_1.1.0.jar")
+assert !files.contains("org.objenesis_1.0.0.jar")

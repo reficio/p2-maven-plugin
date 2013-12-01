@@ -22,7 +22,7 @@ import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
 import org.apache.felix.bundleplugin.BundlePlugin;
 import org.apache.maven.artifact.DefaultArtifact;
-import org.reficio.p2.repo.Artifact;
+import org.reficio.p2.resolver.Artifact;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,13 +32,15 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
  * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
  */
 public class BundleUtils extends BundlePlugin {
+
+    // BAD, but useful in this case...
+    public static final BundleUtils INSTANCE = new BundleUtils();
 
     private static final String BUNDLE_SYMBOLIC_NAME_ATTR_NAME = "Bundle-SymbolicName";
     private static final String BUNDLE_VERSION = "Bundle-Version";
@@ -63,6 +65,10 @@ public class BundleUtils extends BundlePlugin {
 
     public String calculateBundleVersion(Artifact artifact) {
         return super.getMaven2OsgiConverter().getVersion(aetherToMavenArtifactBasic(artifact));
+    }
+
+    public String cleanupVersion(String version) {
+        return super.getMaven2OsgiConverter().getVersion(version);
     }
 
     public boolean isBundle(File file) {

@@ -16,23 +16,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.utils;
-
-import org.junit.Test;
-import org.reficio.p2.logger.Logger;
+package org.reficio.p2.resolver;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)
+ * @author Tom Bujok (tom.bujok@gmail.com)<br/>
+ *         Reficio (TM) - Reestablish your software!<br/>
+ *         http://www.reficio.org
  * @since 1.0.0
- *        <p/>
- *        Reficio (TM) - Reestablish your software!</br>
- *        http://www.reficio.org
  */
-public class LoggerTest {
+public class ResolvedArtifact {
 
-    @Test(expected = RuntimeException.class)
-    public void getLog_uninitializedLogger_exceptionThrown() {
-        Logger.getLog();
+    private boolean root;
+    private final Artifact artifact;
+    private final Artifact sourceArtifact;
+
+    public ResolvedArtifact(Artifact artifact, Artifact sourceArtifact, boolean root) {
+        this.artifact = artifact;
+        this.sourceArtifact = sourceArtifact;
+        this.root = root;
+    }
+
+    public Artifact getArtifact() {
+        return artifact;
+    }
+
+    public Artifact getSourceArtifact() {
+        return sourceArtifact;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public boolean isTransitive() {
+        return !isRoot();
+    }
+
+    public boolean isSnapshot() {
+        return artifact.isSnapshot();
     }
 
 }
