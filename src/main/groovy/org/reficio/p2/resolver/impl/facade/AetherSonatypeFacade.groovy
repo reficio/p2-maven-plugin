@@ -19,6 +19,7 @@
 package org.reficio.p2.resolver.impl.facade
 
 import org.reficio.p2.resolver.Artifact
+import org.sonatype.aether.artifact.Artifact as AetherArtifact
 import org.sonatype.aether.collection.CollectRequest
 import org.sonatype.aether.graph.Dependency
 import org.sonatype.aether.graph.DependencyFilter
@@ -90,7 +91,7 @@ class AetherSonatypeFacade implements AetherFacade {
 
     @Override
     Artifact translateArtifactAetherToGeneric(artifact) {
-        Artifact aetherArtifact = (Artifact) artifact
+	AetherArtifact aetherArtifact = (AetherArtifact) artifact
         aetherArtifact.with {
             return new Artifact(groupId, artifactId, baseVersion, extension, classifier,
                     snapshot, version, file)

@@ -67,7 +67,7 @@ Here's the pom.xml:
                 <plugin>
                     <groupId>org.reficio</groupId>
                     <artifactId>p2-maven-plugin</artifactId>
-                    <version>1.1.0-SNAPSHOT</version>
+                    <version>1.1.0</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
@@ -488,8 +488,8 @@ Sample configuration snippet with the additional options:
 ### How can I hack around?
 * GitHub -> https://github.com/reficio/p2-maven-plugin
 * Jenkins -> https://reficio.ci.cloudbees.com/view/p2-maven-plugin/
-* Site -> http://projects.reficio.org/p2-maven-plugin/1.1.0-SNAPSHOT/manual.html
-* Coverage -> http://projects.reficio.org/p2-maven-plugin/1.1.0-SNAPSHOT/clover/index.html
+* Site -> http://projects.reficio.org/p2-maven-plugin/1.1.0/manual.html
+* Coverage -> http://projects.reficio.org/p2-maven-plugin/1.1.0/clover/index.html
 
 ### Reporting bugs
 Please describe the issue thoroughly. Please include a minimal pom.xml file that enables reproducing the problem.
