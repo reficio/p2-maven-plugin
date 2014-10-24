@@ -32,8 +32,8 @@ import org.sonatype.aether.util.filter.PatternExclusionsDependencyFilter
 import org.sonatype.aether.util.graph.PreorderNodeListGenerator
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.1.0
  */

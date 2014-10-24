@@ -24,8 +24,8 @@ import java.io.File;
  * Represents one artifact (normally a jar file).
  * Decouples the plugin's model and the Aether model.
  *
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.1.0
  */
