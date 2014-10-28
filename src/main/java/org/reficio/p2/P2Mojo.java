@@ -23,6 +23,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.execution.MavenSession;
@@ -58,11 +59,14 @@ import org.reficio.p2.resolver.ArtifactResolutionResult;
 import org.reficio.p2.resolver.ArtifactResolver;
 import org.reficio.p2.resolver.ResolvedArtifact;
 import org.reficio.p2.resolver.impl.AetherResolver;
+import org.reficio.p2.utils.JarUtils;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -193,7 +197,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     /**
      */
-    @Parameter(readonly=true, required=true)
+    @Parameter(readonly=true)
     private List<P2Artifact> artifacts;
 
     /**
@@ -353,8 +357,11 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     	log.debug("Handling feature "+p2Artifact.getId());
         ArtifactBundlerRequest bundlerRequest = P2Helper.createBundlerRequest(p2Artifact, resolvedArtifact, featuresDestinationFolder);
     	try {
-	    	FileUtils.copyFile(bundlerRequest.getBinaryInputFile(), bundlerRequest.getBinaryOutputFile());
-	    	log.info("Copied "+bundlerRequest.getBinaryInputFile()+ " to "+bundlerRequest.getBinaryOutputFile());
+    		File inputFile = bundlerRequest.getBinaryInputFile();
+    		File outputFile = bundlerRequest.getBinaryOutputFile();
+    		//This will also copy the input to the output
+   			JarUtils.adjustFeatureQualifierVersionWithTimestamp(inputFile, outputFile);
+	    	log.info("Copied "+inputFile+ " to "+outputFile);
         } catch (Exception ex) {
             throw new RuntimeException("Error while bundling jar or source: " + bundlerRequest.getBinaryInputFile().getName(), ex);
         }
