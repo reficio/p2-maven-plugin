@@ -24,15 +24,15 @@ Read further to fully understand why dependency management with Maven and Tycho 
 ### Java vs. Maven vs. Eclipse RCP - dependency war
 In order to add a third-party dependency to an Eclipse RCP project the dependency has to reside in a P2 update site. 
 
-Eclipse (and other providers) provide a set of public update sites, but obviously not all popular and publicly available dependencies are there (that is the problem number #1). Pretty often you would also like to add a corporate / internal depenency - and you do not have to be a genius to figure out that it is not somewhere on the web… 
+Eclipse (and other providers) provide a set of public update sites, but obviously not all popular and publicly available dependencies are there (that is the problem number #1). Pretty often you would also like to add a corporate / internal dependency - and you do not have to be a genius to figure out that it is not somewhere on the web… 
 
-Since Eclipse RCP is an OSGi environment in order to add a dependency to a p2 update site the depenedncy has to be an OSGi bundle (that is the problem number #2).
+Since Eclipse RCP is an OSGi environment in order to add a dependency to a p2 update site the dependency has to be an OSGi bundle (that is the problem number #2).
 
 So, let's sum up for now: all our artifacts have to be OSGi bundles, but they are not always bundles and they have to be located in a P2 site, but we do not have that site. How do we proceed then? 
 
-It is not that difficult, there is a 'bnd' tool written by Peter Kriens that can transform your jars into bundles. There is also a convenience tool provided by Eclipse RCP that can generate a P2 site (in a cumbersome and painful way though). Both tools assume that all your jars/bundles are located in a local folder - which means that you have to download them by-hand. You could use Maven to automate it a bit, but there is a significant difference in the way how Maven calculates a dependency tree and this is not alwyas compatible with the OSGi way (that is the problem number #3). Let us elaborate on it a bit more.
+It is not that difficult, there is a 'bnd' tool written by Peter Kriens that can transform your jars into bundles. There is also a convenience tool provided by Eclipse RCP that can generate a P2 site (in a cumbersome and painful way though). Both tools assume that all your jars/bundles are located in a local folder - which means that you have to download them by-hand. You could use Maven to automate it a bit, but there is a significant difference in the way how Maven calculates a dependency tree and this is not always compatible with the OSGi way (that is the problem number #3). Let us elaborate on it a bit more.
 
-In a P2 update site, there may be three versions of the same dependency, as bundles may selectively include one class from version X, and a second class from version Y (that is normal in the world of OSGi). In Maven, though, if you specify two version of a dependency only one of them will be fetched as you don't want to have two almost identical dependencies on your classpath (Java simply cannot deal with that). 
+In a P2 update site, there may be three versions of the same dependency, as bundles may selectively include one class from version X, and a second class from version Y (that is normal in the world of OSGi). In Maven, though, if you specify two versions of a dependency only one of them will be fetched as you don't want to have two almost identical dependencies on your classpath (Java simply cannot deal with that). 
 
 So in essence, to solve all problems mentioned above you have to do three things by-hand:
 
@@ -45,7 +45,7 @@ Ufff, that is a mundane, cumbersome, repeatable and stupid activity that may tak
 That's where p2-maven-plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is... :)
 
 ## How to use it in 2 minutes?
-Using p2-maven-plugin is really simple. I have prepared a quickstart pom.xml file so that you can give it a try right away. We're gonna generate a site and expose it using the jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
+Using p2-maven-plugin is really simple. I have prepared a quickstart pom.xml file so that you can give it a try right away. We're going to generate a site and expose it using the jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
 
 Here's the repo location where you can check the newest version id: http://repo.reficio.org/maven/org/reficio/p2-maven-plugin/
 
@@ -60,7 +60,7 @@ Here's the pom.xml:
         <groupId>org.reficio.rcp</groupId>
         <artifactId>example-p2-site</artifactId>
         <packaging>pom</packaging>
-        <version>1.0.0</version>
+        <version>1.1.1-SNAPSHOT</version>
     
         <build>
             <plugins>
@@ -173,7 +173,7 @@ Your is located in the target/repository folder and looks like this:
     │       └── org.apache.commons.lang3_3.1.0.jar        
 ```
 
-Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is too expose our newly created update site using an HTTP server. We're gonna use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin set-up. Just type 'mvn jetty:run' and open the following link http://localhost:8080/site. Your P2 update site will be there!
+Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is to expose our newly created update site using an HTTP server. We're going to use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin set-up. Just type 'mvn jetty:run' and open the following link http://localhost:8080/site. Your P2 update site will be there!
 
 Now, simply reference your site in your target definition and play with your Eclipse RCP project like you were in the Plain Old Java Environment. Remember to enable the "Group items by category" option, otherwise you will not see any bundles.
 
@@ -212,9 +212,9 @@ Now, simply reference your site in your target definition and play with your Ecl
 ```
 
 ## Best Practices
-* DO NOT to use the Tycho's pomDependencies->consider option as it simply of NO good
-* DO NOT define your external dependencies in the `dependencies` section of the pom.xml (mvn compilation will work in the console, but it will not work in the Eclipse IDE when you import the project, since the 'Target Configuration' knows nothing about the dependencies defined there)
-* Use the MANIFEST-FIRST approach - define all your depencies in the MANIFES.MF files.
+* **DO NOT** to use the Tycho's pomDependencies->consider option as it simply of NO good
+* **DO NOT** define your external dependencies in the `dependencies` section of the pom.xml (mvn compilation will work in the console, but it will not work in the Eclipse IDE when you import the project, since the 'Target Configuration' knows nothing about the dependencies defined there)
+* Use the MANIFEST-FIRST approach - define all your depencies in the MANIFEST.MF files.
 * If some of your depencies are not OSGi bundles or are not available in P2 update sites, SIMPLY define them in the p2-maven-plugin config, generate the site and make it available using jetty (or any other mechanism). Then add the URL of the exposed site to the target platform definition. In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP project!
 * Whenever you have to add another external dependency, simply re-invoke "mvn p2:site" and the site will be regenerated.
 * You can automate the generation/exposition of our site using for example Jenkins and Apache2
@@ -234,8 +234,8 @@ What will be the behavior like if we use the configuraiton listed below?
 * specified dependencies will be fetched
 * transitive dependencies will be fetched
 * jars containing source code will NOT be fetched
-* jars that are NOT osgi bundles will be "bundled" using bnd tool; if instructions are specified, they will be APPLIED.
-* jars that are osgi bundles will be simply included, if instructions are specified, they will be IGNORED (see override example)
+* jars that are **NOT** osgi bundles will be "bundled" using bnd tool; if instructions are specified, they will be APPLIED.
+* jars that are osgi bundles will be simply included, if instructions are specified, they will be **IGNORED** (see override example)
 * p2 site will be generated
 
 How the instructions works:
@@ -492,10 +492,10 @@ Sample configuration snippet with the additional options:
 * Coverage -> http://projects.reficio.org/p2-maven-plugin/1.1.0/clover/index.html
 
 ### Reporting bugs
-Please describe the issue thoroughly. Please include a minimal pom.xml file that enables reproducing the problem.
+Please describe the issue thoroughly. Please include a minimal pom.xml file that can be used to reproduce the problem.
 
 ### Pull requests
-If you submit a pull request please make sure to an unit/integreation test case that covers the feature. Pull requests without a proper test coverage may not be pulled at all.
+If you submit a pull request please make sure to add an unit/integreation test case that covers the feature. Pull requests without a proper test coverage may not be pulled at all.
 
 ### Running integration tests
 Invoke the following command to run the integration tests suite:

@@ -19,6 +19,7 @@
 package org.reficio.p2.resolver.impl.facade
 
 import org.reficio.p2.resolver.Artifact
+import org.sonatype.aether.artifact.Artifact as AetherArtifact
 import org.sonatype.aether.collection.CollectRequest
 import org.sonatype.aether.graph.Dependency
 import org.sonatype.aether.graph.DependencyFilter
@@ -31,8 +32,8 @@ import org.sonatype.aether.util.filter.PatternExclusionsDependencyFilter
 import org.sonatype.aether.util.graph.PreorderNodeListGenerator
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.1.0
  */
@@ -90,7 +91,7 @@ class AetherSonatypeFacade implements AetherFacade {
 
     @Override
     Artifact translateArtifactAetherToGeneric(artifact) {
-        Artifact aetherArtifact = (Artifact) artifact
+	AetherArtifact aetherArtifact = (AetherArtifact) artifact
         aetherArtifact.with {
             return new Artifact(groupId, artifactId, baseVersion, extension, classifier,
                     snapshot, version, file)

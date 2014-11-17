@@ -29,8 +29,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.0.0
  */

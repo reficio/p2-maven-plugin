@@ -16,22 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.impl.facade
 
-/**
- * @author Tom Bujok (tom.bujok@gmail.com)<br>
- *         Reficio (TM) - Reestablish your software!<br>
- *         http://www.reficio.org
- * @since 1.1.0
- */
-class AetherSonatypeFacadeTest extends AbstractAetherFacadeTest {
-    @Override
-    AetherFacade facade() {
-        return new AetherSonatypeFacade()
-    }
+//
+// $Id$
+//
 
-    @Override
-    String expectedPackage() {
-        return "org.sonatype.aether."
-    }
-}
+import aQute.lib.osgi.Jar
+import org.reficio.p2.utils.TestUtils as Util;
+
+File target = new File(basedir, 'p2.repo/target/repository/features')
+assert target.exists()
+assert target.listFiles().size() == 1
+
+String jarName = "test.feature_1.0.0.jar"
+assert target.listFiles().first().name == jarName
+

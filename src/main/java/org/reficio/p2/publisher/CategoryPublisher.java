@@ -31,8 +31,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.0.0
  */
@@ -115,13 +115,13 @@ public class CategoryPublisher {
         }
 
         public Builder categoryFileLocation(String categoryFileLocation) {
-            checkNotNull(launcher, "categoryFileLocation cannot be null");
+            checkNotNull(categoryFileLocation, "categoryFileLocation cannot be null");
             this.categoryFileLocation = categoryFileLocation;
             return this;
         }
 
         public Builder metadataRepositoryLocation(String metadataRepositoryLocation) {
-            checkNotNull(launcher, "metadataRepositoryLocation cannot be null");
+            checkNotNull(metadataRepositoryLocation, "metadataRepositoryLocation cannot be null");
             this.metadataRepositoryLocation = metadataRepositoryLocation;
             return this;
         }

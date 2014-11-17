@@ -32,8 +32,8 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.0.0
  */

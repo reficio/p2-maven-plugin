@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents one <artifact> section in the plugin configuration.
+ * Represents one &lt;artifact&gt; section in the plugin configuration.
  * This class is mutable only because the values are set by Maven using the setters.
  *
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.0.0
  */

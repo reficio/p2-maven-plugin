@@ -23,8 +23,8 @@ import org.reficio.p2.resolver.impl.facade.AetherFacade
 import org.reficio.p2.resolver.impl.facade.AetherSonatypeFacade
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.1.0
  */
