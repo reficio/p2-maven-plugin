@@ -18,28 +18,13 @@
  */
 package org.reficio.p2.utils;
 
-import aQute.lib.osgi.FileResource;
-import aQute.lib.osgi.Resource;
 import aQute.lib.osgi.Analyzer;
+import aQute.lib.osgi.FileResource;
 import aQute.lib.osgi.Jar;
-
+import aQute.lib.osgi.Resource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,6 +34,18 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
@@ -70,35 +67,31 @@ public class JarUtils {
             Attributes attributes = manifest.getMainAttributes();
             attributes.putValue(Analyzer.BUNDLE_VERSION, version);
             jar.write(outputFile);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot open jar " + outputFile);
         } catch (Exception e) {
-            throw new RuntimeException("Cannot open jar " + outputFile);
+            throw new RuntimeException("Cannot open jar " + outputFile, e);
         } finally {
             if (jar != null) {
                 jar.close();
             }
         }
     }
-    
+
     public static void adjustFeatureQualifierVersionWithTimestamp(File inputFile, File outputFile) {
         Jar jar = null;
         try {
-        	jar = new Jar(inputFile);
-	        Resource res = jar.getResource("feature.xml");
-	        Document featureSpec = parseXml(res.openInputStream());
-	        String version = featureSpec.getDocumentElement().getAttributeNode("version").getValue();
-	        String newVersion = replaceQualifierWithTimestamp(version);
-	        featureSpec.getDocumentElement().getAttributeNode("version").setValue(newVersion);
-            File newXml = new File(inputFile.getParentFile(),"feature.xml");
+            jar = new Jar(inputFile);
+            Resource res = jar.getResource("feature.xml");
+            Document featureSpec = parseXml(res.openInputStream());
+            String version = featureSpec.getDocumentElement().getAttributeNode("version").getValue();
+            String newVersion = replaceQualifierWithTimestamp(version);
+            featureSpec.getDocumentElement().getAttributeNode("version").setValue(newVersion);
+            File newXml = new File(inputFile.getParentFile(), "feature.xml");
             writeXml(featureSpec, newXml);
             FileResource newRes = new FileResource(newXml);
             jar.putResource("feature.xml", newRes, true);
             jar.write(outputFile);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot open jar " + outputFile);
         } catch (Exception e) {
-            throw new RuntimeException("Cannot open jar " + outputFile);
+            throw new RuntimeException("Cannot open jar " + outputFile, e);
         } finally {
             if (jar != null) {
                 jar.close();
@@ -107,32 +100,28 @@ public class JarUtils {
     }
 
     public static Document parseXml(InputStream input) {
-    	try {
-	    	DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-	    	fac.setValidating(false);
-	    	
-	    	DocumentBuilder docBuilder = fac.newDocumentBuilder();
-	    	Document doc = docBuilder.parse(input);
-	    	
-	    	return doc;
-    	}catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	//should never reach this
-    	return null;
+        try {
+            DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+            fac.setValidating(false);
+            DocumentBuilder docBuilder = fac.newDocumentBuilder();
+            Document doc = docBuilder.parse(input);
+            return doc;
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot parse XML input", e);
+        }
     }
-    
+
     public static void writeXml(Document doc, File outputFile) {
-    	try {
-	    	Transformer transformer = TransformerFactory.newInstance().newTransformer();
-	    	Result output = new StreamResult(outputFile);
-	    	Source input = new DOMSource(doc);
-	    	transformer.transform(input, output);
-    	}catch (Exception e) {
-    		e.printStackTrace();
-    	}
+        try {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            Result output = new StreamResult(outputFile);
+            Source input = new DOMSource(doc);
+            transformer.transform(input, output);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot write XML document to file " + outputFile.getName(), e);
+        }
     }
-    
+
     public static String replaceQualifierWithTimestamp(String version) {
         String tweakedVersion = version;
         if (version.contains(ECLIPSE_QUALIFIER_POSTFIX)) {
@@ -140,7 +129,7 @@ public class JarUtils {
         }
         return tweakedVersion;
     }
-    
+
     public static String replaceSnapshotWithTimestamp(String version) {
         String tweakedVersion = version;
         if (version.contains(JAR_SNAPSHOT_POSTFIX)) {
@@ -150,7 +139,7 @@ public class JarUtils {
         }
         return tweakedVersion;
     }
-    
+
     public static String getTimeStamp() {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         return format.format(new Date());
