@@ -24,8 +24,8 @@ import static org.junit.Assert.assertEquals;
 import static org.reficio.p2.P2Helper.calculateSourceName;
 
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.0.0
  */

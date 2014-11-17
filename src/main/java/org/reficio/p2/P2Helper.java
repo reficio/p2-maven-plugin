@@ -37,11 +37,11 @@ import java.io.IOException;
  * <ul>
  * <li>artifact resolver module</li>
  * <li>artifact bundler module</li>
- * </li>
+ * </ul>
  * Wires up all the internal logic.
  *
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.1.0
  */

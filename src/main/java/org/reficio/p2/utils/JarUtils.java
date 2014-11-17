@@ -18,15 +18,20 @@
  */
 package org.reficio.p2.utils;
 
+import aQute.lib.osgi.FileResource;
+import aQute.lib.osgi.Resource;
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.w3c.dom.Document;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -36,9 +41,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 /**
- * @author Tom Bujok (tom.bujok@gmail.com)<br/>
- *         Reficio (TM) - Reestablish your software!<br/>
+ * @author Tom Bujok (tom.bujok@gmail.com)<br>
+ *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
  * @since 1.0.0
  */
@@ -46,6 +60,7 @@ public class JarUtils {
 
     private static final String JAR_SNAPSHOT_POSTFIX = "-SNAPSHOT";
     private static final String OSGI_SNAPSHOT_POSTFIX = ".SNAPSHOT";
+    private static final String ECLIPSE_QUALIFIER_POSTFIX = ".qualifier";
 
     public static void adjustSnapshotOutputVersion(File inputFile, File outputFile, String version) {
         Jar jar = null;
@@ -65,7 +80,67 @@ public class JarUtils {
             }
         }
     }
+    
+    public static void adjustFeatureQualifierVersionWithTimestamp(File inputFile, File outputFile) {
+        Jar jar = null;
+        try {
+        	jar = new Jar(inputFile);
+	        Resource res = jar.getResource("feature.xml");
+	        Document featureSpec = parseXml(res.openInputStream());
+	        String version = featureSpec.getDocumentElement().getAttributeNode("version").getValue();
+	        String newVersion = replaceQualifierWithTimestamp(version);
+	        featureSpec.getDocumentElement().getAttributeNode("version").setValue(newVersion);
+            File newXml = new File(inputFile.getParentFile(),"feature.xml");
+            writeXml(featureSpec, newXml);
+            FileResource newRes = new FileResource(newXml);
+            jar.putResource("feature.xml", newRes, true);
+            jar.write(outputFile);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot open jar " + outputFile);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot open jar " + outputFile);
+        } finally {
+            if (jar != null) {
+                jar.close();
+            }
+        }
+    }
 
+    public static Document parseXml(InputStream input) {
+    	try {
+	    	DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+	    	fac.setValidating(false);
+	    	
+	    	DocumentBuilder docBuilder = fac.newDocumentBuilder();
+	    	Document doc = docBuilder.parse(input);
+	    	
+	    	return doc;
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	//should never reach this
+    	return null;
+    }
+    
+    public static void writeXml(Document doc, File outputFile) {
+    	try {
+	    	Transformer transformer = TransformerFactory.newInstance().newTransformer();
+	    	Result output = new StreamResult(outputFile);
+	    	Source input = new DOMSource(doc);
+	    	transformer.transform(input, output);
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    public static String replaceQualifierWithTimestamp(String version) {
+        String tweakedVersion = version;
+        if (version.contains(ECLIPSE_QUALIFIER_POSTFIX)) {
+            tweakedVersion = tweakedVersion.replace(ECLIPSE_QUALIFIER_POSTFIX, "." + getTimeStamp());
+        }
+        return tweakedVersion;
+    }
+    
     public static String replaceSnapshotWithTimestamp(String version) {
         String tweakedVersion = version;
         if (version.contains(JAR_SNAPSHOT_POSTFIX)) {
@@ -75,8 +150,8 @@ public class JarUtils {
         }
         return tweakedVersion;
     }
-
-    private static String getTimeStamp() {
+    
+    public static String getTimeStamp() {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         return format.format(new Date());
     }
