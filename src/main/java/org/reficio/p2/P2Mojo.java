@@ -21,9 +21,7 @@ package org.reficio.p2;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.execution.MavenSession;
@@ -32,11 +30,7 @@ import org.apache.maven.plugin.AbstractMojoExecutionException;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugins.annotations.Component;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -65,8 +59,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -97,10 +89,6 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     @Parameter(defaultValue="${session}", required=true, readonly=true)
     private MavenSession session;
 
-    /**
-     * @component
-     * @required
-     */
     @Component
     @Requirement
     private BuildPluginManager pluginManager;
@@ -111,18 +99,10 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     @Parameter(defaultValue="${project.build.directory}/repository", required=true)
     private String destinationDirectory;
 
-    /**
-     * @component
-     * @required
-     */
     @Component
     @Requirement
     private EquinoxServiceFactory p2;
 
-    /**
-     * @component
-     * @required
-     */
     @Component
     @Requirement
     private P2ApplicationLauncher launcher;
@@ -130,21 +110,18 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     /**
      * Specifies a file containing category definitions.
-     *
      */
     @Parameter(defaultValue="")
     private String categoryFileURL;
 
     /**
      * Optional line of additional arguments passed to the p2 application launcher.
-     *
      */
     @Parameter(defaultValue="false")
     private boolean pedantic;
 
     /**
      * Specifies whether to compress generated update site.
-     *
      */
     @Parameter(defaultValue="true")
     private boolean compressSite;
@@ -152,15 +129,12 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     /**
      * Kill the forked process after a certain number of seconds. If set to 0, wait forever for the
      * process, never timing out.
-     *
      */
     @Parameter(defaultValue="0", alias="p2.timeout")
     private int forkedProcessTimeoutInSeconds;
 
     /**
      * Specifies additional arguments to p2Launcher, for example -consoleLog -debug -verbose
-     *
-     * @parameter default-value=""
      */
     @Parameter(defaultValue="")
     private String additionalArgs;
@@ -180,29 +154,21 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     /**
      * The current repository/network configuration of Maven.
-     *
      */
     @Parameter(defaultValue="${repositorySystemSession}", readonly=true, required=true)
     private Object repoSession;
 
     /**
      * The project's remote repositories to use for the resolution of project dependencies.
-     *
-     * @parameter default-value="${project.remoteProjectRepositories}"
-     * @required
-     * @readonly
      */
     @Parameter(defaultValue="${project.remoteProjectRepositories}", readonly=true, required=true)
     private List<Object> projectRepos;
 
-    /**
-     */
     @Parameter(readonly=true)
     private List<P2Artifact> artifacts;
 
     /**
      * A list of artifacts that define eclipse features
-     * 
      */
     @Parameter(readonly=true)
     private List<P2Artifact> features;
