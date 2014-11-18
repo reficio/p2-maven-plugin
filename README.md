@@ -157,7 +157,7 @@ You will see the following output:
     [INFO] ------------------------------------------------------------------------
 ```
 
-Your is located in the target/repository folder and looks like this:
+Your p2 site is located in the target/repository folder and looks like this:
 ```
 	pom.xml
 	target
@@ -171,9 +171,6 @@ Your is located in the target/repository folder and looks like this:
     │   │   ├── org.apache.commons.lang_2.5.0.jar
     │   │   ├── org.apache.commons.lang_2.6.0.jar
     │   │   └── org.apache.commons.lang3_3.1.0.jar
-    │   │
-    │   └── features
-	│       └── com.example.feature_1.0.0.jar     
 ```
 
 Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is to expose our newly created update site using an HTTP server. We're going to use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin set-up. Just type 'mvn jetty:run' and open the following link http://localhost:8080/site. Your P2 update site will be there!
@@ -215,15 +212,15 @@ Now, simply reference your site in your target definition and play with your Ecl
 ```
 
 ## Best Practices
-* **DO NOT** to use the Tycho's pomDependencies->consider option as it simply of NO good
+* **DO NOT** to use the Tycho's pomDependencies->consider option as it is simply of NO good
 * **DO NOT** define your external dependencies in the `dependencies` section of the pom.xml (mvn compilation will work in the console, but it will not work in the Eclipse IDE when you import the project, since the 'Target Configuration' knows nothing about the dependencies defined there)
-* Use the MANIFEST-FIRST approach - define all your depencies in the MANIFEST.MF files.
-* If some of your depencies are not OSGi bundles or are not available in P2 update sites, SIMPLY define them in the p2-maven-plugin config, generate the site and make it available using jetty (or any other mechanism). Then add the URL of the exposed site to the target platform definition. In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP project!
+* Use the MANIFEST-FIRST approach - define all your dependencies in the MANIFEST.MF files.
+* If some of your dependencies are not OSGi bundles or are not available in P2 update sites, SIMPLY define them in the p2-maven-plugin config, generate the site and make it available using jetty (or any other mechanism). Then add the URL of the exposed site to the target platform definition. In such a way you will have a consistent, manifest-first dependency management in Eclipse RCP project!
 * Whenever you have to add another external dependency, simply re-invoke "mvn p2:site" and the site will be regenerated.
 * You can automate the generation/exposition of our site using for example Jenkins and Apache2
 
 ## Maven compatibility
-p2-maven-plugin is compatible with Maven 3.x
+p2-maven-plugin is compatible with Maven 3.x (we test it against 3.0.x, 3.1.x, 3.2.x)
 
 ## Examples
 There are many more use examples, just have a look:
@@ -455,7 +452,28 @@ Example usage:
 	</configuration>
 ```
 
-### Other features
+Your p2 site will look like this:
+```
+	pom.xml
+	target
+    ├── repository
+    │   ├── artifacts.jar
+    │   ├── category.xml
+    │   ├── content.jar
+    │   └── plugins
+    │   │   └── org.apache.commons.lang3_3.1.0.jar
+    │   │
+    │   └── features
+	│       └── com.example.feature_1.0.0.jar
+```
+
+You can have a look at two integration test cases of this feature that are located in the src/test/integration folder:
+
+* feature-bundle-01-it
+* feature-bundle-02-it
+
+
+### Other tricks
 * p2-maven-plugin will tweak the version of a snapshot dependency replacing the SNAPSHOT string with a timestamp in the following format "yyyyMMddHHmmss" (feature #14)
 * It's possible to add a classifier to the artifact definition - supported notation: `<groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>`; for example:  `<id>groupid:artifactid:jar:tests:version</id>` (feature #28)
 
