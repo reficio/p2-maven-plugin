@@ -16,6 +16,7 @@
 
         <maven.version>3.2.3</maven.version>
         <maven.annotations.version>3.3</maven.annotations.version>
+        <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
         <tycho.version>0.18.1</tycho.version>
 
         <sonatype.aether.version>1.13.1</sonatype.aether.version>
@@ -96,13 +97,14 @@
             <version>${maven.version}</version>
             <scope>provided</scope>
         </dependency>
-	    <!-- dependencies to annotations -->
-	    <dependency>
-	      <groupId>org.apache.maven.plugin-tools</groupId>
-	      <artifactId>maven-plugin-annotations</artifactId>
-	      <version>${maven.annotations.version}</version>
-	      <scope>provided</scope><!-- annotations are needed only to build the plugin -->
-	    </dependency>
+        <!-- dependencies to annotations -->
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-annotations</artifactId>
+            <version>${maven.annotations.version}</version>
+            <scope>provided</scope>
+            <!-- annotations are needed only to build the plugin -->
+        </dependency>
 
 
         <!-- org.sonatype.aether artifacts ARE provided by Maven 3.0.x -->
@@ -224,6 +226,27 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${maven.plugin.plugin.version}</version>
+                    <configuration>
+                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>mojo-descriptor</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>descriptor</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.gmaven</groupId>
