@@ -166,11 +166,14 @@ Your is located in the target/repository folder and looks like this:
     │   ├── category.xml
     │   ├── content.jar
     │   └── plugins
-    │       ├── org.apache.commons.io_2.1.0.jar
-    │       ├── org.apache.commons.lang_2.4.0.jar
-    │       ├── org.apache.commons.lang_2.5.0.jar
-    │       ├── org.apache.commons.lang_2.6.0.jar
-    │       └── org.apache.commons.lang3_3.1.0.jar        
+    │   │   ├── org.apache.commons.io_2.1.0.jar
+    │   │   ├── org.apache.commons.lang_2.4.0.jar
+    │   │   ├── org.apache.commons.lang_2.5.0.jar
+    │   │   ├── org.apache.commons.lang_2.6.0.jar
+    │   │   └── org.apache.commons.lang3_3.1.0.jar
+    │   │
+    │   └── features
+	│       └── com.example.feature_1.0.0.jar     
 ```
 
 Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is to expose our newly created update site using an HTTP server. We're going to use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin set-up. Just type 'mvn jetty:run' and open the following link http://localhost:8080/site. Your P2 update site will be there!
@@ -429,6 +432,28 @@ Example usage:
     </artifact>
 ```
 
+### Eclipse Features
+You can also add eclipse feature bundles to maven and include them in the generated p2 repository.
+
+* build may fail if the maven artifact is not a valid eclipse feature jar
+* source and transitive must both be false for feature artifacts
+* plugins must be added separately, adding the feature will not add the corresponding plugins
+
+Example usage:
+```xml
+	<configuration>
+		<artifacts>
+			<artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
+		</artifacts>
+		<features>
+			<artifact>
+				<id>org.reficio:test.feature:1.0.0</id>
+				<source>false</source>
+				<transitive>false</transitive>
+			</artifact>
+		</features>
+	</configuration>
+```
 
 ### Other features
 * p2-maven-plugin will tweak the version of a snapshot dependency replacing the SNAPSHOT string with a timestamp in the following format "yyyyMMddHHmmss" (feature #14)
