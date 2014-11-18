@@ -60,14 +60,14 @@ Here's the pom.xml:
         <groupId>org.reficio.rcp</groupId>
         <artifactId>example-p2-site</artifactId>
         <packaging>pom</packaging>
-        <version>1.1.1</version>
+        <version>1.1.2-SNAPSHOT</version>
     
         <build>
             <plugins>
                 <plugin>
                     <groupId>org.reficio</groupId>
                     <artifactId>p2-maven-plugin</artifactId>
-                    <version>1.1.1</version>
+                    <version>1.1.2-SNAPSHOT</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
