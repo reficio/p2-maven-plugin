@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.impl.facade
+package org.reficio.p2.resolver.maven.impl.facade
 
 import org.eclipse.aether.artifact.Artifact as AetherArtifact
 import org.eclipse.aether.artifact.DefaultArtifact
@@ -29,7 +29,7 @@ import org.eclipse.aether.resolution.DependencyRequest
 import org.eclipse.aether.util.artifact.SubArtifact
 import org.eclipse.aether.util.filter.PatternExclusionsDependencyFilter
 import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator
-import org.reficio.p2.resolver.Artifact
+import org.reficio.p2.resolver.maven.Artifact
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>

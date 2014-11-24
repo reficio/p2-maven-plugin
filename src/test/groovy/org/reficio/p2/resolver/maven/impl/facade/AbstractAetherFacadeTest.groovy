@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.impl.facade
+package org.reficio.p2.resolver.maven.impl.facade
 
 import org.junit.Test
 

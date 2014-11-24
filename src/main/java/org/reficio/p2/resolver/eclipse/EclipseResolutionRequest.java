@@ -16,38 +16,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.impl.facade
-
-import org.reficio.p2.resolver.Artifact
+package org.reficio.p2.resolver.eclipse;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
  *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
- * @since 1.1.0
+ * @since 1.1.2
  */
-interface AetherFacade {
+public class EclipseResolutionRequest {
 
-    def newDependencyRequest(dependencyNode, dependencyFilter)
+    /**
+     * Artifact file name as it appears in the P2 update site.
+     * If the artifact file is: "org.junit_4.11.0.v201303080030.jar the id is: "org.junit".
+     */
+    private final String id;
 
-    def newPreorderNodeListGenerator()
+    /**
+     * Artifact file name as it appears in the P2 update site.
+     * If the artifact file is: "org.junit_4.11.0.v201303080030.jar the version is:"4.11.0.v201303080030".
+     */
+    private final String version;
 
-    def newCollectRequest()
+    /**
+     * Indicator to include source dependencies
+     */
+    private final boolean source;
 
-    def newDependency(defaultArtifact, String scope)
+    public EclipseResolutionRequest(String id, String version, boolean source) {
+        this.id = id;
+        this.version = version;
+        this.source = source;
+    }
 
-    def newDefaultArtifact(artifact)
+    public String getId() {
+        return id;
+    }
 
-    def newArtifactRequest()
+    public String getVersion() {
+        return version;
+    }
 
-    def newSubArtifact(artifact, String classifier, String extension)
-
-    def newPatternExclusionsDependencyFilter(List<String> excludes)
-
-    def newDependencyFilter(filterClosure)
-
-    Artifact translateArtifactAetherToGeneric(artifact)
-
-    def translateArtifactGenericToAether(Artifact artifact)
+    public boolean isSource() {
+        return source;
+    }
 
 }

@@ -16,12 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.impl
+package org.reficio.p2.resolver.maven.impl
 
 import org.apache.commons.lang.StringUtils
 import org.reficio.p2.logger.Logger
-import org.reficio.p2.resolver.*
-import org.reficio.p2.resolver.impl.facade.AetherFacade
+import org.reficio.p2.resolver.maven.impl.facade.AetherFacade
+import org.reficio.p2.resolver.maven.Artifact
+import org.reficio.p2.resolver.maven.ArtifactResolutionRequest
+import org.reficio.p2.resolver.maven.ArtifactResolutionResult
+import org.reficio.p2.resolver.maven.ArtifactResolver
+import org.reficio.p2.resolver.maven.ResolvedArtifact
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>

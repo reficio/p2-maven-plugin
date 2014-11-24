@@ -16,7 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.impl.facade
+package org.reficio.p2.resolver.maven.impl.facade
+
+import org.reficio.p2.resolver.maven.Artifact
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
@@ -24,14 +26,28 @@ package org.reficio.p2.resolver.impl.facade
  *         http://www.reficio.org
  * @since 1.1.0
  */
-class AetherSonatypeFacadeTest extends AbstractAetherFacadeTest {
-    @Override
-    AetherFacade facade() {
-        return new AetherSonatypeFacade()
-    }
+interface AetherFacade {
 
-    @Override
-    String expectedPackage() {
-        return "org.sonatype.aether."
-    }
+    def newDependencyRequest(dependencyNode, dependencyFilter)
+
+    def newPreorderNodeListGenerator()
+
+    def newCollectRequest()
+
+    def newDependency(defaultArtifact, String scope)
+
+    def newDefaultArtifact(artifact)
+
+    def newArtifactRequest()
+
+    def newSubArtifact(artifact, String classifier, String extension)
+
+    def newPatternExclusionsDependencyFilter(List<String> excludes)
+
+    def newDependencyFilter(filterClosure)
+
+    Artifact translateArtifactAetherToGeneric(artifact)
+
+    def translateArtifactGenericToAether(Artifact artifact)
+
 }

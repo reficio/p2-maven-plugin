@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver;
+package org.reficio.p2.resolver.maven;
 
 import java.io.File;
 

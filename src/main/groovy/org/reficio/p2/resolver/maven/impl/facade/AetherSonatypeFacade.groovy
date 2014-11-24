@@ -16,9 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.impl.facade
+package org.reficio.p2.resolver.maven.impl.facade
 
-import org.reficio.p2.resolver.Artifact
+import org.reficio.p2.resolver.maven.Artifact
 import org.sonatype.aether.artifact.Artifact as AetherArtifact
 import org.sonatype.aether.collection.CollectRequest
 import org.sonatype.aether.graph.Dependency
@@ -91,7 +91,7 @@ class AetherSonatypeFacade implements AetherFacade {
 
     @Override
     Artifact translateArtifactAetherToGeneric(artifact) {
-	AetherArtifact aetherArtifact = (AetherArtifact) artifact
+        AetherArtifact aetherArtifact = (AetherArtifact) artifact
         aetherArtifact.with {
             return new Artifact(groupId, artifactId, baseVersion, extension, classifier,
                     snapshot, version, file)

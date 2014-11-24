@@ -16,44 +16,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver;
+package org.reficio.p2.resolver.maven.impl
+
+import org.reficio.p2.resolver.maven.impl.facade.AetherEclipseFacade
+import org.reficio.p2.resolver.maven.impl.facade.AetherFacade
+import org.reficio.p2.resolver.maven.impl.facade.AetherSonatypeFacade
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
  *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class ResolvedArtifact {
+class Aether {
 
-    private boolean root;
-    private final Artifact artifact;
-    private final Artifact sourceArtifact;
-
-    public ResolvedArtifact(Artifact artifact, Artifact sourceArtifact, boolean root) {
-        this.artifact = artifact;
-        this.sourceArtifact = sourceArtifact;
-        this.root = root;
-    }
-
-    public Artifact getArtifact() {
-        return artifact;
-    }
-
-    public Artifact getSourceArtifact() {
-        return sourceArtifact;
-    }
-
-    public boolean isRoot() {
-        return root;
-    }
-
-    public boolean isTransitive() {
-        return !isRoot();
-    }
-
-    public boolean isSnapshot() {
-        return artifact.isSnapshot();
+    static AetherFacade facade(def repositorySystemSession) {
+        if (repositorySystemSession.getClass().getCanonicalName().contains("org.eclipse")) {
+            return new AetherEclipseFacade()
+        } else if (repositorySystemSession.getClass().getCanonicalName().contains("org.sonatype")) {
+            return new AetherSonatypeFacade()
+        } else {
+            throw new RuntimeException("Fuck you Maven!")
+        }
     }
 
 }

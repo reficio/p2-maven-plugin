@@ -16,17 +16,7 @@
                 <version>1.2.0-SNAPSHOT</version>
                 <executions>
                     <execution>
-                        <!-- PHASE EXAMPLE -->
-                        <!--
-                        This example presents how to bind the invocation of the plugin to the maven 'compile' phase.
-
-                        To run the example please invoke: mvn compile
-                        -->
-                        <id>generate-p2-site</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
+                        <id>default-cli</id>
 
                         <configuration>
                             <artifacts>
@@ -40,11 +30,30 @@
                                     <id>commons-lang:commons-lang:2.6</id>
                                 </artifact>
                             </artifacts>
+                            <p2>
+                                <artifact>
+                                    <id>org.junit:4.11.0.v201303080030</id>
+                                </artifact>
+                            </p2>
                         </configuration>
 
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.1.5.v20120716</version>
+                <configuration>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
+                    <webApp>
+                        <contextPath>/site</contextPath>
+                    </webApp>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -54,6 +63,14 @@
             <url>http://repo.reficio.org/maven/</url>
         </pluginRepository>
     </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>kepler</id>
+            <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</url>
+            <layout>p2</layout>
+        </repository>
+    </repositories>
 
 </project>
 

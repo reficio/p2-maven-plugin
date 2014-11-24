@@ -19,9 +19,10 @@
 package org.reficio.p2.resolver.impl;
 
 import org.junit.Test;
-import org.reficio.p2.resolver.impl.facade.AetherEclipseFacade;
-import org.reficio.p2.resolver.impl.facade.AetherFacade;
-import org.reficio.p2.resolver.impl.facade.AetherSonatypeFacade;
+import org.reficio.p2.resolver.maven.impl.Aether;
+import org.reficio.p2.resolver.maven.impl.facade.AetherEclipseFacade;
+import org.reficio.p2.resolver.maven.impl.facade.AetherFacade;
+import org.reficio.p2.resolver.maven.impl.facade.AetherSonatypeFacade;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;

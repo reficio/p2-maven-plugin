@@ -16,22 +16,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.impl.facade
+package org.reficio.p2.resolver.maven;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
  *         Reficio (TM) - Reestablish your software!<br>
  *         http://www.reficio.org
- * @since 1.1.0
+ * @since 1.0.0
  */
-class AetherEclipseFacadeTest extends AbstractAetherFacadeTest {
-    @Override
-    AetherFacade facade() {
-        return new AetherEclipseFacade()
+public class ResolvedArtifact {
+
+    private boolean root;
+    private final Artifact artifact;
+    private final Artifact sourceArtifact;
+
+    public ResolvedArtifact(Artifact artifact, Artifact sourceArtifact, boolean root) {
+        this.artifact = artifact;
+        this.sourceArtifact = sourceArtifact;
+        this.root = root;
     }
 
-    @Override
-    String expectedPackage() {
-        return "org.eclipse.aether."
+    public Artifact getArtifact() {
+        return artifact;
     }
+
+    public Artifact getSourceArtifact() {
+        return sourceArtifact;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public boolean isTransitive() {
+        return !isRoot();
+    }
+
+    public boolean isSnapshot() {
+        return artifact.isSnapshot();
+    }
+
 }

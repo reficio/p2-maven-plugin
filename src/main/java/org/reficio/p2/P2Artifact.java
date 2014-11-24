@@ -35,7 +35,7 @@ import java.util.Map;
 public class P2Artifact {
 
     /**
-     * Artifact id the following format "groupId:artifactId:version"
+     * Artifact id in the following format "groupId:artifactId:version"
      */
     private String id;
 

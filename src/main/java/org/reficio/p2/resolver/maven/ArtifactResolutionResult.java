@@ -16,7 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver;
+package org.reficio.p2.resolver.maven;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
@@ -24,8 +27,16 @@ package org.reficio.p2.resolver;
  *         http://www.reficio.org
  * @since 1.1.0
  */
-public interface ArtifactResolver {
+public class ArtifactResolutionResult {
 
-    ArtifactResolutionResult resolve(ArtifactResolutionRequest request);
+    private final List<ResolvedArtifact> resolvedArtifacts;
+
+    public ArtifactResolutionResult(List<ResolvedArtifact> resolvedArtifacts) {
+        this.resolvedArtifacts = new ArrayList<ResolvedArtifact>(resolvedArtifacts);
+    }
+
+    public List<ResolvedArtifact> getResolvedArtifacts() {
+        return new ArrayList<ResolvedArtifact>(resolvedArtifacts);
+    }
 
 }

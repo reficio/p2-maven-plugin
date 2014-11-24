@@ -19,7 +19,7 @@
 package org.reficio.p2;
 
 import org.reficio.p2.logger.Logger;
-import org.reficio.p2.resolver.ResolvedArtifact;
+import org.reficio.p2.resolver.maven.ResolvedArtifact;
 import org.reficio.p2.utils.BundleUtils;
 
 /**

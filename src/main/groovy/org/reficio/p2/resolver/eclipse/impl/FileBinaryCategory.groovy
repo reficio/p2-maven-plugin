@@ -16,27 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver;
+package org.reficio.p2.resolver.eclipse.impl
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * @author Tom Bujok (tom.bujok@gmail.com)<br>
- *         Reficio (TM) - Reestablish your software!<br>
- *         http://www.reficio.org
- * @since 1.1.0
- */
-public class ArtifactResolutionResult {
-
-    private final List<ResolvedArtifact> resolvedArtifacts;
-
-    public ArtifactResolutionResult(List<ResolvedArtifact> resolvedArtifacts) {
-        this.resolvedArtifacts = new ArrayList<ResolvedArtifact>(resolvedArtifacts);
+class FileBinaryCategory {
+    def static leftShift(File file, URL url) {
+        url.withInputStream { is ->
+            file.withOutputStream { os ->
+                def bs = new BufferedOutputStream(os)
+                bs << is
+            }
+        }
     }
-
-    public List<ResolvedArtifact> getResolvedArtifacts() {
-        return new ArrayList<ResolvedArtifact>(resolvedArtifacts);
-    }
-
 }
+

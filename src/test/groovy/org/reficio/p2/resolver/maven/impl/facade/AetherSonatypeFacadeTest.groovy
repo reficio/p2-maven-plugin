@@ -16,11 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.impl
-
-import org.reficio.p2.resolver.impl.facade.AetherEclipseFacade
-import org.reficio.p2.resolver.impl.facade.AetherFacade
-import org.reficio.p2.resolver.impl.facade.AetherSonatypeFacade
+package org.reficio.p2.resolver.maven.impl.facade
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
@@ -28,16 +24,14 @@ import org.reficio.p2.resolver.impl.facade.AetherSonatypeFacade
  *         http://www.reficio.org
  * @since 1.1.0
  */
-class Aether {
-
-    static AetherFacade facade(def repositorySystemSession) {
-        if (repositorySystemSession.getClass().getCanonicalName().contains("org.eclipse")) {
-            return new AetherEclipseFacade()
-        } else if (repositorySystemSession.getClass().getCanonicalName().contains("org.sonatype")) {
-            return new AetherSonatypeFacade()
-        } else {
-            throw new RuntimeException("Fuck you Maven!")
-        }
+class AetherSonatypeFacadeTest extends AbstractAetherFacadeTest {
+    @Override
+    AetherFacade facade() {
+        return new AetherSonatypeFacade()
     }
 
+    @Override
+    String expectedPackage() {
+        return "org.sonatype.aether."
+    }
 }

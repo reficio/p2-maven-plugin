@@ -24,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.bundler.ArtifactBundlerRequest;
 import org.reficio.p2.bundler.impl.AquteHelper;
-import org.reficio.p2.resolver.ResolvedArtifact;
+import org.reficio.p2.resolver.maven.ResolvedArtifact;
 import org.reficio.p2.utils.BundleUtils;
 import org.reficio.p2.utils.JarUtils;
 
