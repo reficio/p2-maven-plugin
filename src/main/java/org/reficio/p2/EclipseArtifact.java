@@ -35,7 +35,7 @@ public class EclipseArtifact {
     /**
      * Indicator to include source dependencies
      */
-    private boolean source = true;
+    private boolean source = false;
 
     public String getId() {
         return id;
