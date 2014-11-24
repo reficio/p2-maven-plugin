@@ -17,7 +17,7 @@
         <maven.version>3.2.3</maven.version>
         <maven.annotations.version>3.3</maven.annotations.version>
         <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
-        <tycho.version>0.18.1</tycho.version>
+        <tycho.version>0.21.0</tycho.version>
 
         <sonatype.aether.version>1.13.1</sonatype.aether.version>
         <eclipse.aether.version>0.9.0.M3</eclipse.aether.version>
