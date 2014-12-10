@@ -374,6 +374,21 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         }
     }
 
+    private void handleFeature(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) {
+    	log.debug("Handling feature "+p2Artifact.getId());
+        ArtifactBundlerRequest bundlerRequest = P2Helper.createBundlerRequest(p2Artifact, resolvedArtifact, featuresDestinationFolder);
+    	try {
+    		File inputFile = bundlerRequest.getBinaryInputFile();
+    		File outputFile = bundlerRequest.getBinaryOutputFile();
+    		//This will also copy the input to the output
+   			JarUtils.adjustFeatureXml(inputFile, outputFile, this.bundlesDestinationFolder, log);
+   			
+	    	log.info("Copied "+inputFile+ " to "+outputFile);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error while bundling jar or source: " + bundlerRequest.getBinaryInputFile().getName(), ex);
+        }
+    }
+    
     private void bundleArtifact(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) {
         P2Validator.validateBundleRequest(p2Artifact, resolvedArtifact);
         ArtifactBundler bundler = getArtifactBundler();
