@@ -360,7 +360,8 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     		File inputFile = bundlerRequest.getBinaryInputFile();
     		File outputFile = bundlerRequest.getBinaryOutputFile();
     		//This will also copy the input to the output
-   			JarUtils.adjustFeatureQualifierVersionWithTimestamp(inputFile, outputFile);
+   			JarUtils.adjustFeatureXml(inputFile, outputFile, this.bundlesDestinationFolder, log);
+   			
 	    	log.info("Copied "+inputFile+ " to "+outputFile);
         } catch (Exception ex) {
             throw new RuntimeException("Error while bundling jar or source: " + bundlerRequest.getBinaryInputFile().getName(), ex);

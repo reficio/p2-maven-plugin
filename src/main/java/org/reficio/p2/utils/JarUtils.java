@@ -25,16 +25,31 @@ import aQute.lib.osgi.Jar;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.RegexFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.maven.plugin.logging.Log;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import clover.retrotranslator.edu.emory.mathcs.backport.java.util.Arrays;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
@@ -81,16 +96,17 @@ public class JarUtils {
         }
     }
     
-    public static void adjustFeatureQualifierVersionWithTimestamp(File inputFile, File outputFile) {
+    public static void adjustFeatureXml(File inputFile, File outputFile, File pluginDir, Log log) {
         Jar jar = null;
         try {
         	jar = new Jar(inputFile);
 	        Resource res = jar.getResource("feature.xml");
 	        Document featureSpec = parseXml(res.openInputStream());
-	        String version = featureSpec.getDocumentElement().getAttributeNode("version").getValue();
-	        String newVersion = replaceQualifierWithTimestamp(version);
-	        featureSpec.getDocumentElement().getAttributeNode("version").setValue(newVersion);
-            File newXml = new File(inputFile.getParentFile(),"feature.xml");
+	        
+	        adjustFeatureQualifierVersionWithTimestamp(featureSpec);
+	        adjustFeaturePluginData(featureSpec, pluginDir, log);
+            
+	        File newXml = new File(inputFile.getParentFile(),"feature.xml");
             writeXml(featureSpec, newXml);
             FileResource newRes = new FileResource(newXml);
             jar.putResource("feature.xml", newRes, true);
@@ -105,7 +121,48 @@ public class JarUtils {
             }
         }
     }
+    
+    public static void adjustFeatureQualifierVersionWithTimestamp(Document featureSpec) {
+	        String version = featureSpec.getDocumentElement().getAttributeNode("version").getValue();
+	        String newVersion = replaceQualifierWithTimestamp(version);   
+	        featureSpec.getDocumentElement().getAttributeNode("version").setValue(newVersion);
+    }
 
+    public static void adjustFeaturePluginData(Document featureSpec, File pluginDir, Log log) throws IOException {
+	        //get list of all plugins
+	        NodeList plugins = featureSpec.getElementsByTagName("plugin");
+	        for(int i=0; i<plugins.getLength(); ++i) {
+	        	Node n = plugins.item(i);
+	        	if (n instanceof Element) {
+		        	Element el = (Element)n;
+		        	final String pluginId = el.getAttribute("id");
+		        	File[] files = pluginDir.listFiles(new FilenameFilter() {
+						@Override
+						public boolean accept(File dir, String name) {
+							return name.startsWith(pluginId) && name.endsWith(".jar");
+						}
+					});
+		        	if (files.length < 0) {
+		        		log.error("Cannot find plugin "+pluginId);
+		        	} else {
+		        		//in case more than one plugin with same id
+		        		Arrays.sort(files,new Comparator<File>() {
+							@Override
+							public int compare(File arg0, File arg1) {
+								return arg0.getName().compareTo(arg1.getName());
+							}
+						});
+		        		//File firstFile = files[0];
+		        		File lastFile = files[files.length-1];
+		        		//String firstVersion = BundleUtils.INSTANCE.getBundleVersion(new Jar(firstFile));
+		        		String lastVersion = BundleUtils.INSTANCE.getBundleVersion(new Jar(lastFile)); //may throw IOException
+		        		log.info("Adjusting version for plugin "+pluginId+" to "+lastVersion);
+		        		el.setAttribute("version", lastVersion);
+		        	}
+	        	}
+	        }
+    }
+    
     public static Document parseXml(InputStream input) {
     	try {
 	    	DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
