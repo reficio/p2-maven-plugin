@@ -20,6 +20,7 @@ package org.reficio.p2.bundler.impl;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
+
 import org.apache.commons.io.FileUtils;
 import org.reficio.p2.bundler.ArtifactBundler;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
@@ -27,6 +28,7 @@ import org.reficio.p2.bundler.ArtifactBundlerRequest;
 import org.reficio.p2.logger.Logger;
 import org.reficio.p2.utils.BundleUtils;
 import org.reficio.p2.utils.JarUtils;
+import org.reficio.p2.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;

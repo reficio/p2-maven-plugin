@@ -189,6 +189,12 @@
             <version>${tycho.version}</version>
         </dependency>
         <dependency>
+        	<groupId>org.eclipse.tycho</groupId>
+        	<artifactId>tycho-packaging-plugin</artifactId>
+        	<version>${tycho.version}</version>
+        	<type>maven-plugin</type>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
@@ -221,6 +227,7 @@
             <artifactId>clover</artifactId>
             <version>${clover.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>

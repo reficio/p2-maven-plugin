@@ -73,10 +73,6 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class JarUtils {
 
-    private static final String JAR_SNAPSHOT_POSTFIX = "-SNAPSHOT";
-    private static final String OSGI_SNAPSHOT_POSTFIX = ".SNAPSHOT";
-    private static final String ECLIPSE_QUALIFIER_POSTFIX = ".qualifier";
-
     public static void adjustSnapshotOutputVersion(File inputFile, File outputFile, String version) {
         Jar jar = null;
         try {
@@ -96,18 +92,18 @@ public class JarUtils {
         }
     }
     
-    public static void adjustFeatureXml(File inputFile, File outputFile, File pluginDir, Log log) {
+    public static void adjustFeatureXml(File inputFile, File outputFile, File pluginDir, Log log, String timestamp) {
         Jar jar = null;
         try {
         	jar = new Jar(inputFile);
 	        Resource res = jar.getResource("feature.xml");
-	        Document featureSpec = parseXml(res.openInputStream());
+	        Document featureSpec = XmlUtils.parseXml(res.openInputStream());
 	        
-	        adjustFeatureQualifierVersionWithTimestamp(featureSpec);
+	        adjustFeatureQualifierVersionWithTimestamp(featureSpec, timestamp);
 	        adjustFeaturePluginData(featureSpec, pluginDir, log);
             
 	        File newXml = new File(inputFile.getParentFile(),"feature.xml");
-            writeXml(featureSpec, newXml);
+	        XmlUtils.writeXml(featureSpec, newXml);
             FileResource newRes = new FileResource(newXml);
             jar.putResource("feature.xml", newRes, true);
             jar.write(outputFile);
@@ -122,9 +118,9 @@ public class JarUtils {
         }
     }
     
-    public static void adjustFeatureQualifierVersionWithTimestamp(Document featureSpec) {
+    public static void adjustFeatureQualifierVersionWithTimestamp(Document featureSpec, String timestamp) {
 	        String version = featureSpec.getDocumentElement().getAttributeNode("version").getValue();
-	        String newVersion = replaceQualifierWithTimestamp(version);   
+	        String newVersion = Utils.eclipseQualifierToTimeStamp(version, timestamp); 
 	        featureSpec.getDocumentElement().getAttributeNode("version").setValue(newVersion);
     }
 
@@ -163,56 +159,6 @@ public class JarUtils {
 	        }
     }
     
-    public static Document parseXml(InputStream input) {
-    	try {
-	    	DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-	    	fac.setValidating(false);
-	    	
-	    	DocumentBuilder docBuilder = fac.newDocumentBuilder();
-	    	Document doc = docBuilder.parse(input);
-	    	
-	    	return doc;
-    	}catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	//should never reach this
-    	return null;
-    }
-    
-    public static void writeXml(Document doc, File outputFile) {
-    	try {
-	    	Transformer transformer = TransformerFactory.newInstance().newTransformer();
-	    	Result output = new StreamResult(outputFile);
-	    	Source input = new DOMSource(doc);
-	    	transformer.transform(input, output);
-    	}catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    }
-    
-    public static String replaceQualifierWithTimestamp(String version) {
-        String tweakedVersion = version;
-        if (version.contains(ECLIPSE_QUALIFIER_POSTFIX)) {
-            tweakedVersion = tweakedVersion.replace(ECLIPSE_QUALIFIER_POSTFIX, "." + getTimeStamp());
-        }
-        return tweakedVersion;
-    }
-    
-    public static String replaceSnapshotWithTimestamp(String version) {
-        String tweakedVersion = version;
-        if (version.contains(JAR_SNAPSHOT_POSTFIX)) {
-            tweakedVersion = tweakedVersion.replace(JAR_SNAPSHOT_POSTFIX, "-" + getTimeStamp());
-        } else if (version.contains(OSGI_SNAPSHOT_POSTFIX)) {
-            tweakedVersion = tweakedVersion.replace(OSGI_SNAPSHOT_POSTFIX, "." + getTimeStamp());
-        }
-        return tweakedVersion;
-    }
-    
-    public static String getTimeStamp() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        return format.format(new Date());
-    }
-
     public static void removeSignature(File jar) {
         File unsignedJar = new File(jar.getParent(), jar.getName() + ".tmp");
         try {
