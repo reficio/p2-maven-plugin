@@ -16,7 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package test2;
+package org.reficio.p2;
 
-public class Dummy {
+public class P2Feature {
+
 }

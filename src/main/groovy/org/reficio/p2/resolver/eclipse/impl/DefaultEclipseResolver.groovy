@@ -79,6 +79,5 @@ class DefaultEclipseResolver implements EclipseResolver {
             }
         }
     }
-
 }
 

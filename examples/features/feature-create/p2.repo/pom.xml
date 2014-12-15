@@ -28,6 +28,8 @@
 		<version>1.0.0</version>
     </parent>
 
+	<packaging>pom</packaging>
+	
     <artifactId>p2.repo</artifactId>
 
     <properties>
@@ -36,7 +38,7 @@
     </properties>
 
     <description>
-        Test the basic features option
+        Demonstrate the create feature option, where a feature is generated from information in this pom
     </description>
 
     <build>
@@ -44,7 +46,7 @@
             <plugin>
                 <groupId>org.reficio</groupId>
                 <artifactId>p2-maven-plugin</artifactId>
-                <version>1.1.1</version>
+                <version>1.1.2-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>default-cli</id>
@@ -53,25 +55,30 @@
 							<goal>site</goal>
 						</goals>
                         <configuration>
-                            <featureArtifacts>
-                                <artifact>
-                                    <id>org.reficio.rcp:test.feature:1.0.0</id>
-                                    <source>false</source>
-                                    <transitive>false</transitive>
-                                </artifact>
-                            </featureArtifacts>
-							<artifacts>
-								<artifact>
-									<id>org.reficio.rcp:test.bundle1:1.0.0</id>
-									<transitive>false</transitive>
-									<source>true</source>
-								</artifact>
-								<artifact>
-									<id>org.reficio.rcp:test.bundle2:1.0.0</id>
-									<transitive>false</transitive>
-									<source>true</source>
-								</artifact>
-							</artifacts>
+                            <featureDefinitions>
+								<feature>
+									<id>test.feature</id>
+									<version>${project.version}</version>
+									<label>Test Feature 2</label>
+									<providerName>${project.groupId}</providerName>
+									<description>${project.description}</description>
+									<copyright></copyright>
+									<license></license>
+									<generateSourceFeature>true</generateSourceFeature>
+									<artifacts>
+										<artifact>
+											<id>org.reficio.rcp:test.bundle1:1.0.0</id>
+											<transitive>false</transitive>
+											<source>true</source>
+										</artifact>
+										<artifact>
+											<id>org.reficio.rcp:test.bundle2:1.0.0-SNAPSHOT</id>
+											<transitive>false</transitive>
+											<source>true</source>
+										</artifact>
+									</artifacts>									
+								</feature>
+                            </featureDefinitions>
                         </configuration>
                     </execution>
                 </executions>

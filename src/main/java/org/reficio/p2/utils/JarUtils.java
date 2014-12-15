@@ -73,7 +73,7 @@ public class JarUtils {
     private static final String JAR_SNAPSHOT_POSTFIX = "-SNAPSHOT";
     private static final String OSGI_SNAPSHOT_POSTFIX = ".SNAPSHOT";
     private static final String ECLIPSE_QUALIFIER_POSTFIX = ".qualifier";
-
+    
     public static void adjustSnapshotOutputVersion(File inputFile, File outputFile, String version) {
         Jar jar = null;
         try {
@@ -92,18 +92,18 @@ public class JarUtils {
     }
 
     
-    public static void adjustFeatureXml(File inputFile, File outputFile, File pluginDir, Log log) {
+    public static void adjustFeatureXml(File inputFile, File outputFile, File pluginDir, Log log, String timestamp) {
         Jar jar = null;
         try {
         	jar = new Jar(inputFile);
 	        Resource res = jar.getResource("feature.xml");
-	        Document featureSpec = parseXml(res.openInputStream());
+	        Document featureSpec = XmlUtils.parseXml(res.openInputStream());
 	        
-	        adjustFeatureQualifierVersionWithTimestamp(featureSpec);
+	        adjustFeatureQualifierVersionWithTimestamp(featureSpec, timestamp);
 	        adjustFeaturePluginData(featureSpec, pluginDir, log);
             
 	        File newXml = new File(inputFile.getParentFile(),"feature.xml");
-            writeXml(featureSpec, newXml);
+	        XmlUtils.writeXml(featureSpec, newXml);
             FileResource newRes = new FileResource(newXml);
             jar.putResource("feature.xml", newRes, true);
             jar.write(outputFile);
@@ -116,9 +116,9 @@ public class JarUtils {
         }
     }
     
-    public static void adjustFeatureQualifierVersionWithTimestamp(Document featureSpec) {
+    public static void adjustFeatureQualifierVersionWithTimestamp(Document featureSpec, String timestamp) {
 	        String version = featureSpec.getDocumentElement().getAttributeNode("version").getValue();
-	        String newVersion = replaceQualifierWithTimestamp(version);   
+	        String newVersion = Utils.eclipseQualifierToTimeStamp(version, timestamp); 
 	        featureSpec.getDocumentElement().getAttributeNode("version").setValue(newVersion);
     }
 

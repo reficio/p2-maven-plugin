@@ -27,6 +27,7 @@ import org.reficio.p2.bundler.ArtifactBundlerRequest;
 import org.reficio.p2.logger.Logger;
 import org.reficio.p2.utils.BundleUtils;
 import org.reficio.p2.utils.JarUtils;
+import org.reficio.p2.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;

@@ -23,19 +23,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Represents one &lt;artifact&gt; section in the plugin configuration.
- * This class is mutable only because the values are set by Maven using the setters.
- *
- * @author Tom Bujok (tom.bujok@gmail.com)<br>
- *         Reficio (TM) - Reestablish your software!<br>
- *         http://www.reficio.org
- * @since 1.0.0
- */
-public class P2Artifact implements IP2Artifact {
+public class P2FeatureArtifact extends P2Feature implements IP2Artifact {
 
     /**
-     * Artifact id in the following format "groupId:artifactId:version"
+     * Artifact id the following format "groupId:artifactId:version"
      */
     private String id;
 
@@ -69,8 +60,6 @@ public class P2Artifact implements IP2Artifact {
      */
     private Map instructions = new LinkedHashMap();
 
-    public P2Artifact() {
-    }
 
     public String getId() {
         return id;

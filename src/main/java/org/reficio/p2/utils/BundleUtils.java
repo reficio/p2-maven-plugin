@@ -26,6 +26,7 @@ import org.reficio.p2.resolver.maven.Artifact;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.jar.Attributes;
@@ -117,11 +118,14 @@ public class BundleUtils extends BundlePlugin {
             return null;
         }
     }
-
-    public static Properties transformDirectives(Map instructions) {
-        Properties properties = new Properties();
-        properties.putAll(BundlePlugin.transformDirectives(instructions));
+    
+    public static Properties transformDirectivesToProperties(Map<String, Object> instructions) {
+    	Map<String, String> converted = new HashMap<String, String>();
+    	for (Map.Entry<String, Object> e: instructions.entrySet()){
+    	    converted.put(e.getKey(), e.getValue().toString());
+    	}
+    	Properties properties = new Properties();
+        properties.putAll(BundlePlugin.transformDirectives(converted));
         return properties;
     }
-
 }
