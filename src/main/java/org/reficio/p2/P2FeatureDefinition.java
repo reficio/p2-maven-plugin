@@ -19,6 +19,7 @@
 package org.reficio.p2;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -109,6 +110,9 @@ public class P2FeatureDefinition extends P2Feature {
 	
 	List<P2Artifact> artifacts;
 	public List<P2Artifact> getArtifacts() {
+		if (null==artifacts) {
+			this.artifacts = new ArrayList<P2Artifact>();
+		}
 		return artifacts;
 	}
 	public void setArtifacts(List<P2Artifact> artifacts) {

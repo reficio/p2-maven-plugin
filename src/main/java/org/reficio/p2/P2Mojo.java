@@ -60,6 +60,7 @@ import org.reficio.p2.utils.JarUtils;
 import org.reficio.p2.utils.Utils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,6 +71,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 
 /**
  * Main plugin class
@@ -429,20 +432,36 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         }
     }
     
-    private void createFeature(P2FeatureDefinition p2featureDefintion) {
+    private void createFeature(P2FeatureDefinition p2featureDefinition) {
     	try {
-    		Map<P2Artifact, ArtifactBundlerInstructions> bi = this.processArtifacts(p2featureDefintion.getArtifacts());
+    		Map<P2Artifact, ArtifactBundlerInstructions> bi = this.processArtifacts(p2featureDefinition.getArtifacts());
     		
-			String timestamp = Utils.getTimeStamp();
-			p2featureDefintion.setVersion( Utils.mavenToEclipse(p2featureDefintion.getVersion(), timestamp) );
-			FeatureBuilder featureBuilder = new FeatureBuilder(p2featureDefintion, bi);
-			featureBuilder.buildXml();
-			featureBuilder.generate(featuresDestinationFolder);
-			log.info("Created feature "+p2featureDefintion.getId());
-			
-			if (p2featureDefintion.getGenerateSourceFeature()) {
-				featureBuilder.generateSourceFeature(featuresDestinationFolder);
+			if (null==p2featureDefinition.getFeatureFile()) {
+				//we must be generating the feature file from the pom
+				String timestamp = Utils.getTimeStamp();
+				p2featureDefinition.setVersion( Utils.mavenToEclipse(p2featureDefinition.getVersion(), timestamp) );
+
+				FeatureBuilder featureBuilder = new FeatureBuilder(p2featureDefinition, bi);
+				featureBuilder.generate(this.featuresDestinationFolder);
+				if (p2featureDefinition.getGenerateSourceFeature()) {
+					featureBuilder.generateSourceFeature(this.featuresDestinationFolder);
+				}
+			} else {
+				//given a feature file, so build using tycho
+				File basedir = p2featureDefinition.getFeatureFile().getParentFile();
+				TychoFeatureBuilder builder = new TychoFeatureBuilder(
+						p2featureDefinition.getFeatureFile(),
+						this.featuresDestinationFolder.getAbsolutePath(),
+						"test.feature",
+						"1.0.0",
+						project,
+						this.session,
+						this.pluginManager
+				);
+				builder.execute();
 			}
+			
+			log.info("Created feature "+p2featureDefinition.getId());
 			
     	} catch (Exception e) {
     		log.error(e);
