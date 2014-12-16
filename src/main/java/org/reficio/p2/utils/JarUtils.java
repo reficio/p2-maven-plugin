@@ -94,6 +94,7 @@ public class JarUtils {
     
     public static void adjustFeatureXml(File inputFile, File outputFile, File pluginDir, Log log, String timestamp) {
         Jar jar = null;
+        File newXml = null;
         try {
         	jar = new Jar(inputFile);
 	        Resource res = jar.getResource("feature.xml");
@@ -102,7 +103,9 @@ public class JarUtils {
 	        adjustFeatureQualifierVersionWithTimestamp(featureSpec, timestamp);
 	        adjustFeaturePluginData(featureSpec, pluginDir, log);
             
-	        File newXml = new File(inputFile.getParentFile(),"feature.xml");
+	        File temp = new File(outputFile.getParentFile(),"temp");
+	        temp.mkdir();
+	        newXml = new File(temp,"feature.xml");
 	        XmlUtils.writeXml(featureSpec, newXml);
             FileResource newRes = new FileResource(newXml);
             jar.putResource("feature.xml", newRes, true);
@@ -114,6 +117,9 @@ public class JarUtils {
         } finally {
             if (jar != null) {
                 jar.close();
+            }
+            if (null!=newXml) {
+            	newXml.delete();
             }
         }
     }

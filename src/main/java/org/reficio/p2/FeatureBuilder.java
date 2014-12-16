@@ -71,14 +71,15 @@ public class FeatureBuilder {
 		try {
 			File featureContent = new File(destinationFolder, this.getFeatureFullName());
 			featureContent.mkdir();
+			this.buildXml();
 			XmlUtils.writeXml(this.xmlDoc, new File(featureContent, "feature.xml"));
 			
-			//TODO: add other files that are required by the feature
-			
+			//we must be generating the feature file from the pom
 			FileOutputStream fos = new FileOutputStream(new File(destinationFolder, this.getFeatureFullName()+".jar"));
 			Manifest mf = new Manifest();
 			JarOutputStream jar = new JarOutputStream(fos, mf);
 			addToJar(jar, featureContent);
+			
 		} catch (Exception e) {
 			throw new RuntimeException("Cannot generate feature", e);
 		}
@@ -129,7 +130,7 @@ public class FeatureBuilder {
 	}
 	
 	Document xmlDoc;
-	public void buildXml() throws ParserConfigurationException, FileNotFoundException {
+	void buildXml() throws ParserConfigurationException, FileNotFoundException {
 		xmlDoc = this.fetchOrCreateXml();
 		Element featureElement = XmlUtils.fetchOrCreateElement(xmlDoc, xmlDoc, "feature");
 		if (null != this.p2FeatureDefintion.getId()) {
@@ -236,5 +237,5 @@ public class FeatureBuilder {
 
 
 	void createFeatureWithTycho() {
-
+	}
 }

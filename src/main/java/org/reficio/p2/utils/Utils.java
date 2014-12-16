@@ -37,7 +37,7 @@ public class Utils {
         if (version.contains(ECLIPSE_QUALIFIER_POSTFIX)) {
             tweakedVersion = tweakedVersion.replace(ECLIPSE_QUALIFIER_POSTFIX, "." + timestamp );
         }
-        return version;
+        return tweakedVersion;
     }
     
     public static String snapshotToTimestamp(String version, String timestamp) {
