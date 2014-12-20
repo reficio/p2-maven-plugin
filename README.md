@@ -229,7 +229,7 @@ There are many more use examples, just have a look:
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml
 
 This is the simplest and the shortest setup. Only the identifiers of the dependencies have to be specified. 
-What will be the behavior like if we use the configuraiton listed below?
+What will be the behavior like if we use the configuration listed below?
 
 * specified dependencies will be fetched
 * transitive dependencies will be fetched
