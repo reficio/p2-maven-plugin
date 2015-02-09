@@ -24,11 +24,12 @@
 
     <parent>
         <groupId>org.reficio</groupId>
-        <artifactId>feature.bundle.02.it</artifactId>
+        <artifactId>feature.bundle.03.it</artifactId>
         <version>@project.version@</version>
     </parent>
 
-    <artifactId>p2.repo</artifactId>
+    <artifactId>test.bundle</artifactId>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,35 +37,43 @@
     </properties>
 
     <description>
-        Test the basic features option
+        A Test Bundle
     </description>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.reficio</groupId>
-                <artifactId>p2-maven-plugin</artifactId>
-                <version>@project.version@</version>
-                <executions>
-                    <execution>
-                        <id>default-cli</id>
-						<phase>package</phase>
-						<goals>
-							<goal>site</goal>
-						</goals>
-                        <configuration>
-                            <featureArtifacts>
-                                <artifact>
-                                    <id>org.reficio:test.feature:1.0.0-SNAPSHOT</id>
-                                    <source>false</source>
-                                    <transitive>false</transitive>
-                                </artifact>
-                            </featureArtifacts>
-                        </configuration>
 
-                    </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9.1</version>
+				<executions>
+					<execution>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+	
+			<!-- create manifest file -->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.5.3</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Manifest-Version>1.0</Manifest-Version>
+						<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+						<Bundle-Name>${project.artifactId}</Bundle-Name>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${bundle-version}</Bundle-Version>
+					</instructions>
+				</configuration>
+			</plugin>
+
         </plugins>
     </build>
 </project>

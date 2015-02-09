@@ -24,7 +24,7 @@
 
     <parent>
         <groupId>org.reficio</groupId>
-        <artifactId>feature.bundle.02.it</artifactId>
+        <artifactId>feature.bundle.03.it</artifactId>
         <version>@project.version@</version>
     </parent>
 
@@ -36,7 +36,7 @@
     </properties>
 
     <description>
-        Test the basic features option
+        Test the create features option
     </description>
 
     <build>
@@ -47,19 +47,33 @@
                 <version>@project.version@</version>
                 <executions>
                     <execution>
+					
                         <id>default-cli</id>
 						<phase>package</phase>
 						<goals>
 							<goal>site</goal>
 						</goals>
+						
                         <configuration>
-                            <featureArtifacts>
-                                <artifact>
-                                    <id>org.reficio:test.feature:1.0.0-SNAPSHOT</id>
-                                    <source>false</source>
-                                    <transitive>false</transitive>
-                                </artifact>
-                            </featureArtifacts>
+							<featureDefinitions>
+								<feature>
+									<id>test.feature</id>
+									<version>${project.version}</version>
+									<label>Test Feature 3</label>
+									<providerName>${project.groupId}</providerName>
+									<description>${project.description}</description>
+									<copyright>A copyright</copyright>
+									<license>A licence</license>
+									<generateSourceFeature>true</generateSourceFeature>
+									<artifacts>
+										<artifact>
+											<id>org.reficio:test.feature:1.0.0-SNAPSHOT</id>
+											<source>false</source>
+											<transitive>false</transitive>
+										</artifact>
+									</artifacts>									
+								</feature>
+							</featureDefinitions>
                         </configuration>
 
                     </execution>
