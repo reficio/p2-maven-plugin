@@ -62,8 +62,8 @@
 									<label>Test Feature 2</label>
 									<providerName>${project.groupId}</providerName>
 									<description>${project.description}</description>
-									<copyright></copyright>
-									<license></license>
+									<copyright>A copyright</copyright>
+									<license>A licence</license>
 									<generateSourceFeature>true</generateSourceFeature>
 									<artifacts>
 										<artifact>
