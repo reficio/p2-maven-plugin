@@ -24,11 +24,14 @@
 
     <parent>
         <groupId>org.reficio</groupId>
-        <artifactId>feature.bundle.02.it</artifactId>
+        <artifactId>integration</artifactId>
         <version>@project.version@</version>
+        <relativePath>../integration.xml</relativePath>
     </parent>
 
-    <artifactId>p2.repo</artifactId>
+	<packaging>pom</packaging>
+
+    <artifactId>feature.bundle.03.it</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,33 +42,10 @@
         Test the basic features option
     </description>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.reficio</groupId>
-                <artifactId>p2-maven-plugin</artifactId>
-                <version>@project.version@</version>
-                <executions>
-                    <execution>
-                        <id>default-cli</id>
-						<phase>package</phase>
-						<goals>
-							<goal>site</goal>
-						</goals>
-                        <configuration>
-                            <featureArtifacts>
-                                <artifact>
-                                    <id>org.reficio:test.feature:1.0.0-SNAPSHOT</id>
-                                    <source>false</source>
-                                    <transitive>false</transitive>
-                                </artifact>
-                            </featureArtifacts>
-                        </configuration>
+	<modules>
+		<module>test.bundle</module>
+		<module>p2.repo</module>
+	</modules>
 
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
 
