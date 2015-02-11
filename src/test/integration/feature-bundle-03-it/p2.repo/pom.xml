@@ -58,7 +58,7 @@
 							<featureDefinitions>
 								<feature>
 									<id>test.feature</id>
-									<version>${project.version}</version>
+									<version>1.0.0</version>
 									<label>Test Feature 3</label>
 									<providerName>${project.groupId}</providerName>
 									<description>${project.description}</description>
@@ -67,8 +67,8 @@
 									<generateSourceFeature>true</generateSourceFeature>
 									<artifacts>
 										<artifact>
-											<id>org.reficio:test.feature:1.0.0-SNAPSHOT</id>
-											<source>false</source>
+											<id>org.reficio:test.bundle:1.0.0</id>
+											<source>true</source>
 											<transitive>false</transitive>
 										</artifact>
 									</artifacts>									

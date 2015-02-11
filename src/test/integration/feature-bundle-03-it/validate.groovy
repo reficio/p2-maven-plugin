@@ -26,8 +26,8 @@ import org.reficio.p2.utils.TestUtils as Util;
 
 File target = new File(basedir, 'p2.repo/target/repository/features')
 assert target.exists()
-assert target.listFiles().size() == 1
+assert target.listFiles().size() == 2
 
-String jarName = "test[.]feature_1[.]0[.]0[.]([0-9]+)[.]jar"
-assert target.listFiles().first().name.matches(jarName)
+String jarName = "test[.]feature_1[.]0[.]0[.]jar"
+assert target.listFiles()[0].name.matches(jarName) || target.listFiles()[1].name.matches(jarName)
 
