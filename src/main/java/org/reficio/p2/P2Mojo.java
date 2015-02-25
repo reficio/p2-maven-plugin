@@ -18,6 +18,7 @@
  */
 package org.reficio.p2;
 
+import clover.com.google.common.collect.Sets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -50,6 +51,7 @@ import org.reficio.p2.publisher.BundlePublisher;
 import org.reficio.p2.publisher.CategoryPublisher;
 import org.reficio.p2.resolver.eclipse.EclipseResolutionRequest;
 import org.reficio.p2.resolver.eclipse.impl.DefaultEclipseResolver;
+import org.reficio.p2.resolver.maven.Artifact;
 import org.reficio.p2.resolver.maven.ArtifactResolutionRequest;
 import org.reficio.p2.resolver.maven.ArtifactResolutionResult;
 import org.reficio.p2.resolver.maven.ArtifactResolver;
@@ -63,6 +65,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Main plugin class
@@ -247,9 +250,35 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         // first resolve all artifacts
         Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = resolveArtifacts();
         // then bundle the artifacts including the transitive dependencies (if specified so)
+
+        Set<Artifact> bundledArtifacts = Sets.newHashSet();
+
+        // first bundle explicitly specified artifacts, to ensure their instructions are processed
         for (P2Artifact p2Artifact : artifacts) {
             for (ResolvedArtifact resolvedArtifact : resolvedArtifacts.get(p2Artifact)) {
-                bundleArtifact(p2Artifact, resolvedArtifact);
+                if (resolvedArtifact.isRoot()) {
+                    if (bundledArtifacts.add(resolvedArtifact.getArtifact())) {
+                        bundleArtifact(p2Artifact, resolvedArtifact);
+                    } else {
+                        String message = String.format("p2-maven-plugin misconfiguration" +
+                                "\n\n\tJar [%s] is configured as an artifact multiple times. " +
+                                "\n\tRemove the duplicate artifact definitions.\n", resolvedArtifact.getArtifact());
+                        throw new RuntimeException(message);
+                    }
+                }
+            }
+        }
+
+        // then bundle transitive artifacts
+        for (P2Artifact p2Artifact : artifacts) {
+            for (ResolvedArtifact resolvedArtifact : resolvedArtifacts.get(p2Artifact)) {
+                if (!resolvedArtifact.isRoot()) {
+                    if (bundledArtifacts.add(resolvedArtifact.getArtifact())) {
+                        bundleArtifact(p2Artifact, resolvedArtifact);
+                    } else {
+                        log.debug(String.format("Not bundling transitive dependency since it has already been bundled [%s]", resolvedArtifact.getArtifact()));
+                    }
+                }
             }
         }
     }

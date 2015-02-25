@@ -110,4 +110,29 @@ public class Artifact {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Artifact artifact = (Artifact) o;
+
+        if (!artifactId.equals(artifact.artifactId)) return false;
+        if (!classifier.equals(artifact.classifier)) return false;
+        if (!extension.equals(artifact.extension)) return false;
+        if (!groupId.equals(artifact.groupId)) return false;
+        if (!version.equals(artifact.version)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = groupId.hashCode();
+        result = 31 * result + artifactId.hashCode();
+        result = 31 * result + extension.hashCode();
+        result = 31 * result + classifier.hashCode();
+        result = 31 * result + version.hashCode();
+        return result;
+    }
 }
