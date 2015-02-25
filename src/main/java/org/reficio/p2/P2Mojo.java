@@ -40,7 +40,6 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-import org.eclipse.sisu.equinox.EquinoxServiceFactory;
 import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
 import org.reficio.p2.bundler.ArtifactBundler;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
@@ -222,10 +221,11 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         bundlesDestinationFolder = new File(buildDirectory, BUNDLES_DESTINATION_FOLDER);
         featuresDestinationFolder = new File(buildDirectory, FEATURES_DESTINATION_FOLDER);
         FileUtils.deleteDirectory(new File(buildDirectory, BUNDLES_TOP_FOLDER));
-        bundlesDestinationFolder.mkdirs();
-        featuresDestinationFolder.mkdirs();
+        FileUtils.forceMkdir(bundlesDestinationFolder);
+        FileUtils.forceMkdir(featuresDestinationFolder);
         artifacts = artifacts != null ? artifacts : new ArrayList<P2Artifact>();
         features = features != null ? features : new ArrayList<P2Artifact>();
+        p2 = p2 != null ? p2 : new ArrayList<EclipseArtifact>();
     }
 
     private void initializeRepositorySystem() {
