@@ -45,7 +45,7 @@ assert Util.symbolicName(jar) == "org.test.bundle"
 assert Util.version(jar) == "1.2.3"
 
 assert Util.attr(jar, "Export-Package") == "com.rabbitmq.client"
-assert Util.attr(jar, "Private-Package") == "com.rabbitmq.utility,com.rabbitmq.tools,com.rabbitmq.tools.jsonrpc,com.rabbitmq.tools.json,com.rabbitmq.client.impl"
+assert Util.attr(jar, "Private-Package").split(',') as Set == "com.rabbitmq.utility,com.rabbitmq.tools,com.rabbitmq.tools.jsonrpc,com.rabbitmq.tools.json,com.rabbitmq.client.impl".split(',') as Set
 assert Util.attr(jar, "Import-Package") == "org.test.util"
 assert Util.attr(jar, "Export-Service") == "com.rabbitmq.client.impl.AQMCommand"
 assert Util.attr(jar, "Bundle-Activator") == "com.rabbitmq.client.impl.Method"
