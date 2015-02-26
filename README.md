@@ -538,7 +538,7 @@ Sample configuration snippet with the additional options:
 Please describe the issue thoroughly. Please include a minimal pom.xml file that can be used to reproduce the problem.
 
 ### Pull requests
-If you submit a pull request please make sure to add an unit/integreation test case that covers the feature. Pull requests without a proper test coverage may not be pulled at all.
+If you submit a pull request please make sure to add an unit/integration test case that covers the feature. Pull requests without a proper test coverage may not be pulled at all.
 
 ### Running integration tests
 Invoke the following command to run the integration tests suite:
