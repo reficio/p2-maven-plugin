@@ -52,13 +52,8 @@ public class P2Helper {
     public static ArtifactBundlerRequest createBundlerRequest(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, File outputFolder) {
         Artifact artifact = resolvedArtifact.getArtifact();
         Artifact sourceArtifact = resolvedArtifact.getSourceArtifact();
-
-        File artifactOutputFolder = new File(outputFolder, artifact.getGroupId());
-        try {
-            FileUtils.forceMkdir(artifactOutputFolder);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        // group output in separate folder by groupId
+        File artifactOutputFolder = forceMkdirSilently(new File(outputFolder, artifact.getGroupId()));
 
         File binaryInputFile = artifact.getFile();
         File binaryOutputFile = new File(artifactOutputFolder, artifact.getFile().getName());
@@ -71,6 +66,15 @@ public class P2Helper {
         boolean bundle = BundleUtils.INSTANCE.isBundle(artifact.getFile());
         boolean shouldBundle = shouldBundle(p2Artifact, resolvedArtifact, bundle);
         return new ArtifactBundlerRequest(binaryInputFile, binaryOutputFile, sourceInputFile, sourceOutputFile, shouldBundle);
+    }
+
+    private static File forceMkdirSilently(File folder) {
+        try {
+            FileUtils.forceMkdir(folder);
+            return folder;
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     private static boolean shouldBundle(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, boolean resolvedArtifactIsBundle) {
