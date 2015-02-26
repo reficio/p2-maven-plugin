@@ -20,10 +20,12 @@ package org.reficio.p2;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.bundler.ArtifactBundlerRequest;
 import org.reficio.p2.bundler.impl.AquteHelper;
+import org.reficio.p2.resolver.maven.Artifact;
 import org.reficio.p2.resolver.maven.ResolvedArtifact;
 import org.reficio.p2.utils.BundleUtils;
 import org.reficio.p2.utils.JarUtils;
@@ -48,15 +50,25 @@ import java.io.IOException;
 public class P2Helper {
 
     public static ArtifactBundlerRequest createBundlerRequest(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, File outputFolder) {
-        File binaryInputFile = resolvedArtifact.getArtifact().getFile();
-        File binaryOutputFile = new File(outputFolder, resolvedArtifact.getArtifact().getFile().getName());
+        Artifact artifact = resolvedArtifact.getArtifact();
+        Artifact sourceArtifact = resolvedArtifact.getSourceArtifact();
+
+        File artifactOutputFolder = new File(outputFolder, artifact.getGroupId());
+        try {
+            FileUtils.forceMkdir(artifactOutputFolder);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
+        File binaryInputFile = artifact.getFile();
+        File binaryOutputFile = new File(artifactOutputFolder, artifact.getFile().getName());
         File sourceInputFile = null;
         File sourceOutputFile = null;
-        if (resolvedArtifact.getSourceArtifact() != null) {
-            sourceInputFile = resolvedArtifact.getSourceArtifact().getFile();
-            sourceOutputFile = new File(outputFolder, resolvedArtifact.getSourceArtifact().getFile().getName());
+        if (sourceArtifact != null) {
+            sourceInputFile = sourceArtifact.getFile();
+            sourceOutputFile = new File(artifactOutputFolder, sourceArtifact.getFile().getName());
         }
-        boolean bundle = BundleUtils.INSTANCE.isBundle(resolvedArtifact.getArtifact().getFile());
+        boolean bundle = BundleUtils.INSTANCE.isBundle(artifact.getFile());
         boolean shouldBundle = shouldBundle(p2Artifact, resolvedArtifact, bundle);
         return new ArtifactBundlerRequest(binaryInputFile, binaryOutputFile, sourceInputFile, sourceOutputFile, shouldBundle);
     }
