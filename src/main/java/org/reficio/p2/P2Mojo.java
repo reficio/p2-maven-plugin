@@ -247,15 +247,15 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     }
 
     private void processArtifacts() {
-        // first resolve all artifacts
         Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = resolveArtifacts();
-        // then bundle the artifacts including the transitive dependencies (if specified so)
+        Set<Artifact> processedArtifacts = processRootArtifacts(resolvedArtifacts);
+        processTransitiveArtifacts(resolvedArtifacts, processedArtifacts);
+    }
 
+    private Set<Artifact> processRootArtifacts(Multimap<P2Artifact, ResolvedArtifact> processedArtifacts) {
         Set<Artifact> bundledArtifacts = Sets.newHashSet();
-
-        // first bundle explicitly specified artifacts, to ensure their instructions are processed
         for (P2Artifact p2Artifact : artifacts) {
-            for (ResolvedArtifact resolvedArtifact : resolvedArtifacts.get(p2Artifact)) {
+            for (ResolvedArtifact resolvedArtifact : processedArtifacts.get(p2Artifact)) {
                 if (resolvedArtifact.isRoot()) {
                     if (bundledArtifacts.add(resolvedArtifact.getArtifact())) {
                         bundleArtifact(p2Artifact, resolvedArtifact);
@@ -268,7 +268,10 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
                 }
             }
         }
+        return bundledArtifacts;
+    }
 
+    private void processTransitiveArtifacts(Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts, Set<Artifact> bundledArtifacts) {
         // then bundle transitive artifacts
         for (P2Artifact p2Artifact : artifacts) {
             for (ResolvedArtifact resolvedArtifact : resolvedArtifacts.get(p2Artifact)) {
