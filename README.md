@@ -429,6 +429,35 @@ Example usage:
     </artifact>
 ```
 
+### P2 Resolver
+The plugin also includes the P2 resolver which means that you can include bundles residing in P2 repositories in the generated site.
+Have a look at the P2 example located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/p2/pom.xml
+
+In order to have a P2 artifact resolved include its definition in the `<p2>` tag (not in the `<artifacts>` tag)
+```xml
+    <p2>
+        <artifact>
+	    <id>org.junit:4.11.0.v201303080030</id>
+	</artifact>
+    </p2>
+```
+
+Next, add a P2 repository in the `<repositories>` tag (its layout has to be set to `<layout>p2</layout>`):
+```xml
+    <repositories>
+        <repository>
+            <id>kepler</id>
+            <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</url>
+            <layout>p2</layout>
+        </repository>
+    </repositories>
+```
+
+If there's more P2 repositories defined, they will be taken in the top-down manner, until the artifact resolution has been successfully executed.
+
+As a result the the specified P2 artifact will be downloaded and included in the generated P2 site.
+It will not be bundled, since all P2 artifacts are alread OSGi bundles by definition.
+
 ### Eclipse Features
 You can also add eclipse feature bundles to maven and include them in the generated p2 repository.
 
