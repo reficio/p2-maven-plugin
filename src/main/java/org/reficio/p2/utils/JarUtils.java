@@ -128,6 +128,13 @@ public class JarUtils {
 	        featureSpec.getDocumentElement().getAttributeNode("version").setValue(newVersion);
     }
 
+    static Comparator<File> fileComparator = new Comparator<File>() {
+		@Override
+		public int compare(File arg0, File arg1) {
+			return arg0.getName().compareTo(arg1.getName());
+		}
+	};
+    
     public static void adjustFeaturePluginData(Document featureSpec, File pluginDir, Log log) throws IOException {
 	        //get list of all plugins
 	        NodeList plugins = featureSpec.getElementsByTagName("plugin");
@@ -135,23 +142,13 @@ public class JarUtils {
 	        	Node n = plugins.item(i);
 	        	if (n instanceof Element) {
 		        	Element el = (Element)n;
-		        	final String pluginId = el.getAttribute("id");
-		        	File[] files = pluginDir.listFiles(new FilenameFilter() {
-						@Override
-						public boolean accept(File dir, String name) {
-							return name.startsWith(pluginId) && name.endsWith(".jar");
-						}
-					});
+		        	String pluginId = el.getAttribute("id");
+		        	File[] files = findFiles(pluginDir, pluginId);
 		        	if (files.length < 0) {
 		        		log.error("Cannot find plugin "+pluginId);
 		        	} else {
 		        		//in case more than one plugin with same id
-		        		Arrays.sort(files,new Comparator<File>() {
-							@Override
-							public int compare(File arg0, File arg1) {
-								return arg0.getName().compareTo(arg1.getName());
-							}
-						});
+		        		Arrays.sort(files,fileComparator);
 		        		//File firstFile = files[0];
 		        		File lastFile = files[files.length-1];
 		        		//String firstVersion = BundleUtils.INSTANCE.getBundleVersion(new Jar(firstFile));
@@ -209,6 +206,15 @@ public class JarUtils {
         return format.format(new Date());
     }
 
+    static File[] findFiles(File pluginDir, final String pluginId) {
+    	 return pluginDir.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return name.startsWith(pluginId) && name.endsWith(".jar");
+				}
+			});
+    }
+    
     public static void removeSignature(File jar) {
         File unsignedJar = new File(jar.getParent(), jar.getName() + ".tmp");
         try {

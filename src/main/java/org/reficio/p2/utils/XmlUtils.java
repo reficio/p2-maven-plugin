@@ -46,10 +46,8 @@ public class XmlUtils {
 	    	
 	    	return doc;
     	}catch (Exception e) {
-    		e.printStackTrace();
+    		 throw new RuntimeException(e.getMessage(), e);
     	}
-    	//should never reach this
-    	return null;
     }
     
     public static void writeXml(Document doc, File outputFile) {
@@ -59,7 +57,7 @@ public class XmlUtils {
 	    	Source input = new DOMSource(doc);
 	    	transformer.transform(input, output);
     	}catch (Exception e) {
-    		e.printStackTrace();
+    		 throw new RuntimeException(e.getMessage(), e);
     	}
     }
     
