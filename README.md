@@ -171,6 +171,9 @@ Your p2 site is located in the target/repository folder and looks like this:
     │   │   ├── org.apache.commons.lang_2.5.0.jar
     │   │   ├── org.apache.commons.lang_2.6.0.jar
     │   │   └── org.apache.commons.lang3_3.1.0.jar
+    │   │
+    │   └── features
+    │   │   └── com.example.feature_1.0.0.jar     
 ```
 
 Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is to expose our newly created update site using an HTTP server. We're going to use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin set-up. Just type 'mvn jetty:run' and open the following link http://localhost:8080/site. Your P2 update site will be there!
@@ -432,6 +435,29 @@ Example usage:
 ### P2 Resolver
 The plugin also includes the P2 resolver which means that you can include bundles residing in P2 repositories in the generated site.
 Have a look at the P2 example located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/p2/pom.xml
+
+### Eclipse Features
+You can also add eclipse feature bundles to maven and include them in the generated p2 repository.
+
+* build may fail if the maven artifact is not a valid eclipse feature jar
+* source and transitive must both be false for feature artifacts
+* plugins must be added separately, adding the feature will not add the corresponding plugins
+
+Example usage:
+```xml
+	<configuration>
+		<artifacts>
+			<artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
+		</artifacts>
+		<features>
+			<artifact>
+				<id>org.reficio:test.feature:1.0.0</id>
+				<source>false</source>
+				<transitive>false</transitive>
+			</artifact>
+		</features>
+	</configuration>
+```
 
 In order to have a P2 artifact resolved include its definition in the `<p2>` tag (not in the `<artifacts>` tag)
 ```xml
