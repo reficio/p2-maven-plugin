@@ -24,12 +24,11 @@
 
     <parent>
         <groupId>org.reficio</groupId>
-        <artifactId>feature.bundle.01.it</artifactId>
+        <artifactId>feature.bundle.03.it</artifactId>
         <version>@project.version@</version>
     </parent>
 
-    <artifactId>test.bundle</artifactId>
-    <version>1.0.0</version>
+    <artifactId>p2.repo</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,59 +36,49 @@
     </properties>
 
     <description>
-        A Test Bundle
+        Test the create features option
     </description>
 
     <build>
         <plugins>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.9.1</version>
-				<executions>
-					<execution>
-						<id>parse-version</id>
-						<goals>
-							<goal>parse-version</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-	
-			<!-- create manifest file -->
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.5.3</version>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Manifest-Version>1.0</Manifest-Version>
-						<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-						<Bundle-Name>${project.artifactId}</Bundle-Name>
-						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-						<Bundle-Version>${bundle-version}</Bundle-Version>
-					</instructions>
-				</configuration>
-			</plugin>
-
-			<!-- Create sources artifact/bundle -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.4</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
+            <plugin>
+                <groupId>org.reficio</groupId>
+                <artifactId>p2-maven-plugin</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+					
+                        <id>default-cli</id>
 						<phase>package</phase>
 						<goals>
-							<goal>jar-no-fork</goal>
+							<goal>site</goal>
 						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
+						
+                        <configuration>
+							<featureDefinitions>
+								<feature>
+									<id>test.feature</id>
+									<version>1.0.0</version>
+									<label>Test Feature 3</label>
+									<providerName>${project.groupId}</providerName>
+									<description>${project.description}</description>
+									<copyright>A copyright</copyright>
+									<license>A licence</license>
+									<generateSourceFeature>true</generateSourceFeature>
+									<artifacts>
+										<artifact>
+											<id>org.reficio:test.bundle:1.0.0</id>
+											<source>true</source>
+											<transitive>false</transitive>
+										</artifact>
+									</artifacts>									
+								</feature>
+							</featureDefinitions>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

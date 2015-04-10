@@ -497,13 +497,13 @@ Example usage:
 		<artifacts>
 			<artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
 		</artifacts>
-		<features>
+		<featureArtifacts>
 			<artifact>
 				<id>org.reficio:test.feature:1.0.0</id>
 				<source>false</source>
 				<transitive>false</transitive>
 			</artifact>
-		</features>
+		</featureArtifacts>
 	</configuration>
 ```
 
@@ -529,6 +529,40 @@ You can have a look at two integration test cases of this feature that are locat
 
 
 ### Other tricks
+Alternatively, you can get this plugin to generate the feature bundles for you as part of generating the p2 repository,
+
+Example usage:
+```xml
+	<configuration>
+		<featureDefinitions>
+			<feature>
+				<id>test.feature</id>
+				<version>${project.version}</version>
+				<label>Test Feature 2</label>
+				<providerName>${project.groupId}</providerName>
+				<description>${project.description}</description>
+				<copyright>A copyright</copyright>
+				<license>A licence</license>
+				<generateSourceFeature>true</generateSourceFeature>
+				<artifacts>
+					<artifact>
+						<id>org.reficio.rcp:test.bundle1:1.0.0</id>
+						<transitive>false</transitive>
+						<source>true</source>
+					</artifact>
+					<artifact>
+						<id>org.reficio.rcp:test.bundle2:1.0.0-SNAPSHOT</id>
+						<transitive>false</transitive>
+						<source>true</source>
+					</artifact>
+				</artifacts>									
+			</feature>
+		</featureDefinitions>
+	</configuration>
+```
+
+
+### Other features
 * p2-maven-plugin will tweak the version of a snapshot dependency replacing the SNAPSHOT string with a timestamp in the following format "yyyyMMddHHmmss" (feature #14)
 * It's possible to add a classifier to the artifact definition - supported notation: `<groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>`; for example:  `<id>groupid:artifactid:jar:tests:version</id>` (feature #28)
 

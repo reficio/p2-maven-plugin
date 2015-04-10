@@ -16,22 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ package test2;
 
-//
-// $Id$
-//
-
-import aQute.lib.osgi.Jar
-import org.reficio.p2.utils.TestUtils as Util;
-
-File featureDir = new File(basedir, 'p2.repo/target/repository/features')
-assert featureDir.exists()
-assert featureDir.listFiles().size() == 1
-
-String jarName = "test.feature_1.0.0.jar"
-assert featureDir.listFiles().first().name == jarName
-
-File pluginDir = new File(basedir, 'p2.repo/target/repository/plugins')
-assert pluginDir.exists()
-assert pluginDir.listFiles().size() == 1
-
+public class Dummy {
+}

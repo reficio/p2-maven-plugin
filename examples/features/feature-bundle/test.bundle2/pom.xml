@@ -23,12 +23,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.reficio</groupId>
-        <artifactId>feature.bundle.01.it</artifactId>
-        <version>@project.version@</version>
+		<groupId>org.reficio.rcp</groupId>
+		<artifactId>example-p2-site</artifactId>
+		<version>1.0.0</version>
     </parent>
 
-    <artifactId>test.bundle</artifactId>
+    <artifactId>test.bundle2</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -37,7 +37,7 @@
     </properties>
 
     <description>
-        A Test Bundle
+        Test Bundle 2
     </description>
 
     <build>
@@ -74,7 +74,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- Create sources artifact/bundle -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>

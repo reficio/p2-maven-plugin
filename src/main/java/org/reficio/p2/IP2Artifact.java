@@ -16,22 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.reficio.p2;
 
-//
-// $Id$
-//
+public interface IP2Artifact {
 
-import aQute.lib.osgi.Jar
-import org.reficio.p2.utils.TestUtils as Util;
+	boolean shouldOverrideManifest();
 
-File featureDir = new File(basedir, 'p2.repo/target/repository/features')
-assert featureDir.exists()
-assert featureDir.listFiles().size() == 1
+	String getId();
 
-String jarName = "test.feature_1.0.0.jar"
-assert featureDir.listFiles().first().name == jarName
+	boolean shouldIncludeTransitive();
 
-File pluginDir = new File(basedir, 'p2.repo/target/repository/plugins')
-assert pluginDir.exists()
-assert pluginDir.listFiles().size() == 1
+	boolean shouldIncludeSources();
 
+}

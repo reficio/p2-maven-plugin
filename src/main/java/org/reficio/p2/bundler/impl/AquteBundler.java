@@ -20,6 +20,7 @@ package org.reficio.p2.bundler.impl;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
+
 import org.apache.commons.io.FileUtils;
 import org.reficio.p2.bundler.ArtifactBundler;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;

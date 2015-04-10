@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="test.feature"
+      label="test.feature"
+      version="1.0.0">
+
+   <description url="">
+      A Test Feature
+   </description>
+
+   <plugin
+         id="test.bundle1"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="test.bundle2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+		 
+</feature>
