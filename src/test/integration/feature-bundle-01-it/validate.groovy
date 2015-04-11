@@ -24,14 +24,10 @@
 import aQute.lib.osgi.Jar
 import org.reficio.p2.utils.TestUtils as Util;
 
-File featureDir = new File(basedir, 'p2.repo/target/repository/features')
-assert featureDir.exists()
-assert featureDir.listFiles().size() == 1
+File target = new File(basedir, 'p2.repo/target/repository/features')
+assert target.exists()
+assert target.listFiles().size() == 1
 
 String jarName = "test.feature_1.0.0.jar"
-assert featureDir.listFiles().first().name == jarName
-
-File pluginDir = new File(basedir, 'p2.repo/target/repository/plugins')
-assert pluginDir.exists()
-assert pluginDir.listFiles().size() == 1
+assert target.listFiles().first().name == jarName
 

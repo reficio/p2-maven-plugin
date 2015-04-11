@@ -53,20 +53,13 @@
 							<goal>site</goal>
 						</goals>
                         <configuration>
-							<artifacts>
-								<artifact>
-									<id>org.reficio:test.bundle:1.0.0</id>
-									<transitive>false</transitive>
-									<source>true</source>
-								</artifact>
-							</artifacts>
-                            <featureArtifacts>
+                            <features>
                                 <artifact>
                                     <id>org.reficio:test.feature:1.0.0-SNAPSHOT</id>
-                                    <source>true</source>
+                                    <source>false</source>
                                     <transitive>false</transitive>
                                 </artifact>
-                            </featureArtifacts>
+                            </features>
                         </configuration>
 
                     </execution>
