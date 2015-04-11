@@ -144,7 +144,7 @@ public class JarUtils {
 		        	Element el = (Element)n;
 		        	String pluginId = el.getAttribute("id");
 		        	File[] files = findFiles(pluginDir, pluginId);
-		        	if (files.length < 0) {
+		        	if (files.length == 0) {
 		        		log.error("Cannot find plugin "+pluginId);
 		        	} else {
 		        		//in case more than one plugin with same id
