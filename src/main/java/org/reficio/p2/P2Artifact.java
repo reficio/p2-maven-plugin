@@ -32,7 +32,7 @@ import java.util.Map;
  *         http://www.reficio.org
  * @since 1.0.0
  */
-public class P2Artifact implements IP2Artifact {
+public class P2Artifact {
 
     /**
      * Artifact id in the following format "groupId:artifactId:version"

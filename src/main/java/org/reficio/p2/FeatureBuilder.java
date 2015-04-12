@@ -35,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.JarEntry;
@@ -46,6 +47,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.utils.Utils;
 import org.reficio.p2.utils.XmlUtils;
@@ -59,15 +61,18 @@ import aQute.lib.osgi.Jar;
 
 public class FeatureBuilder {
 
-	public FeatureBuilder(P2FeatureDefinition p2FeatureDefintion, Map<P2Artifact, ArtifactBundlerInstructions>  bundlerInstructions, String timestamp) {
+	public FeatureBuilder(P2FeatureDefinition p2FeatureDefintion, Multimap<P2Artifact, 
+			ArtifactBundlerInstructions>  bundlerInstructions, boolean generateSourceFeature, String timestamp) {
 		this.p2FeatureDefintion = p2FeatureDefintion;
 		this.bundlerInstructions = bundlerInstructions;
+		this.generateSourceFeature = generateSourceFeature;
 		this.featureTimeStamp = timestamp;
 	}
 
-	Map<P2Artifact, ArtifactBundlerInstructions>  bundlerInstructions;
+	Multimap<P2Artifact, ArtifactBundlerInstructions>  bundlerInstructions;
 	P2FeatureDefinition p2FeatureDefintion;
-
+	boolean generateSourceFeature;
+	
 	public void generate(File destinationFolder) {
 		try {
 			File featureContent = new File(destinationFolder, this.getFeatureFullName());
@@ -162,16 +167,30 @@ public class FeatureBuilder {
 			licenceElement.setTextContent(this.p2FeatureDefintion.getLicense());
 		}
 
-		for(P2Artifact artifact: this.p2FeatureDefintion.artifacts) {
-			Element pluginElement = XmlUtils.createElement(xmlDoc,featureElement,"plugin");
-			String id = this.bundlerInstructions.get(artifact).getSymbolicName();
-			String version = this.bundlerInstructions.get(artifact).getProposedVersion();
-			pluginElement.setAttribute("id", id);
-			pluginElement.setAttribute("download-size", "0"); //TODO
-			pluginElement.setAttribute("install-size", "0");  //TODO
-			pluginElement.setAttribute("version", version);
-			pluginElement.setAttribute("unpack", "false");
-			
+		for(P2Artifact artifact: this.p2FeatureDefintion.getArtifacts()) {
+			Collection<ArtifactBundlerInstructions> abis = this.bundlerInstructions.get(artifact);
+			for (ArtifactBundlerInstructions abi : abis) {
+				String id = abi.getSymbolicName();
+				String version = abi.getProposedVersion();
+				Element pluginElement = XmlUtils.createElement(xmlDoc,featureElement,"plugin");
+				pluginElement.setAttribute("id", id);
+				pluginElement.setAttribute("download-size", "0"); //TODO
+				pluginElement.setAttribute("install-size", "0");  //TODO
+				pluginElement.setAttribute("version", version);
+				pluginElement.setAttribute("unpack", "false"); // TODO
+				if (generateSourceFeature) {
+					id = abi.getSourceSymbolicName();
+					if (!StringUtils.isBlank(id)) {
+						pluginElement = XmlUtils.createElement(xmlDoc,featureElement,"plugin");
+						pluginElement.setAttribute("id", id);
+						pluginElement.setAttribute("download-size", "0"); //TODO
+						pluginElement.setAttribute("install-size", "0");  //TODO
+						pluginElement.setAttribute("version", version);
+						pluginElement.setAttribute("unpack", "false"); // TODO
+					}
+				}
+			}
+
 		}
 		
 		//update qualified version if need be
@@ -189,49 +208,4 @@ public class FeatureBuilder {
 		}
 	}
 
-	public void generateSourceFeature(File destinationFolder) {
-		Element featureElement = XmlUtils.fetchOrCreateElement(xmlDoc, xmlDoc, "feature");
-		featureElement.setAttribute("id", featureElement.getAttribute("id")+".source");
-		featureElement.setAttribute("label", featureElement.getAttribute("label")+" Developer Resources");
-		NodeList nl = featureElement.getElementsByTagName("plugin");
-		List<Element> elements = new ArrayList<Element>();
-		//can't remove as we iterate over nl, because its size changes when we remove
-		for(int n = 0; n < nl.getLength(); ++n) {
-			elements.add((Element)nl.item(n));
-		}
-		for(Element e: elements) {
-			featureElement.removeChild(e);
-		}
-		
-		for(P2Artifact artifact: this.p2FeatureDefintion.artifacts) {
-			Element pluginElement = XmlUtils.createElement(xmlDoc,featureElement,"plugin");
-			String id = this.bundlerInstructions.get(artifact).getSourceSymbolicName();
-			String version = this.bundlerInstructions.get(artifact).getProposedVersion();
-			pluginElement.setAttribute("id", id);
-			pluginElement.setAttribute("download-size", "0"); //TODO
-			pluginElement.setAttribute("install-size", "0");  //TODO
-			pluginElement.setAttribute("version", version);
-			pluginElement.setAttribute("unpack", "false");
-			
-		}
-		
-		try {
-			File sourceFeatureContent = new File(destinationFolder, this.getFeatureFullName()+".source");
-			sourceFeatureContent.mkdir();
-			XmlUtils.writeXml(this.xmlDoc, new File(sourceFeatureContent, "feature.xml"));
-			
-			//TODO: add other files that are required by the feature
-			
-			FileOutputStream fos = new FileOutputStream(new File(destinationFolder, this.getFeatureFullName()+".jar"));
-			Manifest mf = new Manifest();
-			JarOutputStream jar = new JarOutputStream(fos, mf);
-			addToJar(jar, sourceFeatureContent);
-		} catch (Exception e) {
-			throw new RuntimeException("Cannot generate feature", e);
-		}
-	}
-
-
-	void createFeatureWithTycho() {
-	}
 }
