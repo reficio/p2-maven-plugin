@@ -95,8 +95,9 @@ public class P2Helper {
 
     public static ArtifactBundlerInstructions createBundlerInstructions(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, String timestamp) {
         try {
-            String symbolicName = calculateSymbolicName(p2Artifact, resolvedArtifact);
-            String symbolicNameWithOptions = calculateSymbolicNameWithOptions(p2Artifact, resolvedArtifact, symbolicName);
+            String fullSymbolicName = calculateFullSymbolicName(p2Artifact, resolvedArtifact);
+            String symbolicNameWithOptions = calculateSymbolicNameWithOptions(p2Artifact, resolvedArtifact, fullSymbolicName);
+            String symbolicName = calculateSymbolicName(fullSymbolicName);
             String name = calculateName(symbolicName);
             String version = calculateVersion(p2Artifact, resolvedArtifact, timestamp);
             String proposedVersion = calculateProposedVersion(resolvedArtifact, timestamp);
@@ -128,8 +129,14 @@ public class P2Helper {
     private static String calculateName(String symbolicName) {
         return symbolicName;
     }
-
-    private static String calculateSymbolicName(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) throws IOException {
+    private static String calculateSymbolicName(String fullSymbolicName) {
+    	int pos = fullSymbolicName.indexOf(';');
+    	if (pos < 0) {
+    		return fullSymbolicName;
+    	}
+        return fullSymbolicName.substring(0,pos);
+    }
+    private static String calculateFullSymbolicName(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) throws IOException {
         String symbolicName = null;
         if (resolvedArtifact.isRoot()) {
             Object symbolicNameValue = p2Artifact.getInstructions().get(Analyzer.BUNDLE_SYMBOLICNAME);
