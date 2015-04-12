@@ -440,9 +440,13 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 				//we must be generating the feature file from the pom
 				p2featureDefinition.setVersion( Utils.mavenToEclipse(p2featureDefinition.getVersion(), timestamp) );
 
-				FeatureBuilder featureBuilder = new FeatureBuilder(p2featureDefinition, bi,
-						 p2featureDefinition.getGenerateSourceFeature(), timestamp);
+				FeatureBuilder featureBuilder = new FeatureBuilder(p2featureDefinition, bi, false, timestamp);
 				featureBuilder.generate(this.featuresDestinationFolder);
+				// generate also a source feature of all available sources
+				if (p2featureDefinition.getGenerateSourceFeature()) {
+					featureBuilder = new FeatureBuilder(p2featureDefinition, bi, true, timestamp);
+					featureBuilder.generate(this.featuresDestinationFolder);
+				}
 				
 			} else {
 				//given a feature file, so build using tycho

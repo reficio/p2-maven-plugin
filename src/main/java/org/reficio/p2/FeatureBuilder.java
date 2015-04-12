@@ -124,11 +124,16 @@ public class FeatureBuilder {
 		return v.replace("qualifier", featureTimeStamp);
 	}
 	
-	String getFeatureFullName() {
-		String fn = this.p2FeatureDefintion.getId()+"_"+this.getQualifiedFeatureVersion();
-		return fn;
-	}
 	
+	String getFeatureFullName() {
+		String id = this.p2FeatureDefintion.getId();
+		if (generateSourceFeature) {
+			id = id + ".source";
+		}
+		return id + "_" + this.getQualifiedFeatureVersion();
+	}
+
+
 	Document xmlDoc;
 	void buildXml() throws ParserConfigurationException, FileNotFoundException {
 		xmlDoc = this.fetchOrCreateXml();
@@ -166,6 +171,16 @@ public class FeatureBuilder {
 			licenceElement.setTextContent(this.p2FeatureDefintion.getLicense());
 		}
 
+		// handle source feature renaming
+		if (generateSourceFeature) {
+			String id = featureElement.getAttribute("id");
+			if (!id.endsWith(".source")) {
+				// we assume, if ID does not end with .source, also label has no note that this is the developer resources
+				featureElement.setAttribute("id", id + ".source");
+				featureElement.setAttribute("label", featureElement.getAttribute("label") + " (Developer Resources)");
+			}
+		}
+		
 		for(P2Artifact artifact: this.p2FeatureDefintion.getArtifacts()) {
 			Collection<ArtifactBundlerInstructions> abis = this.bundlerInstructions.get(artifact);
 			for (ArtifactBundlerInstructions abi : abis) {
