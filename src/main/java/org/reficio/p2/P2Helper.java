@@ -50,7 +50,7 @@ import java.io.IOException;
  */
 public class P2Helper {
 
-    public static ArtifactBundlerRequest createBundlerRequest(IP2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, File outputFolder) {
+    public static ArtifactBundlerRequest createBundlerRequest(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, File outputFolder) {
         Artifact artifact = resolvedArtifact.getArtifact();
         Artifact sourceArtifact = resolvedArtifact.getSourceArtifact();
         // group output in separate folder by groupId
@@ -79,7 +79,7 @@ public class P2Helper {
         }
     }
 
-    private static boolean shouldBundle(IP2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, boolean resolvedArtifactIsBundle) {
+    private static boolean shouldBundle(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, boolean resolvedArtifactIsBundle) {
         if (resolvedArtifactIsBundle) {
             if (p2Artifact.shouldOverrideManifest() && resolvedArtifact.isRoot()) {
                 return true;
@@ -99,10 +99,12 @@ public class P2Helper {
             String name = calculateName(symbolicName);
             String version = calculateVersion(p2Artifact, resolvedArtifact, timestamp);
             String proposedVersion = calculateProposedVersion(resolvedArtifact, timestamp);
-
-            String sourceSymbolicName = calculateSourceSymbolicName(symbolicName);
-            String sourceName = calculateSourceName(name, symbolicName);
-
+            String sourceSymbolicName = null;
+            String sourceName = null;
+            if (resolvedArtifact.getSourceArtifact() != null) {
+            	sourceSymbolicName = calculateSourceSymbolicName(symbolicName);
+            	sourceName = calculateSourceName(name, symbolicName);
+            }
             ArtifactBundlerInstructions.Builder builder = ArtifactBundlerInstructions.builder()
                     .name(name)
                     .symbolicName(symbolicName)
