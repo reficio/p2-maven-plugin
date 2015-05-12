@@ -18,42 +18,22 @@
  */
 package org.reficio.p2;
 
-import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.utils.Utils;
+import org.reficio.p2.logger.Logger;
+import org.reficio.p2.utils.JarUtils;
 import org.reficio.p2.utils.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Multimap;
 
@@ -61,63 +41,38 @@ import aQute.bnd.osgi.Jar;
 
 public class FeatureBuilder {
 
+
 	public FeatureBuilder(P2FeatureDefinition p2FeatureDefintion, Multimap<P2Artifact, 
-			ArtifactBundlerInstructions>  bundlerInstructions, boolean generateSourceFeature, String timestamp) {
+			ArtifactBundlerInstructions>  bundlerInstructions, boolean generateSourceFeature, boolean unpack, String timestamp) {
 		this.p2FeatureDefintion = p2FeatureDefintion;
 		this.bundlerInstructions = bundlerInstructions;
 		this.generateSourceFeature = generateSourceFeature;
+		this.unpack = unpack;
 		this.featureTimeStamp = timestamp;
 	}
 
-	Multimap<P2Artifact, ArtifactBundlerInstructions>  bundlerInstructions;
-	P2FeatureDefinition p2FeatureDefintion;
-	boolean generateSourceFeature;
+	private Multimap<P2Artifact, ArtifactBundlerInstructions>  bundlerInstructions;
+	private P2FeatureDefinition p2FeatureDefintion;
+	private boolean generateSourceFeature;
+	private boolean unpack;
+	//cache this so that the same timestamp is used
+	private String featureTimeStamp;
 	
 	public void generate(File destinationFolder) {
 		try {
 			File featureContent = new File(destinationFolder, this.getFeatureFullName());
 			featureContent.mkdir();
-			this.buildXml();
-			XmlUtils.writeXml(this.xmlDoc, new File(featureContent, "feature.xml"));
+			Document xmlDoc = this.buildXml();
 			
-			//we must be generating the feature file from the pom
-			FileOutputStream fos = new FileOutputStream(new File(destinationFolder, this.getFeatureFullName()+".jar"));
-			Manifest mf = new Manifest();
-			JarOutputStream jar = new JarOutputStream(fos, mf);
-			addToJar(jar, featureContent);
+			XmlUtils.writeXml(xmlDoc, new File(featureContent, "feature.xml"));
+			
+			File destJar = new File(destinationFolder, this.getFeatureFullName()+".jar");
+			JarUtils.createJar(featureContent, destJar);
 			
 		} catch (Exception e) {
 			throw new RuntimeException("Cannot generate feature", e);
 		}
 	}
-	
-	private void addToJar(JarOutputStream jar, File content) throws IOException
-	{
-		for (File f : FileUtils.listFiles(content, null, true) ) {
-			String fname = f.getPath().replace("\\", "/");
-			if (f.isDirectory()) {
-				if (!fname.endsWith("/")) {
-					fname = fname + "/";
-				}
-				JarEntry entry = new JarEntry(fname);
-				entry.setTime(f.lastModified());
-				jar.putNextEntry(entry);
-				jar.closeEntry();
-			} else {
-				//must be a file
-				JarEntry entry = new JarEntry(fname);
-				entry.setTime(f.lastModified());
-				jar.putNextEntry(entry);
-				jar.write( IOUtils.toByteArray(new FileInputStream(f)) );
-				jar.closeEntry();
-			}
-			
-
-		}
-	}
-	
-	//cache this so that the same timestamp is used
-	String featureTimeStamp;
 	
 	String getQualifiedFeatureVersion() {
 		String v = this.p2FeatureDefintion.getVersion();
@@ -133,44 +88,22 @@ public class FeatureBuilder {
 		return id + "_" + this.getQualifiedFeatureVersion();
 	}
 
+	private Logger log() {
+		return Logger.getLog();
+	}
 
-	Document xmlDoc;
-	void buildXml() throws ParserConfigurationException, FileNotFoundException {
-		xmlDoc = this.fetchOrCreateXml();
+	Document buildXml() throws ParserConfigurationException, FileNotFoundException {
+		Document xmlDoc = this.fetchOrCreateXml();
 		Element featureElement = XmlUtils.fetchOrCreateElement(xmlDoc, xmlDoc, "feature");
-		if (null != this.p2FeatureDefintion.getId()) {
-			featureElement.setAttribute("id", this.p2FeatureDefintion.getId());
-		} else if (featureElement.hasAttribute("id")) {
-			this.p2FeatureDefintion.setId(featureElement.getAttribute("id"));
-		} else {
-			throw new RuntimeException("No id defined for feature in pom or featureFile");
-		}
-		if (null != this.p2FeatureDefintion.getVersion()) {
-			featureElement.setAttribute("version", this.p2FeatureDefintion.getVersion());
-		} else if (featureElement.hasAttribute("version")) {
-			this.p2FeatureDefintion.setVersion(featureElement.getAttribute("version"));
-		} else {
-			throw new RuntimeException("No version defined for feature in pom or featureFile");
-		}
-		if (null != this.p2FeatureDefintion.getLabel()) {
-			featureElement.setAttribute("label", this.p2FeatureDefintion.getLabel());
-		}
-		if (null != this.p2FeatureDefintion.getProviderName()) {
-			featureElement.setAttribute("provider-name", this.p2FeatureDefintion.getProviderName());
-		}
-		if (null != this.p2FeatureDefintion.getDescription()) {
-			Element descriptionElement = XmlUtils.fetchOrCreateElement(xmlDoc, featureElement, "description");
-			descriptionElement.setTextContent(this.p2FeatureDefintion.getDescription());
-		}
-		if (null != this.p2FeatureDefintion.getCopyright()) {
-			Element copyrightElement = XmlUtils.fetchOrCreateElement(xmlDoc, featureElement, "copyright");
-			copyrightElement.setTextContent(this.p2FeatureDefintion.getCopyright());
-		}
-		if (null != this.p2FeatureDefintion.getLicense()) {
-			Element licenceElement = XmlUtils.fetchOrCreateElement(xmlDoc, featureElement, "license");
-			licenceElement.setTextContent(this.p2FeatureDefintion.getLicense());
-		}
-
+	
+		// feature ID & Version are read from POM/featureDefinition and if not present in POM from the XML-template.
+		// then we have to write back the found value to featureDefinition
+		computeFeatureId(featureElement);
+		computeFeatureVersion(featureElement);
+		
+		// set additonal attributes: label, providerName, description, copyright, license
+		computeFeatureAttributes(xmlDoc, featureElement);
+	
 		// handle source feature renaming
 		if (generateSourceFeature) {
 			String id = featureElement.getAttribute("id");
@@ -180,31 +113,32 @@ public class FeatureBuilder {
 				featureElement.setAttribute("label", featureElement.getAttribute("label") + " (Developer Resources)");
 			}
 		}
-		
-		for(P2Artifact artifact: this.p2FeatureDefintion.getArtifacts()) {
-			Collection<ArtifactBundlerInstructions> abis = this.bundlerInstructions.get(artifact);
-			for (ArtifactBundlerInstructions abi : abis) {
-				String id = abi.getSymbolicName();
-				String version = abi.getProposedVersion();
-				Element pluginElement = XmlUtils.createElement(xmlDoc,featureElement,"plugin");
-				pluginElement.setAttribute("id", id);
-				pluginElement.setAttribute("download-size", "0"); //TODO
-				pluginElement.setAttribute("install-size", "0");  //TODO
-				pluginElement.setAttribute("version", version);
-				pluginElement.setAttribute("unpack", "false"); // TODO
-				if (generateSourceFeature) {
-					id = abi.getSourceSymbolicName();
-					if (!StringUtils.isBlank(id)) {
-						pluginElement = XmlUtils.createElement(xmlDoc,featureElement,"plugin");
-						pluginElement.setAttribute("id", id);
-						pluginElement.setAttribute("download-size", "0"); //TODO
-						pluginElement.setAttribute("install-size", "0");  //TODO
-						pluginElement.setAttribute("version", version);
-						pluginElement.setAttribute("unpack", "false"); // TODO
-					}
-				}
-			}
+		// add the <plugin> tags of the defined artifacts
+		generateFeatureContent(xmlDoc, featureElement);
 
+	
+		return xmlDoc;
+	}
+
+	private void computeFeatureId(Element featureElement) {
+		if (this.p2FeatureDefintion.getId() != null) {
+			featureElement.setAttribute("id", this.p2FeatureDefintion.getId());
+		} else if (featureElement.hasAttribute("id")) {
+			// ID in XML, but not in POM. Write back
+			this.p2FeatureDefintion.setId(featureElement.getAttribute("id"));
+		} else {
+			throw new RuntimeException("No id defined for feature in pom or featureFile");
+		}
+	}
+
+	private void computeFeatureVersion(Element featureElement) {
+		if (this.p2FeatureDefintion.getVersion() != null) {
+			featureElement.setAttribute("version", this.p2FeatureDefintion.getVersion());
+		} else if (featureElement.hasAttribute("version")) {
+			// Version in XML, but not in POM. Write back
+			this.p2FeatureDefintion.setVersion(featureElement.getAttribute("version"));
+		} else {
+			throw new RuntimeException("No version defined for feature in pom or featureFile");
 		}
 		
 		//update qualified version if need be
@@ -213,12 +147,61 @@ public class FeatureBuilder {
 			featureElement.setAttribute("version", xmlVersion.replace("qualifier", featureTimeStamp));
 		}
 	}
+	
+	private void computeFeatureAttributes(Document xmlDoc, Element featureElement) {
+		if (this.p2FeatureDefintion.getLabel() != null) {
+			featureElement.setAttribute("label", this.p2FeatureDefintion.getLabel());
+		}
+		if (this.p2FeatureDefintion.getProviderName() != null) {
+			featureElement.setAttribute("provider-name", this.p2FeatureDefintion.getProviderName());
+		}
+		if (this.p2FeatureDefintion.getDescription() != null) {
+			Element descriptionElement = XmlUtils.fetchOrCreateElement(xmlDoc, featureElement, "description");
+			descriptionElement.setTextContent(this.p2FeatureDefintion.getDescription());
+		}
+		if (this.p2FeatureDefintion.getCopyright() != null) {
+			Element copyrightElement = XmlUtils.fetchOrCreateElement(xmlDoc, featureElement, "copyright");
+			copyrightElement.setTextContent(this.p2FeatureDefintion.getCopyright());
+		}
+		if (this.p2FeatureDefintion.getLicense() != null) {
+			Element licenceElement = XmlUtils.fetchOrCreateElement(xmlDoc, featureElement, "license");
+			licenceElement.setTextContent(this.p2FeatureDefintion.getLicense());
+		}
+		
+	}
+
+	private void generateFeatureContent(Document xmlDoc, Element featureElement) {
+		for(P2Artifact artifact: this.p2FeatureDefintion.getArtifacts()) {
+			Collection<ArtifactBundlerInstructions> abis = this.bundlerInstructions.get(artifact);
+			for (ArtifactBundlerInstructions abi : abis) {
+				String version = abi.getProposedVersion();
+				
+				String id;
+				if (generateSourceFeature) {
+					// 2015-05-12/RPr: A Source feature contains only sources.
+					id = abi.getSourceSymbolicName();
+					if (StringUtils.isBlank(id)) {
+						log().info("\t [WARN] No source found for " + abi.getSymbolicName());
+						continue;
+					}
+				} else {
+					id = abi.getSymbolicName();
+				}
+				Element pluginElement = XmlUtils.createElement(xmlDoc,featureElement,"plugin");
+				pluginElement.setAttribute("id", id);
+				pluginElement.setAttribute("download-size", "0"); //TODO How can we get the JAR-size from the artifact?
+				pluginElement.setAttribute("install-size", "0");  //TODO 
+				pluginElement.setAttribute("version", version);
+				pluginElement.setAttribute("unpack", unpack ? "true" : "false");
+			}
+		}	
+	}
 
 	Document fetchOrCreateXml() throws ParserConfigurationException, FileNotFoundException {
-		if (null == this.p2FeatureDefintion.featureFile) {
+		if (null == this.p2FeatureDefintion.getFeatureFile()) {
 			return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		} else {
-			return XmlUtils.parseXml(new FileInputStream(this.p2FeatureDefintion.featureFile));
+			return XmlUtils.parseXml(new FileInputStream(this.p2FeatureDefintion.getFeatureFile()));
 		}
 	}
 }

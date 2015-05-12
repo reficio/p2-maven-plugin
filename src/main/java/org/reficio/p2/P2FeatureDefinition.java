@@ -31,12 +31,24 @@ import java.util.List;
  *         http://www.itemis.de
  * @since 1.1.2
  */
-public class P2FeatureDefinition extends P2Feature {
+public class P2FeatureDefinition  {
 	
 	public P2FeatureDefinition() {
 	}
 	
-	File featureFile;
+	private File featureFile;
+	private String id;
+	private String version;
+	private String label;
+	private String providerName;
+	private String description;
+	private String copyright;
+	private String license;
+	private boolean generateSourceFeature;
+	private List<P2Artifact> artifacts;
+	private boolean unpack;
+	
+	
 	public File getFeatureFile() {
 		return featureFile;
 	}
@@ -44,7 +56,6 @@ public class P2FeatureDefinition extends P2Feature {
 		this.featureFile = featureFile;
 	}
 	
-	String id;
 	public String getId() {
 		return id;
 	}
@@ -52,7 +63,6 @@ public class P2FeatureDefinition extends P2Feature {
 		this.id = id;
 	}
 	
-	String version;
 	public String getVersion() {
 		return version;
 	}
@@ -60,7 +70,6 @@ public class P2FeatureDefinition extends P2Feature {
 		this.version = version;
 	}
 	
-	String label;
 	public String getLabel() {
 		return label;
 	}
@@ -68,7 +77,6 @@ public class P2FeatureDefinition extends P2Feature {
 		this.label = label;
 	}
 	
-	String providerName;
 	public String getProviderName() {
 		return providerName;
 	}
@@ -76,7 +84,6 @@ public class P2FeatureDefinition extends P2Feature {
 		this.providerName = providerName;
 	}
 	
-	String description;
 	public String getDescription() {
 		return description;
 	}
@@ -84,7 +91,6 @@ public class P2FeatureDefinition extends P2Feature {
 		this.description = description;
 	}
 	
-	String copyright;
 	public String getCopyright() {
 		return copyright;
 	}
@@ -92,7 +98,6 @@ public class P2FeatureDefinition extends P2Feature {
 		this.copyright = copyright;
 	}
 	
-	String license;
 	public String getLicense() {
 		return license;
 	}
@@ -100,7 +105,6 @@ public class P2FeatureDefinition extends P2Feature {
 		this.license = license;
 	}
 	
-	boolean generateSourceFeature;
 	public boolean getGenerateSourceFeature() {
 		return generateSourceFeature;
 	}
@@ -108,7 +112,6 @@ public class P2FeatureDefinition extends P2Feature {
 		this.generateSourceFeature = generateSourceFeature;
 	}
 	
-	List<P2Artifact> artifacts;
 	public List<P2Artifact> getArtifacts() {
 		if (null==artifacts) {
 			this.artifacts = new ArrayList<P2Artifact>();
@@ -118,8 +121,12 @@ public class P2FeatureDefinition extends P2Feature {
 	public void setArtifacts(List<P2Artifact> artifacts) {
 		this.artifacts = artifacts;
 	}
-
-//	List<> includes;
-//	List<> requires;
+	
+	public boolean getUnpack() {
+		return unpack;
+	}
+	public void setUnpack(boolean unpack) {
+		this.unpack = unpack;
+	}
 	
 }

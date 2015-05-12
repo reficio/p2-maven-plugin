@@ -18,8 +18,6 @@
  */
 package org.reficio.p2.resolver.eclipse;
 
-import org.reficio.p2.resolver.maven.ArtifactResolutionRequest;
-import org.reficio.p2.resolver.maven.ArtifactResolutionResult;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
