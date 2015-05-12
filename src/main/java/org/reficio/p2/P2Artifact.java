@@ -67,7 +67,7 @@ public class P2Artifact {
     /**
      * The BND instructions for the bundle.
      */
-    private Map instructions = new LinkedHashMap();
+    private Map<String, Object> instructions = new LinkedHashMap<String, Object>();
 
     public P2Artifact() {
     }
@@ -80,11 +80,11 @@ public class P2Artifact {
         this.id = id;
     }
 
-    public Map getInstructions() {
+    public Map<String, Object> getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(Map instructions) {
+    public void setInstructions(Map<String, Object> instructions) {
         this.instructions = instructions;
     }
 

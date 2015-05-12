@@ -268,24 +268,6 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         return null;
     }
 
-//    private Map<P2Artifact, ArtifactBundlerInstructions> processArtifacts(List<P2Artifact> artifacts) {
-//    	Map<P2Artifact, ArtifactBundlerInstructions> bundlerInstructions = new HashMap<P2Artifact, ArtifactBundlerInstructions>();
-//        // first resolve all artifacts
-//        Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = resolveArtifacts(artifacts);
-//        // then bundle the artifacts including the transitive dependencies (if specified so)
-//        if (null!=artifacts) {
-//	        for (P2Artifact p2Artifact : artifacts) {
-//	            for (ResolvedArtifact resolvedArtifact : resolvedArtifacts.get(p2Artifact)) {
-//	            	String timestamp = Utils.getTimeStamp();
-//	                ArtifactBundlerInstructions abi = bundleArtifact(p2Artifact, resolvedArtifact, timestamp);
-//	                bundlerInstructions.put(p2Artifact,abi);
-//	            }
-//	        }
-//        }
-//        return bundlerInstructions;
-//    }
-
-
     private Multimap<P2Artifact, ArtifactBundlerInstructions>  processArtifacts(List<P2Artifact> artifacts) {
     	Multimap<P2Artifact, ArtifactBundlerInstructions> bundlerInstructions = ArrayListMultimap.create();
     	
@@ -350,7 +332,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
             }
         }
  
-        if (null!=featureDefinitions) {
+        if (featureDefinitions != null) {
 	        for (P2FeatureDefinition p2Feature : featureDefinitions) {
 	        		this.createFeature(p2Feature);
 	        }
@@ -427,21 +409,22 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 				//we must be generating the feature file from the pom
 				p2featureDefinition.setVersion( Utils.mavenToEclipse(p2featureDefinition.getVersion(), timestamp) );
 
-				FeatureBuilder featureBuilder = new FeatureBuilder(p2featureDefinition, bi, false, timestamp);
-				featureBuilder.generate(this.featuresDestinationFolder);
-				// generate also a source feature of all available sources
-				if (p2featureDefinition.getGenerateSourceFeature()) {
-					featureBuilder = new FeatureBuilder(p2featureDefinition, bi, true, timestamp);
-					featureBuilder.generate(this.featuresDestinationFolder);
-				}
+				boolean unpack = p2featureDefinition.getUnpack();
+				FeatureBuilder featureBuilder = new FeatureBuilder(p2featureDefinition, bi, false, unpack, timestamp);
+				featureBuilder.generate(this.featuresDestinationFolder);	
 				
+				if ( p2featureDefinition.getGenerateSourceFeature()) {
+					// build also the source feature. (But do not unpack. Should not be neccessary)
+					FeatureBuilder sourceFeatureBuilder = new FeatureBuilder(p2featureDefinition, bi, true, false, timestamp);
+					sourceFeatureBuilder.generate(this.featuresDestinationFolder);
+				}
 			} else {
 				//given a feature file, so build using tycho
 				File basedir = p2featureDefinition.getFeatureFile().getParentFile();
 				TychoFeatureBuilder builder = new TychoFeatureBuilder(
 						p2featureDefinition.getFeatureFile(),
 						this.featuresDestinationFolder.getAbsolutePath(),
-						"test.feature",
+						"test.feature",  // these are only dummy values.
 						"1.0.0",
 						project,
 						this.session,

@@ -22,6 +22,7 @@ import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.FileResource;
 import aQute.lib.osgi.Jar;
 import aQute.lib.osgi.Resource;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
@@ -33,6 +34,8 @@ import org.w3c.dom.NodeList;
 import clover.retrotranslator.edu.emory.mathcs.backport.java.util.Arrays;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -40,6 +43,8 @@ import java.io.InputStream;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -52,11 +57,6 @@ import java.util.zip.ZipOutputStream;
  * @since 1.0.0
  */
 public class JarUtils {
-/*
-    private static final String JAR_SNAPSHOT_POSTFIX = "-SNAPSHOT";
-    private static final String OSGI_SNAPSHOT_POSTFIX = ".SNAPSHOT";
-    private static final String ECLIPSE_QUALIFIER_POSTFIX = ".qualifier";
-*/
 
     public static void adjustSnapshotOutputVersion(File inputFile, File outputFile, String version) {
         Jar jar = null;
@@ -77,11 +77,6 @@ public class JarUtils {
     
     /**
      * Opens the feature.xml in the given jar file and adjusts all version numbers/timestamps
-     * @param inputFile
-     * @param outputFile
-     * @param pluginDir
-     * @param log
-     * @param timestamp
      */
     public static void adjustFeatureXml(File inputFile, File outputFile, File pluginDir, Log log, String timestamp) {
         Jar jar = null;
@@ -108,59 +103,12 @@ public class JarUtils {
             if (jar != null) {
                 jar.close();
             }
-            if (null!=newXml) {
+            if (newXml != null) {
             	newXml.delete();
             }
         }
     }
-/*
-    public static Document parseXml(InputStream input) {
-        try {
-            DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-            fac.setValidating(false);
-            DocumentBuilder docBuilder = fac.newDocumentBuilder();
-            Document doc = docBuilder.parse(input);
-            return doc;
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot parse XML input", e);
-        }
-    }
 
-    public static void writeXml(Document doc, File outputFile) {
-        try {
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            Result output = new StreamResult(outputFile);
-            Source input = new DOMSource(doc);
-            transformer.transform(input, output);
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot write XML document to file " + outputFile.getName(), e);
-        }
-    }
-
-    public static String replaceQualifierWithTimestamp(String version) {
-        String tweakedVersion = version;
-        if (version.contains(ECLIPSE_QUALIFIER_POSTFIX)) {
-            tweakedVersion = tweakedVersion.replace(ECLIPSE_QUALIFIER_POSTFIX, "." + getTimeStamp());
-        }
-        return tweakedVersion;
-    }
-
-    public static String replaceSnapshotWithTimestamp(String version) {
-        String tweakedVersion = version;
-        if (version.contains(JAR_SNAPSHOT_POSTFIX)) {
-            tweakedVersion = tweakedVersion.replace(JAR_SNAPSHOT_POSTFIX, "-" + getTimeStamp());
-        } else if (version.contains(OSGI_SNAPSHOT_POSTFIX)) {
-            tweakedVersion = tweakedVersion.replace(OSGI_SNAPSHOT_POSTFIX, "." + getTimeStamp());
-        }
-        return tweakedVersion;
-    }
-
-    public static String getTimeStamp() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        return format.format(new Date());
-    }
-
-*/    
     public static void adjustFeatureQualifierVersionWithTimestamp(Document featureSpec, String timestamp) {
 	        String version = featureSpec.getDocumentElement().getAttributeNode("version").getValue();
 	        String newVersion = Utils.eclipseQualifierToTimeStamp(version, timestamp); 
@@ -176,10 +124,6 @@ public class JarUtils {
     
 	/**
 	 * Adjust the pluginId TODO - this may be wrong if singleton is used
-	 * @param featureSpec
-	 * @param pluginDir
-	 * @param log
-	 * @throws IOException
 	 */
     public static void adjustFeaturePluginData(Document featureSpec, File pluginDir, Log log) throws IOException {
 	        //get list of all plugins
@@ -278,4 +222,39 @@ public class JarUtils {
         }
     }
 
+    public static void createJar(File directory, File destJar) throws IOException {
+    
+		
+		//we must be generating the feature file from the pom
+		FileOutputStream fos = new FileOutputStream(destJar);
+		Manifest mf = new Manifest();
+		JarOutputStream jar = new JarOutputStream(fos, mf);
+		addToJar(jar, directory);
+		jar.close();
+    }
+    
+	private static void addToJar(JarOutputStream jar, File content) throws IOException
+	{
+		for (File f : FileUtils.listFiles(content, null, true) ) {
+			String fname = f.getPath().replace("\\", "/");
+			if (f.isDirectory()) {
+				if (!fname.endsWith("/")) {
+					fname = fname + "/";
+				}
+				JarEntry entry = new JarEntry(fname);
+				entry.setTime(f.lastModified());
+				jar.putNextEntry(entry);
+				jar.closeEntry();
+			} else {
+				//must be a file
+				JarEntry entry = new JarEntry(fname);
+				entry.setTime(f.lastModified());
+				jar.putNextEntry(entry);
+				jar.write( IOUtils.toByteArray(new FileInputStream(f)) );
+				jar.closeEntry();
+			}
+			
+
+		}
+	}
 }

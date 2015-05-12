@@ -60,7 +60,7 @@ public class TychoFeatureBuilder {
         this.buildPluginManager = buildPluginManager;
     }
 
-    public void execute() throws MojoExecutionException, IOException {
+    private MavenProject prepareMavenProject() {
     	MavenProject mp =new MavenProject();
     	mp.getModel().setGroupId(this.mavenProject.getGroupId());
     	mp.getModel().setArtifactId(featureId);
@@ -70,6 +70,11 @@ public class TychoFeatureBuilder {
     	mp.setFile(featureFile); //sets the basedir for the MavenProject
     	org.eclipse.tycho.artifacts.DependencyArtifacts da = new DefaultDependencyArtifacts();
     	mp.setContextValue(TychoConstants.CTX_DEPENDENCY_ARTIFACTS, da);
+    	return mp;
+	}
+
+	public void execute() throws MojoExecutionException, IOException {
+    	MavenProject mp = prepareMavenProject();
     	mavenSession.setCurrentProject(mp);
         executeMojo(
                 plugin(
