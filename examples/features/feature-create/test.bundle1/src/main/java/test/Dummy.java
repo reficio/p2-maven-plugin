@@ -16,17 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.eclipse;
+package test;
 
-
-/**
- * @author Tom Bujok (tom.bujok@gmail.com)<br>
- *         Reficio (TM) - Reestablish your software!<br>
- *         http://www.reficio.org
- * @since 1.1.2
- */
-public interface EclipseResolver {
-
-    EclipseResolutionResponse resolve(EclipseResolutionRequest request);
-
+public class Dummy {
 }
