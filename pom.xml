@@ -1,7 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+		 
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+		<groupId>de.foconis.starter</groupId>
+		<artifactId>foconis-starter</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath/>
+    </parent>
+	
     <groupId>org.reficio</groupId>
     <artifactId>p2-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
@@ -636,15 +643,17 @@
 
         <profile>
             <id>it</id>
+			<!--
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+			-->
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-invoker-plugin</artifactId>
-                        <version>1.9</version>
+                        <version>1.10</version>
                         <dependencies>
                             <dependency>
                                 <groupId>org.codehaus.groovy</groupId>
@@ -694,6 +703,7 @@
             <url>http://repo.reficio.org/maven/</url>
         </repository>
     </repositories>
+<!--
 
     <distributionManagement>
         <repository>
@@ -702,5 +712,5 @@
             <url>scp://${reficio.server}/var/www/repo/maven</url>
         </repository>
     </distributionManagement>
-
+-->
 </project>
