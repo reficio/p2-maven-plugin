@@ -5,9 +5,15 @@
     <parent>
 		<groupId>de.foconis.starter</groupId>
 		<artifactId>foconis-starter</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.1-SNAPSHOT</version>
 		<relativePath/>
     </parent>
+
+
+    <scm>
+		<developerConnection>scm:git:ssh://git@stash.foconis.de:7999/mvn/p2-maven-plugin.git</developerConnection>
+    </scm>
+	
 	
     <groupId>org.reficio</groupId>
     <artifactId>p2-maven-plugin</artifactId>
@@ -36,6 +42,7 @@
 
         <clover.version>3.1.12</clover.version>
         <clover.license>/private/reficio/clover.license</clover.license>
+		<foconis.site.subdir>p2-maven-plugin</foconis.site.subdir>		
     </properties>
 
     <licenses>
@@ -68,11 +75,6 @@
         <url>https://github.com/reficio/p2-maven-plugin/issues</url>
     </issueManagement>
 
-    <scm>
-        <connection>scm:git:git://github.com/reficio/p2-maven-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:reficio/p2-maven-plugin.git</developerConnection>
-        <url>http://github.com/reficio/p2-maven-plugin</url>
-    </scm>
 
     <ciManagement>
         <system>jenkins</system>
@@ -709,6 +711,10 @@
             <id>reficio</id>
             <url>http://repo.reficio.org/maven/</url>
         </repository>
+		<repository>
+			<id>foconis</id>
+			<url>https://repo.foconis.de/maven/</url>
+		</repository>		
     </repositories>
 <!--
 
