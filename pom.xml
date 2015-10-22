@@ -4,7 +4,7 @@
     <parent>
 		<groupId>de.foconis.starter</groupId>
 		<artifactId>foconis-starter</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.8</version>
 		<relativePath />
     </parent>
 
