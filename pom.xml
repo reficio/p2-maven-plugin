@@ -1,24 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-		 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-		<groupId>de.foconis.starter</groupId>
-		<artifactId>foconis-starter</artifactId>
-		<version>1.0.1</version>
-		<relativePath />
-    </parent>
-
-
-    <scm>
-		<developerConnection>scm:git:ssh://git@stash.foconis.de:7999/mvn/p2-maven-plugin.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
-	
-	
     <groupId>org.reficio</groupId>
     <artifactId>p2-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.2.2-FOC-SNAPSHOT</version>
+    <version>1.2.1-FOC-SNAPSHOT</version>
     <name>p2-maven-plugin</name>
     <url>http://projects.reficio.org/${project.artifactId}/${project.version}</url>
     <description>Maven plugin for the automation of jars wrapping and p2 site generation</description>
@@ -42,7 +29,6 @@
 
         <clover.version>3.1.12</clover.version>
         <clover.license>/private/reficio/clover.license</clover.license>
-		<foconis.site.subdir>p2-maven-plugin</foconis.site.subdir>		
     </properties>
 
     <licenses>
@@ -75,6 +61,11 @@
         <url>https://github.com/reficio/p2-maven-plugin/issues</url>
     </issueManagement>
 
+    <scm>
+        <connection>scm:git:git://github.com/reficio/p2-maven-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:reficio/p2-maven-plugin.git</developerConnection>
+        <url>http://github.com/reficio/p2-maven-plugin</url>
+    </scm>
 
     <ciManagement>
         <system>jenkins</system>
@@ -269,7 +260,7 @@
                 <artifactId>gmaven-plugin</artifactId>
                 <version>${gmaven.version}</version>
                 <configuration>
-                    <source />
+                    <source/>
                     <providerSelection>${gmaven.provider.selection}</providerSelection>
                     <sourceEncoding>UTF-8</sourceEncoding>
                 </configuration>
@@ -483,10 +474,13 @@
                             <failOnError>false</failOnError>
                             <target>
                                 <copy todir="${basedir}/src/site/markdown">
-                                    <fileset dir="${basedir}" includes="README.md" />
+                                    <fileset dir="${basedir}" includes="README.md"/>
                                 </copy>
-                                <move file="${basedir}/src/site/markdown/README.md" tofile="${basedir}/src/site/markdown/manual.md" />
-                                <replaceregexp file="${basedir}/src/site/markdown/manual.md" match="```.*" replace="" byline="true" />
+                                <move file="${basedir}/src/site/markdown/README.md" tofile="${basedir}/src/site/markdown/manual.md"/>
+                                <replaceregexp file="${basedir}/src/site/markdown/manual.md"
+                                               match="```.*"
+                                               replace=""
+                                               byline="true"/>
                             </target>
                         </configuration>
                         <goals>
@@ -524,17 +518,26 @@
                                 <id>default-cli</id>
                                 <configuration>
                                     <tasks>
-                                        <echo message="Running ANT for deploying the site..." />
-                                        <property name="project_folder" value="/var/www/projects/${project.artifactId}" />
-                                        <property name="version_folder" value="${project_folder}/${project.version}" />
-                                        <property name="site_tgz" value="${project.artifactId}-${project.version}-site.tgz" />
-                                        <tar destfile="target/${site_tgz}" basedir="target/site" compression="gzip" />
-                                        <echo message="Creating folder for the site ${version_folder}" />
-                                        <sshexec host="${reficio.server}" username="${reficio.usr}" password="${reficio.pwd}" verbose="false" command="mkdir -p ${version_folder}" />
-                                        <echo message="Uploading compressed site ${site_tgz}" />
-                                        <scp file="target/${site_tgz}" todir="${reficio.usr}@${reficio.server}:${project_folder}/" password="${reficio.pwd}" verbose="false" />
-                                        <echo message="Extracting compressed site and cleaning up" />
-                                        <sshexec host="${reficio.server}" username="${reficio.usr}" password="${reficio.pwd}" verbose="false" command="rm -rf ${version_folder}/*; tar -C ${version_folder} -xf ${project_folder}/${site_tgz}; rm ${project_folder}/${project.artifactId}-${project.version}-site.tgz" />
+                                        <echo message="Running ANT for deploying the site..."/>
+                                        <property name="project_folder" value="/var/www/projects/${project.artifactId}"/>
+                                        <property name="version_folder" value="${project_folder}/${project.version}"/>
+                                        <property name="site_tgz" value="${project.artifactId}-${project.version}-site.tgz"/>
+                                        <tar destfile="target/${site_tgz}" basedir="target/site" compression="gzip"/>
+                                        <echo message="Creating folder for the site ${version_folder}"/>
+                                        <sshexec host="${reficio.server}"
+                                                 username="${reficio.usr}"
+                                                 password="${reficio.pwd}"
+                                                 verbose="false"
+                                                 command="mkdir -p ${version_folder}"/>
+                                        <echo message="Uploading compressed site ${site_tgz}"/>
+                                        <scp file="target/${site_tgz}" todir="${reficio.usr}@${reficio.server}:${project_folder}/"
+                                             password="${reficio.pwd}" verbose="false"/>
+                                        <echo message="Extracting compressed site and cleaning up"/>
+                                        <sshexec host="${reficio.server}"
+                                                 username="${reficio.usr}"
+                                                 password="${reficio.pwd}"
+                                                 verbose="false"
+                                                 command="rm -rf ${version_folder}/*; tar -C ${version_folder} -xf ${project_folder}/${site_tgz}; rm ${project_folder}/${project.artifactId}-${project.version}-site.tgz"/>
                                     </tasks>
                                 </configuration>
                                 <goals>
@@ -640,11 +643,9 @@
 
         <profile>
             <id>it</id>
-			<!--
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-			-->
             <build>
                 <plugins>
                     <plugin>
@@ -699,12 +700,7 @@
             <id>reficio</id>
             <url>http://repo.reficio.org/maven/</url>
         </repository>
-		<repository>
-			<id>foconis</id>
-			<url>https://repo.foconis.de/maven/</url>
-		</repository>		
     </repositories>
-<!--
 
     <distributionManagement>
         <repository>
@@ -713,5 +709,5 @@
             <url>scp://${reficio.server}/var/www/repo/maven</url>
         </repository>
     </distributionManagement>
--->
+
 </project>
