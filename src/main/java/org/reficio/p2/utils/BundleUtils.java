@@ -20,6 +20,7 @@ package org.reficio.p2.utils;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Jar;
+
 import org.apache.felix.bundleplugin.BundlePlugin;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.reficio.p2.resolver.maven.Artifact;
@@ -118,7 +119,7 @@ public class BundleUtils extends BundlePlugin {
         }
     }
 
-    public static Properties transformDirectives(Map instructions) {
+	public static Properties transformDirectivesToProperties(Map<String, Object> instructions) {
         Properties properties = new Properties();
         properties.putAll(BundlePlugin.transformDirectives(instructions));
         return properties;

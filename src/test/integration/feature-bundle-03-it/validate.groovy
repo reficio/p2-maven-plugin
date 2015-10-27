@@ -16,17 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.reficio.p2.resolver.eclipse;
 
+//
+// $Id$
+//
 
-/**
- * @author Tom Bujok (tom.bujok@gmail.com)<br>
- *         Reficio (TM) - Reestablish your software!<br>
- *         http://www.reficio.org
- * @since 1.1.2
- */
-public interface EclipseResolver {
+import aQute.lib.osgi.Jar
+import org.reficio.p2.utils.TestUtils as Util;
 
-    EclipseResolutionResponse resolve(EclipseResolutionRequest request);
+File target = new File(basedir, 'p2.repo/target/repository/features')
+assert target.exists()
+assert target.listFiles().size() == 2
 
-}
+String jarName = "test[.]feature_1[.]0[.]0[.]jar"
+assert target.listFiles()[0].name.matches(jarName) || target.listFiles()[1].name.matches(jarName)
+

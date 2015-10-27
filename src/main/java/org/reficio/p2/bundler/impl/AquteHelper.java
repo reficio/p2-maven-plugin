@@ -80,7 +80,7 @@ public class AquteHelper {
 
     private static void setInstructions(Analyzer analyzer, ArtifactBundlerInstructions instructions) {
         if (!instructions.getInstructions().isEmpty()) {
-            analyzer.setProperties(BundleUtils.transformDirectives(instructions.getInstructions()));
+            analyzer.setProperties(BundleUtils.transformDirectivesToProperties(instructions.getInstructions()));
         }
     }
 
