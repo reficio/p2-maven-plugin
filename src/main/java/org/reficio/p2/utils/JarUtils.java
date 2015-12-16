@@ -18,10 +18,10 @@
  */
 package org.reficio.p2.utils;
 
-import aQute.lib.osgi.Analyzer;
-import aQute.lib.osgi.FileResource;
-import aQute.lib.osgi.Jar;
-import aQute.lib.osgi.Resource;
+import aQute.bnd.osgi.Analyzer;
+import aQute.bnd.osgi.FileResource;
+import aQute.bnd.osgi.Jar;
+import aQute.bnd.osgi.Resource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;

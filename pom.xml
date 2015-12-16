@@ -17,7 +17,7 @@
         <maven.version>3.2.3</maven.version>
         <maven.annotations.version>3.3</maven.annotations.version>
         <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
-        <tycho.version>0.21.0</tycho.version>
+        <tycho.version>0.23.1</tycho.version>
 
         <sonatype.aether.version>1.13.1</sonatype.aether.version>
         <eclipse.aether.version>0.9.0.M3</eclipse.aether.version>
@@ -159,11 +159,11 @@
             <artifactId>guava</artifactId>
             <version>15.0</version>
         </dependency>
-        <dependency>
-            <groupId>biz.aQute</groupId>
-            <artifactId>bnd</artifactId>
-            <version>1.50.0</version>
-        </dependency>
+ 		<dependency>
+			<groupId>biz.aQute.bnd</groupId>
+			<artifactId>biz.aQute.bnd</artifactId>
+			<version>3.0.0</version>
+		</dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
@@ -177,7 +177,7 @@
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>maven-bundle-plugin</artifactId>
-            <version>2.3.6</version>
+            <version>3.0.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.osgi</groupId>
