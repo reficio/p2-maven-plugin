@@ -18,8 +18,8 @@
  */
 package org.reficio.p2.utils;
 
-import aQute.lib.osgi.Analyzer;
-import aQute.lib.osgi.Jar;
+import aQute.bnd.osgi.Analyzer;
+import aQute.bnd.osgi.Jar;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
