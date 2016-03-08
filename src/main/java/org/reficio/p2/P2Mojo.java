@@ -122,6 +122,16 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     private boolean pedantic;
 
     /**
+     * Skip invalid arguments.
+     *
+     * <p>
+     * This flag controls if the processing should be continued on invalid artifacts. It defaults to false to keep the
+     * old behavior (break on invalid artifacts).
+     */
+    @Parameter(defaultValue = "false")
+    private boolean skipInvalidArtifacts;
+
+    /**
      * Specifies whether to compress generated update site.
      */
     @Parameter(defaultValue = "true")
@@ -276,8 +286,17 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         for (P2Artifact p2Artifact : artifacts) {
             for (ResolvedArtifact resolvedArtifact : resolvedArtifacts.get(p2Artifact)) {
                 if (!resolvedArtifact.isRoot()) {
-                    if (bundledArtifacts.add(resolvedArtifact.getArtifact())) {
-                        bundleArtifact(p2Artifact, resolvedArtifact);
+                    if (!bundledArtifacts.contains(resolvedArtifact.getArtifact())) {
+                        try {
+                            bundleArtifact(p2Artifact, resolvedArtifact);
+                            bundledArtifacts.add(resolvedArtifact.getArtifact());
+                        } catch (final RuntimeException ex) {
+                            if (skipInvalidArtifacts) {
+                                log.warn(String.format("Skip artifact=[%s]: %s", p2Artifact.getId(), ex.getMessage()));
+                            } else {
+                                throw ex;
+                            }
+                        }
                     } else {
                         log.debug(String.format("Not bundling transitive dependency since it has already been bundled [%s]", resolvedArtifact.getArtifact()));
                     }
