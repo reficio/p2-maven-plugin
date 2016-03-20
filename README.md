@@ -542,6 +542,12 @@ There are some other plugin options that you can specify in the configuration:
     <td></td>
     <td>Specifies additional arguments to p2Launcher, for example -consoleLog -debug -verbose</td>
 </tr>
+<tr>
+    <td>skipInvalidArtifacts</td>
+    <td>false</td>
+    <td>Controls if the processing should be continued if bundling errors occur.</td>
+</tr>
+This flag .
 </table>
 
 
