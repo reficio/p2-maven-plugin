@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.TimeZone;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
@@ -58,6 +59,7 @@ public class JarUtils {
     private static final String JAR_SNAPSHOT_POSTFIX = "-SNAPSHOT";
     private static final String OSGI_SNAPSHOT_POSTFIX = ".SNAPSHOT";
     private static final String ECLIPSE_QUALIFIER_POSTFIX = ".qualifier";
+    private static final String FORCED_CONTEXT_QUALIFIER = System.getProperty("forceContextQualifier");
 
     public static void adjustSnapshotOutputVersion(File inputFile, File outputFile, String version) {
         Jar jar = null;
@@ -83,7 +85,7 @@ public class JarUtils {
             Resource res = jar.getResource("feature.xml");
             Document featureSpec = parseXml(res.openInputStream());
             String version = featureSpec.getDocumentElement().getAttributeNode("version").getValue();
-            String newVersion = replaceQualifierWithTimestamp(version);
+            String newVersion = replaceQualifierWithTimestamp(version, inputFile.lastModified());
             featureSpec.getDocumentElement().getAttributeNode("version").setValue(newVersion);
             File newXml = new File(inputFile.getParentFile(), "feature.xml");
             writeXml(featureSpec, newXml);
@@ -122,27 +124,31 @@ public class JarUtils {
         }
     }
 
-    public static String replaceQualifierWithTimestamp(String version) {
+    public static String replaceQualifierWithTimestamp(String version, long artifactLastModified) {
         String tweakedVersion = version;
         if (version.contains(ECLIPSE_QUALIFIER_POSTFIX)) {
-            tweakedVersion = tweakedVersion.replace(ECLIPSE_QUALIFIER_POSTFIX, "." + getTimeStamp());
+            tweakedVersion = tweakedVersion.replace(ECLIPSE_QUALIFIER_POSTFIX, "." + getTimeStamp(artifactLastModified));
         }
         return tweakedVersion;
     }
 
-    public static String replaceSnapshotWithTimestamp(String version) {
+    public static String replaceSnapshotWithTimestamp(String version, long artifactLastModified) {
         String tweakedVersion = version;
         if (version.contains(JAR_SNAPSHOT_POSTFIX)) {
-            tweakedVersion = tweakedVersion.replace(JAR_SNAPSHOT_POSTFIX, "-" + getTimeStamp());
+            tweakedVersion = tweakedVersion.replace(JAR_SNAPSHOT_POSTFIX, "-" + getTimeStamp(artifactLastModified));
         } else if (version.contains(OSGI_SNAPSHOT_POSTFIX)) {
-            tweakedVersion = tweakedVersion.replace(OSGI_SNAPSHOT_POSTFIX, "." + getTimeStamp());
+            tweakedVersion = tweakedVersion.replace(OSGI_SNAPSHOT_POSTFIX, "." + getTimeStamp(artifactLastModified));
         }
         return tweakedVersion;
     }
 
-    public static String getTimeStamp() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        return format.format(new Date());
+    public static String getTimeStamp(long artifactLastModified) {
+        if (FORCED_CONTEXT_QUALIFIER != null) {
+            return FORCED_CONTEXT_QUALIFIER;
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmm");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return format.format(new Date(artifactLastModified));
     }
 
     public static void removeSignature(File jar) {

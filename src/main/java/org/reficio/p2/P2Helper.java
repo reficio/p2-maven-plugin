@@ -159,7 +159,8 @@ public class P2Helper {
         // in case of root artifact try to take the version from the instructions
         if (resolvedArtifact.isRoot()) {
             Object versionValue = p2Artifact.getInstructions().get(Analyzer.BUNDLE_VERSION);
-            version = versionValue != null ? JarUtils.replaceSnapshotWithTimestamp(versionValue.toString()) : null;
+            long artifactLastModified = resolvedArtifact.getArtifact().getFile().lastModified();
+            version = versionValue != null ? JarUtils.replaceSnapshotWithTimestamp(versionValue.toString(), artifactLastModified) : null;
         }
         // if contains snapshot (manually set by the user) -> "SNAPSHOT" will be manually replaced
         return version;
@@ -177,7 +178,8 @@ public class P2Helper {
             }
         }
         // if still contains snapshot (manually set by the user) -> "SNAPSHOT" will be manually replaced
-        return BundleUtils.INSTANCE.cleanupVersion(JarUtils.replaceSnapshotWithTimestamp(version));
+        long artifactLastModified = resolvedArtifact.getArtifact().getFile().lastModified();
+        return BundleUtils.INSTANCE.cleanupVersion(JarUtils.replaceSnapshotWithTimestamp(version, artifactLastModified));
     }
 
     private static String calculateSnapshotVersion(ResolvedArtifact resolvedArtifact) {
