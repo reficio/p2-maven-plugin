@@ -60,9 +60,9 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.util.IOUtil;
 import org.eclipse.tycho.core.TychoConstants;
-import org.eclipse.tycho.core.facade.BuildProperties;
+import org.eclipse.tycho.core.shared.BuildProperties;
 import org.eclipse.tycho.core.osgitools.DefaultReactorProject;
-import org.eclipse.tycho.core.osgitools.targetplatform.DefaultTargetPlatform;
+import org.eclipse.tycho.core.osgitools.targetplatform.DefaultDependencyArtifacts;
 import org.eclipse.tycho.core.utils.MavenSessionUtils;
 import org.eclipse.tycho.model.Feature;
 import org.eclipse.tycho.packaging.LicenseFeatureHelper;
@@ -71,7 +71,7 @@ import org.reficio.p2.publisher.BundlePublisher.Builder;
 import org.twdata.maven.mojoexecutor.MojoExecutor;
 
 public class TychoFeatureBuilder {
-    private static final String TYCHO_VERSION = "0.18.1";
+    private static final String TYCHO_VERSION = "0.23.1";
 
     File featureFile;
     private final String outputDirectory;
@@ -100,7 +100,7 @@ public class TychoFeatureBuilder {
     	mp.getModel().setPackaging("eclipse-feature");
     	mp.setPluginArtifactRepositories(this.mavenProject.getPluginArtifactRepositories());
     	mp.setFile(featureFile); //sets the basedir for the MavenProject
-    	org.eclipse.tycho.artifacts.DependencyArtifacts da = new DefaultTargetPlatform();
+    	org.eclipse.tycho.artifacts.DependencyArtifacts da = new DefaultDependencyArtifacts();
     	mp.setContextValue(TychoConstants.CTX_DEPENDENCY_ARTIFACTS, da);
     	mavenSession.setCurrentProject(mp);
         executeMojo(
