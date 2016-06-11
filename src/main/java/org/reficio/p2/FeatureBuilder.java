@@ -59,9 +59,10 @@ import aQute.bnd.osgi.Jar;
 
 public class FeatureBuilder {
 
-	public FeatureBuilder(P2FeatureDefinition p2FeatureDefintion, Map<P2Artifact, ArtifactBundlerInstructions>  bundlerInstructions) {
+	public FeatureBuilder(P2FeatureDefinition p2FeatureDefintion, Map<P2Artifact, ArtifactBundlerInstructions>  bundlerInstructions, String timestamp) {
 		this.p2FeatureDefintion = p2FeatureDefintion;
 		this.bundlerInstructions = bundlerInstructions;
+		this.featureTimeStamp = timestamp;
 	}
 
 	Map<P2Artifact, ArtifactBundlerInstructions>  bundlerInstructions;
@@ -112,16 +113,10 @@ public class FeatureBuilder {
 	
 	//cache this so that the same timestamp is used
 	String featureTimeStamp;
-	String getFeatureTimeStamp() {
-		if (null==featureTimeStamp) {
-			this.featureTimeStamp = Utils.getTimeStamp();
-		}
-		return featureTimeStamp;
-	}
 	
 	String getQualifiedFeatureVersion() {
 		String v = this.p2FeatureDefintion.getVersion();
-		return v.replace("qualifier", this.getFeatureTimeStamp());
+		return v.replace("qualifier", featureTimeStamp);
 	}
 	
 	String getFeatureFullName() {
@@ -181,7 +176,7 @@ public class FeatureBuilder {
 		//update qualified version if need be
 		String xmlVersion = featureElement.getAttribute("version");
 		if (xmlVersion.contains("qualifier")) {
-			featureElement.setAttribute("version", xmlVersion.replace("qualifier", this.getFeatureTimeStamp()));
+			featureElement.setAttribute("version", xmlVersion.replace("qualifier", featureTimeStamp));
 		}
 	}
 
