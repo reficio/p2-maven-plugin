@@ -67,7 +67,7 @@ public class P2Artifact {
     /**
      * The BND instructions for the bundle.
      */
-    private Map instructions = new LinkedHashMap();
+    private Map<String, Object> instructions = new LinkedHashMap<String, Object>();
 
     public P2Artifact() {
     }
@@ -80,11 +80,11 @@ public class P2Artifact {
         this.id = id;
     }
 
-    public Map getInstructions() {
+    public Map<String, Object> getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(Map instructions) {
+    public void setInstructions(Map<String, Object> instructions) {
         this.instructions = instructions;
     }
 
@@ -124,4 +124,27 @@ public class P2Artifact {
         this.excludes = excludes;
     }
 
+    public String getVersion() {
+    	String[] parts = this.getId().split(":");
+    	if (parts.length < 3) {
+    		throw new RuntimeException("Artifact Id must be of the form <groupId>:<artifactId>:<version>: "+this.getId());
+    	}
+    	return parts[2];
+    }
+    
+    public String getArtifactId() {
+    	String[] parts = this.getId().split(":");
+    	if (parts.length < 3) {
+    		throw new RuntimeException("Artifact Id must be of the form <groupId>:<artifactId>:<version>: "+this.getId());
+    	}
+    	return parts[1];
+    }
+    
+    public String getGroupId() {
+    	String[] parts = this.getId().split(":");
+    	if (parts.length < 3) {
+    		throw new RuntimeException("Artifact Id must be of the form <groupId>:<artifactId>:<version>: "+this.getId());
+    	}
+    	return parts[1];
+    }
 }

@@ -57,14 +57,27 @@ import org.reficio.p2.resolver.maven.ArtifactResolver;
 import org.reficio.p2.resolver.maven.ResolvedArtifact;
 import org.reficio.p2.resolver.maven.impl.AetherResolver;
 import org.reficio.p2.utils.JarUtils;
+import org.reficio.p2.utils.Utils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
+
 
 /**
  * Main plugin class
@@ -88,6 +101,8 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     private static final String DEFAULT_CATEGORY_FILE = "category.xml";
     private static final String DEFAULT_CATEGORY_CLASSPATH_LOCATION = "/";
 
+    private String timestamp = Utils.getTimeStamp(); // create timestamp only once!
+    
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
@@ -120,7 +135,6 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
      */
     @Parameter(defaultValue = "false")
     private boolean pedantic;
-
     /**
      * Skip invalid arguments.
      *
@@ -130,7 +144,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
      */
     @Parameter(defaultValue = "false")
     private boolean skipInvalidArtifacts;
-
+    
     /**
      * Specifies whether to compress generated update site.
      */
@@ -189,7 +203,14 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
      */
     @Parameter(readonly = true)
     private List<EclipseArtifact> p2;
-
+   
+    /**
+     * A list of definitions of eclipse features
+     * 
+     */
+    @Parameter(readonly=true)
+    private List<P2FeatureDefinition> featureDefinitions;
+    
     /**
      * Logger retrieved from the Maven internals.
      * It's the recommended way to do it...
@@ -215,7 +236,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         try {
             initializeEnvironment();
             initializeRepositorySystem();
-            processArtifacts();
+            processArtifacts(this.artifacts);
             processFeatures();
             processEclipseArtifacts();
             executeP2PublisherPlugin();
@@ -256,19 +277,26 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         return null;
     }
 
-    private void processArtifacts() {
-        Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = resolveArtifacts();
-        Set<Artifact> processedArtifacts = processRootArtifacts(resolvedArtifacts);
+    private Multimap<P2Artifact, ArtifactBundlerInstructions>  processArtifacts(List<P2Artifact> artifacts) {
+    	Multimap<P2Artifact, ArtifactBundlerInstructions> bundlerInstructions = ArrayListMultimap.create();
+    	
+        Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = resolveArtifacts(artifacts);
+        Set<Artifact> processedArtifacts = processRootArtifacts(resolvedArtifacts, bundlerInstructions, artifacts);
         processTransitiveArtifacts(resolvedArtifacts, processedArtifacts);
+        
+        return bundlerInstructions;
+        
     }
 
-    private Set<Artifact> processRootArtifacts(Multimap<P2Artifact, ResolvedArtifact> processedArtifacts) {
+    private Set<Artifact> processRootArtifacts(Multimap<P2Artifact, ResolvedArtifact> processedArtifacts, 
+    		Multimap<P2Artifact, ArtifactBundlerInstructions> bundlerInstructions, List<P2Artifact> artifacts) {
         Set<Artifact> bundledArtifacts = Sets.newHashSet();
         for (P2Artifact p2Artifact : artifacts) {
             for (ResolvedArtifact resolvedArtifact : processedArtifacts.get(p2Artifact)) {
                 if (resolvedArtifact.isRoot()) {
                     if (bundledArtifacts.add(resolvedArtifact.getArtifact())) {
-                        bundleArtifact(p2Artifact, resolvedArtifact);
+                    	ArtifactBundlerInstructions abi = bundleArtifact(p2Artifact, resolvedArtifact);
+                    	bundlerInstructions.put(p2Artifact,abi);
                     } else {
                         String message = String.format("p2-maven-plugin misconfiguration" +
                                 "\n\n\tJar [%s] is configured as an artifact multiple times. " +
@@ -282,6 +310,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     }
 
     private void processTransitiveArtifacts(Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts, Set<Artifact> bundledArtifacts) {
+
         // then bundle transitive artifacts
         for (P2Artifact p2Artifact : artifacts) {
             for (ResolvedArtifact resolvedArtifact : resolvedArtifacts.get(p2Artifact)) {
@@ -304,9 +333,10 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
             }
         }
     }
-
+    
     private void processFeatures() {
         // artifacts should already have been resolved by processArtifacts()
+
         Multimap<P2Artifact, ResolvedArtifact> resolvedFeatures = resolveFeatures();
         // then bundle the artifacts including the transitive dependencies (if specified so)
         log.info("Resolved " + resolvedFeatures.size() + " features");
@@ -315,9 +345,17 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
                 handleFeature(p2Artifact, resolvedArtifact);
             }
         }
+ 
+        if (featureDefinitions != null) {
+	        for (P2FeatureDefinition p2Feature : featureDefinitions) {
+	        		this.createFeature(p2Feature);
+	        }
+        }
     }
+    
 
-    private Multimap<P2Artifact, ResolvedArtifact> resolveArtifacts() {
+    
+    private Multimap<P2Artifact, ResolvedArtifact> resolveArtifacts(List<P2Artifact> artifacts) {
         Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = ArrayListMultimap.create();
         for (P2Artifact p2Artifact : artifacts) {
             logResolving(p2Artifact);
@@ -326,6 +364,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         }
         return resolvedArtifacts;
     }
+
 
     private Multimap<P2Artifact, ResolvedArtifact> resolveFeatures() {
         Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = ArrayListMultimap.create();
@@ -336,17 +375,18 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         }
         return resolvedArtifacts;
     }
+            
 
     private void logResolving(EclipseArtifact p2) {
-        log.info(String.format("Resolving artifact=[%s] source=[%s]", p2.getId(),
-                p2.shouldIncludeSources()));
-    }
-
+    	log.info(String.format("Resolving artifact=[%s] source=[%s]", p2.getId(),
+    		p2.shouldIncludeSources()));
+    }    
+    
     private void logResolving(P2Artifact p2) {
         log.info(String.format("Resolving artifact=[%s] transitive=[%s] source=[%s]", p2.getId(), p2.shouldIncludeTransitive(),
                 p2.shouldIncludeSources()));
     }
-
+    
     private ArtifactResolutionResult resolveArtifact(P2Artifact p2Artifact) {
         ArtifactResolutionRequest resolutionRequest = ArtifactResolutionRequest.builder()
                 .rootArtifactId(p2Artifact.getId())
@@ -358,7 +398,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         logResolved(resolutionRequest, resolutionResult);
         return resolutionResult;
     }
-
+    
     private ArtifactResolver getArtifactResolver() {
         return new AetherResolver(repoSystem, repoSession, projectRepos);
     }
@@ -373,13 +413,54 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
             }
         }
     }
+    
+    private void createFeature(P2FeatureDefinition p2featureDefinition) {
+    	try {
+    		Multimap<P2Artifact, ArtifactBundlerInstructions> bi = this.processArtifacts(p2featureDefinition.getArtifacts());
+    		
+			if (null==p2featureDefinition.getFeatureFile()) {
+				//we must be generating the feature file from the pom
+				p2featureDefinition.setVersion( Utils.mavenToEclipse(p2featureDefinition.getVersion(), timestamp) );
 
-    private void bundleArtifact(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) {
+				boolean unpack = p2featureDefinition.getUnpack();
+				FeatureBuilder featureBuilder = new FeatureBuilder(p2featureDefinition, bi, false, unpack, timestamp);
+				featureBuilder.generate(this.featuresDestinationFolder);	
+				
+				if ( p2featureDefinition.getGenerateSourceFeature()) {
+					// build also the source feature. (But do not unpack. Should not be neccessary)
+					FeatureBuilder sourceFeatureBuilder = new FeatureBuilder(p2featureDefinition, bi, true, false, timestamp);
+					sourceFeatureBuilder.generate(this.featuresDestinationFolder);
+				}
+			} else {
+				//given a feature file, so build using tycho
+				File basedir = p2featureDefinition.getFeatureFile().getParentFile();
+				TychoFeatureBuilder builder = new TychoFeatureBuilder(
+						p2featureDefinition.getFeatureFile(),
+						this.featuresDestinationFolder.getAbsolutePath(),
+						"test.feature",  // these are only dummy values.
+						"1.0.0",
+						project,
+						this.session,
+						this.pluginManager
+				);
+				builder.execute();
+			}
+			
+			log.info("Created feature "+p2featureDefinition.getId());
+			
+    	} catch (Exception e) {
+    		log.error(e);
+    	}
+    }
+    
+    private ArtifactBundlerInstructions bundleArtifact(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) {
+    	log.info("Bundling Artifact "+p2Artifact.getId());
         P2Validator.validateBundleRequest(p2Artifact, resolvedArtifact);
         ArtifactBundler bundler = getArtifactBundler();
-        ArtifactBundlerInstructions bundlerInstructions = P2Helper.createBundlerInstructions(p2Artifact, resolvedArtifact);
+        ArtifactBundlerInstructions bundlerInstructions = P2Helper.createBundlerInstructions(p2Artifact, resolvedArtifact, timestamp);
         ArtifactBundlerRequest bundlerRequest = P2Helper.createBundlerRequest(p2Artifact, resolvedArtifact, bundlesDestinationFolder);
         bundler.execute(bundlerRequest, bundlerInstructions);
+        return bundlerInstructions;
     }
 
     private void handleFeature(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) {
@@ -389,7 +470,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
             File inputFile = bundlerRequest.getBinaryInputFile();
             File outputFile = bundlerRequest.getBinaryOutputFile();
             //This will also copy the input to the output
-            JarUtils.adjustFeatureQualifierVersionWithTimestamp(inputFile, outputFile);
+            JarUtils.adjustFeatureXml(inputFile, outputFile, this.bundlesDestinationFolder, log, timestamp);
             log.info("Copied " + inputFile + " to " + outputFile);
         } catch (Exception ex) {
             throw new RuntimeException("Error while bundling jar or source: " + bundlerRequest.getBinaryInputFile().getName(), ex);
