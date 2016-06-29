@@ -46,6 +46,8 @@ public class BundleUtils extends BundlePlugin {
     private static final String BUNDLE_VERSION = "Bundle-Version";
     private static final String BUNDLE_NAME = "Bundle-Name";
 
+    private boolean reuseSnapshotVersionFromArtifact = true;
+
     public boolean reportErrors(Analyzer analyzer) {
         return super.reportErrors("", analyzer);
     }
@@ -124,4 +126,11 @@ public class BundleUtils extends BundlePlugin {
         return properties;
     }
 
+    public void setReuseSnapshotVersionFromArtifact(boolean in) {
+        reuseSnapshotVersionFromArtifact = in;
+    }
+
+    public boolean isReuseSnapshotVersionFromArtifact() {
+        return reuseSnapshotVersionFromArtifact;
+    }
 }

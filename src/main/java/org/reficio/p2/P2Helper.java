@@ -181,10 +181,12 @@ public class P2Helper {
     }
 
     private static String calculateSnapshotVersion(ResolvedArtifact resolvedArtifact) {
-        // attempt to take the proper snapshot version from the artifact's version
-        String version = resolvedArtifact.getArtifact().getVersion();
-        if (isProperSnapshotVersion(version)) {
-            return version;
+        if(BundleUtils.INSTANCE.isReuseSnapshotVersionFromArtifact()) {
+            // attempt to take the proper snapshot version from the artifact's version
+            String version = resolvedArtifact.getArtifact().getVersion();
+            if (isProperSnapshotVersion(version)) {
+                return version;
+            }
         }
         // attempt to take the proper snapshot version from the artifact's baseVersion
         String baseVersion = resolvedArtifact.getArtifact().getBaseVersion();
