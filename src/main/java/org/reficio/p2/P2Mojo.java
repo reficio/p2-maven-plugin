@@ -56,6 +56,7 @@ import org.reficio.p2.resolver.maven.ArtifactResolutionResult;
 import org.reficio.p2.resolver.maven.ArtifactResolver;
 import org.reficio.p2.resolver.maven.ResolvedArtifact;
 import org.reficio.p2.resolver.maven.impl.AetherResolver;
+import org.reficio.p2.utils.BundleUtils;
 import org.reficio.p2.utils.JarUtils;
 
 import java.io.File;
@@ -143,6 +144,13 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
      */
     @Parameter(defaultValue = "0", alias = "p2.timeout")
     private int forkedProcessTimeoutInSeconds;
+
+    /**
+     * Specifies whether snapshot artifact timestamps should be reused
+     * This can result in inhomogenous naming of artifacts
+     */
+    @Parameter(defaultValue = "true")
+    private boolean reuseSnapshotVersionFromArtifact;
 
     /**
      * Specifies additional arguments to p2Launcher, for example -consoleLog -debug -verbose
@@ -257,6 +265,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     }
 
     private void processArtifacts() {
+        BundleUtils.INSTANCE.setReuseSnapshotVersionFromArtifact(reuseSnapshotVersionFromArtifact);
         Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = resolveArtifacts();
         Set<Artifact> processedArtifacts = processRootArtifacts(resolvedArtifacts);
         processTransitiveArtifacts(resolvedArtifacts, processedArtifacts);
