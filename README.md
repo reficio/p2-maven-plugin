@@ -60,14 +60,14 @@ Here's the pom.xml:
         <groupId>org.reficio.rcp</groupId>
         <artifactId>example-p2-site</artifactId>
         <packaging>pom</packaging>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>1.2.0</version>
     
         <build>
             <plugins>
                 <plugin>
                     <groupId>org.reficio</groupId>
                     <artifactId>p2-maven-plugin</artifactId>
-                    <version>1.2.0-SNAPSHOT</version>
+                    <version>1.2.0</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
@@ -566,8 +566,8 @@ Sample configuration snippet with the additional options:
 ### How can I hack around?
 * GitHub -> https://github.com/reficio/p2-maven-plugin
 * Jenkins -> https://reficio.ci.cloudbees.com/view/p2-maven-plugin/
-* Site -> http://projects.reficio.org/p2-maven-plugin/1.2.0-SNAPSHOT/manual.html
-* Coverage -> http://projects.reficio.org/p2-maven-plugin/1.2.0-SNAPSHOT/clover/index.html
+* Site -> http://projects.reficio.org/p2-maven-plugin/1.2.0/manual.html
+* Coverage -> http://projects.reficio.org/p2-maven-plugin/1.2.0/clover/index.html
 
 ### Reporting bugs
 Please describe the issue thoroughly. Please include a minimal pom.xml file that can be used to reproduce the problem.
