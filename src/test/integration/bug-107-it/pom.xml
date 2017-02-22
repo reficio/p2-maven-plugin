@@ -37,7 +37,7 @@
     </properties>
 
     <description>
-        Test the basic config option
+        Test the renamed categoryFilePath config option
     </description>
 
     <build>
@@ -52,12 +52,12 @@
                         <configuration>
                             <artifacts>
                                 <artifact>
-                                    <id>org.bouncycastle:bcprov-ext-jdk15:1.46</id>
+                                    <id>de.hu_berlin.german.korpling.saltnpepper:salt-graph:2.1.2</id>
                                     <source>false</source>
                                     <transitive>false</transitive>
                                 </artifact>
                             </artifacts>
-                            <categoryFilePath>WRONG_PATH_TO_CATEGORY_FILE</categoryFilePath>
+                            <categoryFilePath>${basedir}/category.xml</categoryFilePath>
                         </configuration>
                     </execution>
                 </executions>
