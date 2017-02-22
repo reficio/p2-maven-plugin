@@ -2,4 +2,4 @@ language: java
 jdk:
   - oraclejdk8
 install: /bin/true
-script: mvn clean test
+script: mvn clean package
