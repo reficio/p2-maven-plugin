@@ -52,64 +52,64 @@ Here's the repo location where you can check the newest version id: http://repo.
 Here's the pom.xml:
 
 ```xml 
-	<?xml version="1.0" encoding="UTF-8"?>
-    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
-             xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-        <modelVersion>4.0.0</modelVersion>
-    
-        <groupId>org.reficio.rcp</groupId>
-        <artifactId>example-p2-site</artifactId>
-        <packaging>pom</packaging>
-        <version>1.2.1-SNAPSHOT</version>
-    
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>org.reficio</groupId>
-                    <artifactId>p2-maven-plugin</artifactId>
-                    <version>1.2.1-SNAPSHOT</version>
-                    <executions>
-                        <execution>
-                            <id>default-cli</id>
-                            <configuration>
-                                <artifacts>
-                                	<!-- specify your depencies here -->
-                                	<!-- groupId:artifactId:version -->
-                                    <artifact><id>commons-io:commons-io:2.1</id></artifact>
-                                    <artifact><id>commons-lang:commons-lang:2.4</id></artifact>
-                                    <artifact><id>commons-lang:commons-lang:2.5</id></artifact>
-                                    <artifact><id>commons-lang:commons-lang:2.6</id></artifact>
-                                    <artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
-                                </artifacts>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                
-                <plugin>
-	                <groupId>org.mortbay.jetty</groupId>
-    	            <artifactId>jetty-maven-plugin</artifactId>
-        	        <version>8.1.5.v20120716</version>
-            	    <configuration>
-                	    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    	<webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
-                    	<webApp>
-                       		<contextPath>/site</contextPath>
-                    	</webApp>
-	               </configuration>
-            	</plugin>
-                
-            </plugins>
-        </build>
-    
-        <pluginRepositories>
-            <pluginRepository>
-                <id>reficio</id>
-                <url>http://repo.reficio.org/maven/</url>
-            </pluginRepository>
-        </pluginRepositories>
-    
-    </project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.reficio.rcp</groupId>
+    <artifactId>example-p2-site</artifactId>
+    <packaging>pom</packaging>
+    <version>1.2.1-SNAPSHOT</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.reficio</groupId>
+                <artifactId>p2-maven-plugin</artifactId>
+                <version>1.2.1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <configuration>
+                            <artifacts>
+                                <!-- specify your depencies here -->
+                                <!-- groupId:artifactId:version -->
+                                <artifact><id>commons-io:commons-io:2.1</id></artifact>
+                                <artifact><id>commons-lang:commons-lang:2.4</id></artifact>
+                                <artifact><id>commons-lang:commons-lang:2.5</id></artifact>
+                                <artifact><id>commons-lang:commons-lang:2.6</id></artifact>
+                                <artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.1.5.v20120716</version>
+                <configuration>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
+                    <webApp>
+                        <contextPath>/site</contextPath>
+                    </webApp>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>reficio</id>
+            <url>http://repo.reficio.org/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
 ```
 
 The artifacts may be specified using the following notation:
