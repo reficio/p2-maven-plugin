@@ -14,7 +14,7 @@ Firstly, Eclipse RCP is an OSGi environment which extends the Java dependency mo
 
 But wait! Isn't Tycho supposed to solve all of these problems? Yeah, well, Tycho can do a lot, but there is definitely "something" missing... What is more, the learning curve is really steep, so it’s very easy to go off down the wrong path wasting a lot of time on simple things.
 
-The following blog entry outlines the problem perfectly: http://bit.ly/PypQEy
+The following blog entry outlines the problem perfectly: http://bit.ly/2mdDsvw
 The author presents five different approaches how to configure the build and dependency management in a Tycho / Eclipse RCP project and, in the end, she couldn’t really propose a satisfactory solution! Unfortunately, there is no "one-click" easy solution, but if you stick to some best practices and use the right tools you can relax while Maven does most of the hard work for you.
 
 p2-maven-plugin simply tries to bridge the gap between Maven-like and RCP-like dependency management styles so that all Maven features can be seamlessly used with "No Fear!"
