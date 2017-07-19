@@ -547,6 +547,11 @@ There are some other plugin options that you can specify in the configuration:
     <td>false</td>
     <td>Controls if the processing should be continued if bundling errors occur.</td>
 </tr>
+<tr>
+    <td>skipNotExistingArtifacts</td>
+    <td>false</td>
+    <td>Controls if the processing should be continued if an artifact could not be resolved.</td>
+</tr>
 This flag .
 </table>
 

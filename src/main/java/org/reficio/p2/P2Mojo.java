@@ -123,7 +123,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     private boolean pedantic;
 
     /**
-     * Skip invalid arguments.
+     * Skip invalid artifacts.
      *
      * <p>
      * This flag controls if the processing should be continued on invalid artifacts. It defaults to false to keep the
@@ -131,6 +131,16 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
      */
     @Parameter(defaultValue = "false")
     private boolean skipInvalidArtifacts;
+
+    /**
+     * Skip not existing artifacts.
+     *
+     * <p>
+     * This flag controls if the processing should be continued anyway, if an artifact does not exist. It defaults to
+     * false to keep the old behavior (break on not existing artifacts).
+     */
+    @Parameter(defaultValue = "false")
+    private boolean skipNotExistingArtifacts;
 
     /**
      * Specifies whether to compress generated update site.
@@ -330,7 +340,21 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = ArrayListMultimap.create();
         for (P2Artifact p2Artifact : artifacts) {
             logResolving(p2Artifact);
-            ArtifactResolutionResult resolutionResult = resolveArtifact(p2Artifact);
+            ArtifactResolutionResult resolutionResult;
+            try {
+                resolutionResult = resolveArtifact(p2Artifact);
+            } catch (final Exception ex) {
+                // In fact a org.eclipse.aether.resolution.ArtifactResolutionException will be thrown, if artifact
+                // couldn't be resolved, but this checked exception does not occur in the method signatures here.
+                // So we catch all exceptions and wrap them into a runtime exception to not change all the method
+                // signatures.
+                if (skipNotExistingArtifacts) {
+                    log.warn(String.format("Skip artifact=[%s]: %s", p2Artifact.getId(), ex.getMessage()));
+                    continue;
+                } else {
+                    throw new RuntimeException(ex);
+                }
+            }
             resolvedArtifacts.putAll(p2Artifact, resolutionResult.getResolvedArtifacts());
         }
         return resolvedArtifacts;
