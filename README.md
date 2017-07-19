@@ -115,62 +115,62 @@ Here's the pom.xml:
 The artifacts may be specified using the following notation:
 
 ```
-    <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
+<groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
 ```
 
 There are many more config options, but basically that's the thing that you need for now. in order to generate the site invoke the following command 'mvn p2:site' in the folder where the pom.xml file resides. When the process finishes your P2 site is ready!
 
 You will see the following output:
 ```
-    $ mvn p2:site
-    
-    [INFO] Scanning for projects...
-    [INFO]                                                                         
-    [INFO] ------------------------------------------------------------------------
-    [INFO] Building example-p2-site 1.0.0
-    [INFO] ------------------------------------------------------------------------
-    [INFO] 
-    [INFO] --- p2-maven-plugin:1.0.0:site (generate-p2-site) @ example-p2-site ---
-    [INFO] Command line:
-        /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources && /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/
-        Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/
-        org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher 
-        -artifactRepository file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository -metadataRepository file:/opt/
-        workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository -publishArtifacts -compress -source /opt/workspaces/reficio/p2-
-        maven-plugin/src/main/resources/target/source
-    Generating metadata for ..
-    Generation completed with success [0 seconds].
-    [INFO] Command line:
-        /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository && /System/Library/Java/JavaVirtualMachines/
-        1.6.0.jdk/Contents/Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/
-        org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.CategoryPublisher -
-        categoryDefinition file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/category.xml -metadataRepository 
-        file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/        
-    Generating metadata for ..
-    Generation completed with success [0 seconds].
-    [INFO] ------------------------------------------------------------------------
-    [INFO] BUILD SUCCESS
-    [INFO] ------------------------------------------------------------------------
-    [INFO] Total time: 5.164s
-    [INFO] Finished at: Sat Jul 07 16:28:49 CEST 2012
-    [INFO] Final Memory: 7M/81M
-    [INFO] ------------------------------------------------------------------------
+$ mvn p2:site
+
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building example-p2-site 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- p2-maven-plugin:1.0.0:site (generate-p2-site) @ example-p2-site ---
+[INFO] Command line:
+    /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources && /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/
+    Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/
+    org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher 
+    -artifactRepository file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository -metadataRepository file:/opt/
+    workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository -publishArtifacts -compress -source /opt/workspaces/reficio/p2-
+    maven-plugin/src/main/resources/target/source
+Generating metadata for ..
+Generation completed with success [0 seconds].
+[INFO] Command line:
+    /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository && /System/Library/Java/JavaVirtualMachines/
+    1.6.0.jdk/Contents/Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/
+    org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.CategoryPublisher -
+    categoryDefinition file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/category.xml -metadataRepository 
+    file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/        
+Generating metadata for ..
+Generation completed with success [0 seconds].
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 5.164s
+[INFO] Finished at: Sat Jul 07 16:28:49 CEST 2012
+[INFO] Final Memory: 7M/81M
+[INFO] ------------------------------------------------------------------------
 ```
 
 Your p2 site is located in the target/repository folder and looks like this:
 ```
-	pom.xml
-	target
-    ├── repository
-    │   ├── artifacts.jar
-    │   ├── category.xml
-    │   ├── content.jar
-    │   └── plugins
-    │   │   ├── org.apache.commons.io_2.1.0.jar
-    │   │   ├── org.apache.commons.lang_2.4.0.jar
-    │   │   ├── org.apache.commons.lang_2.5.0.jar
-    │   │   ├── org.apache.commons.lang_2.6.0.jar
-    │   │   └── org.apache.commons.lang3_3.1.0.jar
+pom.xml
+target
+├── repository
+│   ├── artifacts.jar
+│   ├── category.xml
+│   ├── content.jar
+│   └── plugins
+│   │   ├── org.apache.commons.io_2.1.0.jar
+│   │   ├── org.apache.commons.lang_2.4.0.jar
+│   │   ├── org.apache.commons.lang_2.5.0.jar
+│   │   ├── org.apache.commons.lang_2.6.0.jar
+│   │   └── org.apache.commons.lang3_3.1.0.jar
 ```
 
 Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is to expose our newly created update site using an HTTP server. We're going to use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin set-up. Just type 'mvn jetty:run' and open the following link http://localhost:8080/site. Your P2 update site will be there!
@@ -178,37 +178,37 @@ Unfortunately, it's not the end of the story since tycho does not support local 
 Now, simply reference your site in your target definition and play with your Eclipse RCP project like you were in the Plain Old Java Environment. Remember to enable the "Group items by category" option, otherwise you will not see any bundles.
 
 ```
-	$ mvn jetty:run
-	
-    [INFO] Scanning for projects...
-    [INFO]
-    [INFO] ------------------------------------------------------------------------
-    [INFO] Building example-p2-site 1.0.0
-    [INFO] ------------------------------------------------------------------------
-    [INFO]
-    [INFO] >>> jetty-maven-plugin:8.1.5.v20120716:run (default-cli) @ example-p2-site >>>
-    [INFO]
-    [INFO] <<< jetty-maven-plugin:8.1.5.v20120716:run (default-cli) @ example-p2-site <<<
-    [INFO]
-    [INFO] --- jetty-maven-plugin:8.1.5.v20120716:run (default-cli) @ example-p2-site ---
-    [INFO] Configuring Jetty for project: example-p2-site
-    [INFO] Webapp source directory = /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository
-    [INFO] Reload Mechanic: automatic
-    [INFO] Classes directory /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/classes does not exist
-    [INFO] Context path = /site
-    [INFO] Tmp directory = /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/tmp
-    [INFO] Web defaults = org/eclipse/jetty/webapp/webdefault.xml
-    [INFO] Web overrides =  none
-    [INFO] web.xml file = null
-    [INFO] Webapp directory = /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository
-    2012-08-20 14:20:13.473:INFO:oejs.Server:jetty-8.1.5.v20120716
-    2012-08-20 14:20:13.582:INFO:oejpw.PlusConfiguration:No Transaction manager found - if your webapp requires one, please configure one.
-    2012-08-20 14:20:13.878:INFO:oejsh.ContextHandler:started o.m.j.p.JettyWebAppContext{/site,file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/},file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/
-    2012-08-20 14:20:13.878:INFO:oejsh.ContextHandler:started o.m.j.p.JettyWebAppContext{/site,file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/},file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/
-    2012-08-20 14:20:13.878:INFO:oejsh.ContextHandler:started o.m.j.p.JettyWebAppContext{/site,file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/},file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/
-    2012-08-20 14:20:13.938:INFO:oejs.AbstractConnector:Started SelectChannelConnector@0.0.0.0:8080
-    [INFO] Started Jetty Server
-    [INFO] Starting scanner at interval of 10 seconds.
+$ mvn jetty:run
+
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building example-p2-site 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] >>> jetty-maven-plugin:8.1.5.v20120716:run (default-cli) @ example-p2-site >>>
+[INFO]
+[INFO] <<< jetty-maven-plugin:8.1.5.v20120716:run (default-cli) @ example-p2-site <<<
+[INFO]
+[INFO] --- jetty-maven-plugin:8.1.5.v20120716:run (default-cli) @ example-p2-site ---
+[INFO] Configuring Jetty for project: example-p2-site
+[INFO] Webapp source directory = /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository
+[INFO] Reload Mechanic: automatic
+[INFO] Classes directory /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/classes does not exist
+[INFO] Context path = /site
+[INFO] Tmp directory = /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/tmp
+[INFO] Web defaults = org/eclipse/jetty/webapp/webdefault.xml
+[INFO] Web overrides =  none
+[INFO] web.xml file = null
+[INFO] Webapp directory = /opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository
+2012-08-20 14:20:13.473:INFO:oejs.Server:jetty-8.1.5.v20120716
+2012-08-20 14:20:13.582:INFO:oejpw.PlusConfiguration:No Transaction manager found - if your webapp requires one, please configure one.
+2012-08-20 14:20:13.878:INFO:oejsh.ContextHandler:started o.m.j.p.JettyWebAppContext{/site,file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/},file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/
+2012-08-20 14:20:13.878:INFO:oejsh.ContextHandler:started o.m.j.p.JettyWebAppContext{/site,file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/},file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/
+2012-08-20 14:20:13.878:INFO:oejsh.ContextHandler:started o.m.j.p.JettyWebAppContext{/site,file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/},file:/opt/workspaces/reficio/p2-maven-plugin/examples/quickstart/target/repository/
+2012-08-20 14:20:13.938:INFO:oejs.AbstractConnector:Started SelectChannelConnector@0.0.0.0:8080
+[INFO] Started Jetty Server
+[INFO] Starting scanner at interval of 10 seconds.
 ```
 
 ## Best Practices
@@ -249,33 +249,33 @@ How the instructions works:
 
 The default instructions are:
 ```xml
-      <instructions>
-          <Import-Package>*;resolution:=optional</Import-Package>
-          <Export-Package>*</Export-Package>
-      </instructions>
+<instructions>
+    <Import-Package>*;resolution:=optional</Import-Package>
+    <Export-Package>*</Export-Package>
+</instructions>
 ```
  
 The following definition of an artifact:
 ```xml 
-    <artifact>
-        <id>commons-io:commons-io:2.1</id>
-    </artifact>
+<artifact>
+    <id>commons-io:commons-io:2.1</id>
+</artifact>
 ```
 
 is an equivalent of the following definition:
 ```xml 
-    <artifact>
-        <id>commons-io:commons-io:2.1</id>
-        <transitive>true</transitive>
-		<source>false</source>
-        <override>false</override>
-        <singleton>false</singleton>
-        <instructions>
-            <Import-Package>*;resolution:=optional</Import-Package>
-            <Export-Package>*</Export-Package>
-        </instructions>
-        <excludes/>
-    </artifact>
+<artifact>
+    <id>commons-io:commons-io:2.1</id>
+    <transitive>true</transitive>
+    <source>false</source>
+    <override>false</override>
+    <singleton>false</singleton>
+    <instructions>
+        <Import-Package>*;resolution:=optional</Import-Package>
+        <Export-Package>*</Export-Package>
+    </instructions>
+    <excludes/>
+</artifact>
 ```     
 
 ### Source option
@@ -286,10 +286,10 @@ If enabled together with the transitive option it will fetch sources of transiti
 
 Example:
 ```xml 
-    <artifact>
-        <id>commons-io:commons-io:2.1</id>
-        <source>true</source>
-    </artifact>
+<artifact>
+    <id>commons-io:commons-io:2.1</id>
+    <source>true</source>
+</artifact>
 ```
 
 
@@ -305,10 +305,10 @@ Expected behavior:
 
 Example usage:
 ```xml
-    <artifact>
-        <id>org.mockito:mockito-core:1.9.0</id>
-        <transitive>false</transitive>
-    </artifact>
+<artifact>
+    <id>org.mockito:mockito-core:1.9.0</id>
+    <transitive>false</transitive>
+</artifact>
 ```
 
 ### Maven phase binding
@@ -316,11 +316,11 @@ This example is located here: https://github.com/reficio/p2-maven-plugin/blob/ma
 
 You can also bind the invocation of the plugin to a Maven phase. Just specify the following binding and your p2-maven-plugin will be invoked during the 'mvn compile' phase.
 ```xml
-	<id>generate-p2-site</id>
-    <phase>compile</phase>
-    <goals>
-    	<goal>site</goal>
-    </goals>
+<id>generate-p2-site</id>
+<phase>compile</phase>
+<goals>
+    <goal>site</goal>
+</goals>
 ```
 
 ### Override option
@@ -344,32 +344,32 @@ Expected behavior:
 
 The following example presents how to enable the override option:
 ```xml
-    <artifact>
-        <id>commons-io:commons-io:2.1</id>
-        <override>true</override>
-    </artifact>
+<artifact>
+    <id>commons-io:commons-io:2.1</id>
+    <override>true</override>
+</artifact>
 ```    
 
 The following example presents how to enable the override option specifying the instructions:
 ```xml
-    <artifact>
-        <id>commons-io:commons-io:2.1</id>
-        <override>true</override>
-        <singleton>false</singleton>
-        <instructions>
-            <Import-Package>*;resolution:=optional</Import-Package>
-            <Export-Package>*</Export-Package>
-        </instructions>
-    </artifact>
+<artifact>
+    <id>commons-io:commons-io:2.1</id>
+    <override>true</override>
+    <singleton>false</singleton>
+    <instructions>
+        <Import-Package>*;resolution:=optional</Import-Package>
+        <Export-Package>*</Export-Package>
+    </instructions>
+</artifact>
 ```
 
 This definition of an artifact should look like this:
 ```xml
-    <artifact>
-        <id>commons-io:commons-io:2.1</id>
-        <transitive>false</transitive>
-        <override>true</override>
-    </artifact>
+<artifact>
+    <id>commons-io:commons-io:2.1</id>
+    <transitive>false</transitive>
+    <override>true</override>
+</artifact>
 ```
 
 ### Excludes option
@@ -403,14 +403,14 @@ Expected behavior:
 
 Example usage:
 ```xml
-    <artifact>
-        <id>org.mockito:mockito-core:1.9.0</id>
-        <source>false</source>
-        <transitive>true</transitive>
-        <excludes>
-            <exclude>org.objenesis:objenesis:jar:1.0</exclude>
-        </excludes>
-    </artifact>
+<artifact>
+    <id>org.mockito:mockito-core:1.9.0</id>
+    <source>false</source>
+    <transitive>true</transitive>
+    <excludes>
+        <exclude>org.objenesis:objenesis:jar:1.0</exclude>
+    </excludes>
+</artifact>
 ```
 
 ### Singleton option
@@ -423,10 +423,10 @@ Expected behavior:
 
 Example usage:
 ```xml
-    <artifact>
-        <id>org.mockito:mockito-core:1.9.0</id>
-        <singleton>true</singleton>
-    </artifact>
+<artifact>
+    <id>org.mockito:mockito-core:1.9.0</id>
+    <singleton>true</singleton>
+</artifact>
 ```
 
 ### P2 Resolver
@@ -435,11 +435,11 @@ Have a look at the P2 example located here: https://github.com/reficio/p2-maven-
 
 In order to have a P2 artifact resolved include its definition in the `<p2>` tag (not in the `<artifacts>` tag)
 ```xml
-    <p2>
-        <artifact>
-	    <id>org.junit:4.11.0.v201303080030</id>
-	</artifact>
-    </p2>
+<p2>
+    <artifact>
+        <id>org.junit:4.11.0.v201303080030</id>
+    </artifact>
+</p2>
 ```
 
 Next, add a P2 repository in the `<repositories>` tag (its layout has to be set to `<layout>p2</layout>`):
@@ -467,33 +467,33 @@ You can also add eclipse feature bundles to maven and include them in the genera
 
 Example usage:
 ```xml
-	<configuration>
-		<artifacts>
-			<artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
-		</artifacts>
-		<features>
-			<artifact>
-				<id>org.reficio:test.feature:1.0.0</id>
-				<source>false</source>
-				<transitive>false</transitive>
-			</artifact>
-		</features>
-	</configuration>
+<configuration>
+    <artifacts>
+        <artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
+    </artifacts>
+    <features>
+        <artifact>
+            <id>org.reficio:test.feature:1.0.0</id>
+            <source>false</source>
+            <transitive>false</transitive>
+        </artifact>
+    </features>
+</configuration>
 ```
 
 Your p2 site will look like this:
 ```
-	pom.xml
-	target
-    ├── repository
-    │   ├── artifacts.jar
-    │   ├── category.xml
-    │   ├── content.jar
-    │   └── plugins
-    │   │   └── org.apache.commons.lang3_3.1.0.jar
-    │   │
-    │   └── features
-	│       └── com.example.feature_1.0.0.jar
+pom.xml
+target
+├── repository
+│   ├── artifacts.jar
+│   ├── category.xml
+│   ├── content.jar
+│   └── plugins
+│   │   └── org.apache.commons.lang3_3.1.0.jar
+│   │
+│   └── features
+│       └── com.example.feature_1.0.0.jar
 ```
 
 You can have a look at two integration test cases of this feature that are located in the src/test/integration folder:
@@ -557,12 +557,12 @@ There are some other plugin options that you can specify in the configuration:
 
 Sample configuration snippet with the additional options:
 ```xml
-	<configuration>
-    	<pedantic>false</pedantic>
-    	<additionalArgs>-consoleLog -debug -verbose</additionalArgs>
-    	<compressSite>true</compressSite>
-    	<forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
-	</configuration>
+<configuration>
+    <pedantic>false</pedantic>
+    <additionalArgs>-consoleLog -debug -verbose</additionalArgs>
+    <compressSite>true</compressSite>
+    <forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
+</configuration>
 ```
 
 ## Last but not least
@@ -583,8 +583,8 @@ If you submit a pull request please make sure to add an unit/integration test ca
 Invoke the following command to run the integration tests suite:
 
 ```
-	$ mvn package
-```	
+$ mvn package
+```
 
 ### Who's behind it?
 Do you like the project? Star it on GitHub and follow me on Twitter! Thanks!
