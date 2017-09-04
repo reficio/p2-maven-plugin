@@ -38,11 +38,11 @@ public final class ArtifactBundlerInstructions {
     private final String sourceSymbolicName;
     private final String proposedVersion;
 
-    private final Map<String, Object> instructions;
+    private final Map<String, String> instructions;
     private final Boolean snapshot;
 
     private ArtifactBundlerInstructions(String name, String symbolicName, String symbolicNameWithOptions, String version, String sourceName,
-                                        String sourceSymbolicName, String proposedVersion, Map<String, Object> instructions,
+                                        String sourceSymbolicName, String proposedVersion, Map<String, String> instructions,
                                         Boolean snapshot) {
         this.name = name;
         this.symbolicName = symbolicName;
@@ -67,7 +67,7 @@ public final class ArtifactBundlerInstructions {
         private String sourceName;
         private String sourceSymbolicName;
         private String proposedVersion;
-        private Map<String, Object> instructions = new HashMap<String, Object>();
+        private Map<String, String> instructions = new HashMap<String, String>();
         private Boolean snapshot;
 
         public Builder name(String name) {
@@ -105,8 +105,8 @@ public final class ArtifactBundlerInstructions {
             return this;
         }
 
-        public  Builder instructions(Map<String, Object> instructions) {
-            this.instructions = new HashMap<String, Object>(instructions);
+        public  Builder instructions(Map<String, String> instructions) {
+            this.instructions = new HashMap<String, String>(instructions);
             return this;
         }
 
@@ -149,7 +149,7 @@ public final class ArtifactBundlerInstructions {
         return proposedVersion;
     }
 
-    public Map<String, Object> getInstructions() {
+    public Map<String, String> getInstructions() {
         return instructions;
     }
 
