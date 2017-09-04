@@ -36,7 +36,7 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
  */
 public class BundlePublisher {
 
-    private static final String TYCHO_VERSION = "0.18.1";
+    private static final String TYCHO_VERSION = "0.23.1";
 
     private final Boolean compressSite;
     private final String additionalArgs;

@@ -18,9 +18,8 @@
  */
 package org.reficio.p2.utils;
 
-import aQute.lib.osgi.Analyzer;
-import aQute.lib.osgi.Jar;
-
+import aQute.bnd.osgi.Analyzer;
+import aQute.bnd.osgi.Jar;
 import org.apache.felix.bundleplugin.BundlePlugin;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.reficio.p2.resolver.maven.Artifact;
@@ -46,6 +45,8 @@ public class BundleUtils extends BundlePlugin {
     private static final String BUNDLE_SYMBOLIC_NAME_ATTR_NAME = "Bundle-SymbolicName";
     private static final String BUNDLE_VERSION = "Bundle-Version";
     private static final String BUNDLE_NAME = "Bundle-Name";
+
+    private boolean reuseSnapshotVersionFromArtifact = true;
 
     public boolean reportErrors(Analyzer analyzer) {
         return super.reportErrors("", analyzer);
@@ -125,4 +126,11 @@ public class BundleUtils extends BundlePlugin {
         return properties;
     }
 
+    public void setReuseSnapshotVersionFromArtifact(boolean in) {
+        reuseSnapshotVersionFromArtifact = in;
+    }
+
+    public boolean isReuseSnapshotVersionFromArtifact() {
+        return reuseSnapshotVersionFromArtifact;
+    }
 }

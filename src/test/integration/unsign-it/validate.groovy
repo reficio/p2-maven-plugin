@@ -21,7 +21,7 @@
 // $Id$
 //
 
-import aQute.lib.osgi.Jar
+import aQute.bnd.osgi.Jar
 
 // verify target
 File target = new File(basedir, 'target/repository/plugins')

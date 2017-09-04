@@ -18,11 +18,9 @@
  */
 package org.reficio.p2;
 
-import aQute.lib.osgi.Analyzer;
-import aQute.lib.osgi.Jar;
-
+import aQute.bnd.osgi.Analyzer;
+import aQute.bnd.osgi.Jar;
 import org.apache.commons.io.FileUtils;
-
 import org.apache.commons.lang.StringUtils;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.bundler.ArtifactBundlerRequest;
@@ -30,6 +28,7 @@ import org.reficio.p2.bundler.impl.AquteHelper;
 import org.reficio.p2.resolver.maven.Artifact;
 import org.reficio.p2.resolver.maven.ResolvedArtifact;
 import org.reficio.p2.utils.BundleUtils;
+import org.reficio.p2.utils.JarUtils;
 import org.reficio.p2.utils.Utils;
 
 import java.io.File;
@@ -194,10 +193,12 @@ public class P2Helper {
     }
 
     private static String calculateSnapshotVersion(ResolvedArtifact resolvedArtifact) {
-        // attempt to take the proper snapshot version from the artifact's version
-        String version = resolvedArtifact.getArtifact().getVersion();
-        if (isProperSnapshotVersion(version)) {
-            return version;
+        if(BundleUtils.INSTANCE.isReuseSnapshotVersionFromArtifact()) {
+            // attempt to take the proper snapshot version from the artifact's version
+            String version = resolvedArtifact.getArtifact().getVersion();
+            if (isProperSnapshotVersion(version)) {
+                return version;
+            }
         }
         // attempt to take the proper snapshot version from the artifact's baseVersion
         String baseVersion = resolvedArtifact.getArtifact().getBaseVersion();

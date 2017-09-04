@@ -14,7 +14,7 @@ Firstly, Eclipse RCP is an OSGi environment which extends the Java dependency mo
 
 But wait! Isn't Tycho supposed to solve all of these problems? Yeah, well, Tycho can do a lot, but there is definitely "something" missing... What is more, the learning curve is really steep, so it’s very easy to go off down the wrong path wasting a lot of time on simple things.
 
-The following blog entry outlines the problem perfectly: http://bit.ly/PypQEy
+The following blog entry outlines the problem perfectly: http://bit.ly/2mdDsvw
 The author presents five different approaches how to configure the build and dependency management in a Tycho / Eclipse RCP project and, in the end, she couldn’t really propose a satisfactory solution! Unfortunately, there is no "one-click" easy solution, but if you stick to some best practices and use the right tools you can relax while Maven does most of the hard work for you.
 
 p2-maven-plugin simply tries to bridge the gap between Maven-like and RCP-like dependency management styles so that all Maven features can be seamlessly used with "No Fear!"
@@ -52,64 +52,64 @@ Here's the repo location where you can check the newest version id: http://repo.
 Here's the pom.xml:
 
 ```xml 
-	<?xml version="1.0" encoding="UTF-8"?>
-    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
-             xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-        <modelVersion>4.0.0</modelVersion>
-    
-        <groupId>org.reficio.rcp</groupId>
-        <artifactId>example-p2-site</artifactId>
-        <packaging>pom</packaging>
-        <version>1.2.0-SNAPSHOT</version>
-    
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>org.reficio</groupId>
-                    <artifactId>p2-maven-plugin</artifactId>
-                    <version>1.2.0-SNAPSHOT</version>
-                    <executions>
-                        <execution>
-                            <id>default-cli</id>
-                            <configuration>
-                                <artifacts>
-                                	<!-- specify your depencies here -->
-                                	<!-- groupId:artifactId:version -->
-                                    <artifact><id>commons-io:commons-io:2.1</id></artifact>
-                                    <artifact><id>commons-lang:commons-lang:2.4</id></artifact>
-                                    <artifact><id>commons-lang:commons-lang:2.5</id></artifact>
-                                    <artifact><id>commons-lang:commons-lang:2.6</id></artifact>
-                                    <artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
-                                </artifacts>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                
-                <plugin>
-	                <groupId>org.mortbay.jetty</groupId>
-    	            <artifactId>jetty-maven-plugin</artifactId>
-        	        <version>8.1.5.v20120716</version>
-            	    <configuration>
-                	    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    	<webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
-                    	<webApp>
-                       		<contextPath>/site</contextPath>
-                    	</webApp>
-	               </configuration>
-            	</plugin>
-                
-            </plugins>
-        </build>
-    
-        <pluginRepositories>
-            <pluginRepository>
-                <id>reficio</id>
-                <url>http://repo.reficio.org/maven/</url>
-            </pluginRepository>
-        </pluginRepositories>
-    
-    </project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.reficio.rcp</groupId>
+    <artifactId>example-p2-site</artifactId>
+    <packaging>pom</packaging>
+    <version>1.2.1-SNAPSHOT</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.reficio</groupId>
+                <artifactId>p2-maven-plugin</artifactId>
+                <version>1.2.1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <configuration>
+                            <artifacts>
+                                <!-- specify your depencies here -->
+                                <!-- groupId:artifactId:version -->
+                                <artifact><id>commons-io:commons-io:2.1</id></artifact>
+                                <artifact><id>commons-lang:commons-lang:2.4</id></artifact>
+                                <artifact><id>commons-lang:commons-lang:2.5</id></artifact>
+                                <artifact><id>commons-lang:commons-lang:2.6</id></artifact>
+                                <artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.1.5.v20120716</version>
+                <configuration>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
+                    <webApp>
+                        <contextPath>/site</contextPath>
+                    </webApp>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>reficio</id>
+            <url>http://repo.reficio.org/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
 ```
 
 The artifacts may be specified using the following notation:
@@ -602,6 +602,12 @@ There are some other plugin options that you can specify in the configuration:
     <td></td>
     <td>Specifies additional arguments to p2Launcher, for example -consoleLog -debug -verbose</td>
 </tr>
+<tr>
+    <td>skipInvalidArtifacts</td>
+    <td>false</td>
+    <td>Controls if the processing should be continued if bundling errors occur.</td>
+</tr>
+This flag .
 </table>
 
 
@@ -620,8 +626,8 @@ Sample configuration snippet with the additional options:
 ### How can I hack around?
 * GitHub -> https://github.com/reficio/p2-maven-plugin
 * Jenkins -> https://reficio.ci.cloudbees.com/view/p2-maven-plugin/
-* Site -> http://projects.reficio.org/p2-maven-plugin/1.2.0-SNAPSHOT/manual.html
-* Coverage -> http://projects.reficio.org/p2-maven-plugin/1.2.0-SNAPSHOT/clover/index.html
+* Site -> http://projects.reficio.org/p2-maven-plugin/1.2.1-SNAPSHOT/manual.html
+* Coverage -> http://projects.reficio.org/p2-maven-plugin/1.2.1-SNAPSHOT/clover/index.html
 
 ### Reporting bugs
 Please describe the issue thoroughly. Please include a minimal pom.xml file that can be used to reproduce the problem.

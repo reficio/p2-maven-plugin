@@ -21,7 +21,7 @@
 // $Id$
 //
 
-import aQute.lib.osgi.Jar
+import aQute.bnd.osgi.Jar
 import org.reficio.p2.utils.TestUtils as Util;
 
 File target = new File(basedir, 'p2.repo/target/repository/features')
