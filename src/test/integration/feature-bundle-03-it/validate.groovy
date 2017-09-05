@@ -20,10 +20,6 @@
 //
 // $Id$
 //
-
-import aQute.lib.osgi.Jar
-import org.reficio.p2.utils.TestUtils as Util;
-
 File target = new File(basedir, 'p2.repo/target/repository/features')
 assert target.exists()
 assert target.listFiles().size() == 2
