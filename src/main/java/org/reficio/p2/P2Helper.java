@@ -29,6 +29,7 @@ import org.reficio.p2.resolver.maven.Artifact;
 import org.reficio.p2.resolver.maven.ResolvedArtifact;
 import org.reficio.p2.utils.BundleUtils;
 import org.reficio.p2.utils.JarUtils;
+import org.reficio.p2.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +58,7 @@ public class P2Helper {
 
         File binaryInputFile = artifact.getFile();
         File binaryOutputFile = new File(artifactOutputFolder, artifact.getFile().getName());
+
         File sourceInputFile = null;
         File sourceOutputFile = null;
         if (sourceArtifact != null) {
@@ -67,6 +69,7 @@ public class P2Helper {
         boolean shouldBundle = shouldBundle(p2Artifact, resolvedArtifact, bundle);
         return new ArtifactBundlerRequest(binaryInputFile, binaryOutputFile, sourceInputFile, sourceOutputFile, shouldBundle);
     }
+
 
     private static File forceMkdirSilently(File folder) {
         try {
@@ -89,17 +92,20 @@ public class P2Helper {
         }
     }
 
-    public static ArtifactBundlerInstructions createBundlerInstructions(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) {
+    public static ArtifactBundlerInstructions createBundlerInstructions(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, String timestamp) {
         try {
-            String symbolicName = calculateSymbolicName(p2Artifact, resolvedArtifact);
-            String symbolicNameWithOptions = calculateSymbolicNameWithOptions(p2Artifact, resolvedArtifact, symbolicName);
+            String fullSymbolicName = calculateFullSymbolicName(p2Artifact, resolvedArtifact);
+            String symbolicNameWithOptions = calculateSymbolicNameWithOptions(p2Artifact, resolvedArtifact, fullSymbolicName);
+            String symbolicName = calculateSymbolicName(fullSymbolicName);
             String name = calculateName(symbolicName);
-            String version = calculateVersion(p2Artifact, resolvedArtifact);
-            String proposedVersion = calculateProposedVersion(resolvedArtifact);
-
-            String sourceSymbolicName = calculateSourceSymbolicName(symbolicName);
-            String sourceName = calculateSourceName(name, symbolicName);
-
+            String version = calculateVersion(p2Artifact, resolvedArtifact, timestamp);
+            String proposedVersion = calculateProposedVersion(resolvedArtifact, timestamp);
+            String sourceSymbolicName = null;
+            String sourceName = null;
+            if (resolvedArtifact.getSourceArtifact() != null) {
+            	sourceSymbolicName = calculateSourceSymbolicName(symbolicName);
+            	sourceName = calculateSourceName(name, symbolicName);
+            }
             ArtifactBundlerInstructions.Builder builder = ArtifactBundlerInstructions.builder()
                     .name(name)
                     .symbolicName(symbolicName)
@@ -124,8 +130,14 @@ public class P2Helper {
     private static String calculateName(String symbolicName) {
         return symbolicName;
     }
-
-    private static String calculateSymbolicName(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) throws IOException {
+    private static String calculateSymbolicName(String fullSymbolicName) {
+    	int pos = fullSymbolicName.indexOf(';');
+    	if (pos < 0) {
+    		return fullSymbolicName;
+    	}
+        return fullSymbolicName.substring(0,pos);
+    }
+    private static String calculateFullSymbolicName(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) throws IOException {
         String symbolicName = null;
         if (resolvedArtifact.isRoot()) {
             Object symbolicNameValue = p2Artifact.getInstructions().get(Analyzer.BUNDLE_SYMBOLICNAME);
@@ -145,27 +157,27 @@ public class P2Helper {
         return symbolicName;
     }
 
-    private static String calculateVersion(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) throws IOException {
-        String version = getUserDefinedVersion(p2Artifact, resolvedArtifact);
+    private static String calculateVersion(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, String timestamp) throws IOException {
+        String version = getUserDefinedVersion(p2Artifact, resolvedArtifact, timestamp);
         if (version != null) {
             return BundleUtils.INSTANCE.cleanupVersion(version);
         } else {
-            return calculateProposedVersion(resolvedArtifact);
+            return calculateProposedVersion(resolvedArtifact, timestamp);
         }
     }
 
-    private static String getUserDefinedVersion(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) {
+    private static String getUserDefinedVersion(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact, String timestamp) {
         String version = null;
         // in case of root artifact try to take the version from the instructions
         if (resolvedArtifact.isRoot()) {
             Object versionValue = p2Artifact.getInstructions().get(Analyzer.BUNDLE_VERSION);
-            version = versionValue != null ? JarUtils.replaceSnapshotWithTimestamp(versionValue.toString()) : null;
+            version = versionValue != null ? Utils.snapshotToTimestamp(versionValue.toString(), timestamp) : null;
         }
         // if contains snapshot (manually set by the user) -> "SNAPSHOT" will be manually replaced
         return version;
     }
 
-    private static String calculateProposedVersion(ResolvedArtifact resolvedArtifact) throws IOException {
+    private static String calculateProposedVersion(ResolvedArtifact resolvedArtifact, String timestamp) throws IOException {
         String version;
         // otherwise calculate the proper version for snapshot and non-snapshot
         if (resolvedArtifact.isSnapshot()) {
@@ -177,7 +189,7 @@ public class P2Helper {
             }
         }
         // if still contains snapshot (manually set by the user) -> "SNAPSHOT" will be manually replaced
-        return BundleUtils.INSTANCE.cleanupVersion(JarUtils.replaceSnapshotWithTimestamp(version));
+        return BundleUtils.INSTANCE.cleanupVersion(Utils.snapshotToTimestamp(version, timestamp));
     }
 
     private static String calculateSnapshotVersion(ResolvedArtifact resolvedArtifact) {
