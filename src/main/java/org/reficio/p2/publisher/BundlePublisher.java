@@ -22,6 +22,7 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.reficio.p2.utils.Utils;
 
 import java.io.IOException;
 
@@ -35,8 +36,6 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
  * @since 1.0.0
  */
 public class BundlePublisher {
-
-    private static final String TYCHO_VERSION = "0.23.1";
 
     private final Boolean compressSite;
     private final String additionalArgs;
@@ -58,7 +57,7 @@ public class BundlePublisher {
                 plugin(
                         groupId("org.eclipse.tycho.extras"),
                         artifactId("tycho-p2-extras-plugin"),
-                        version(TYCHO_VERSION)
+                        version(Utils.TYCHO_VERSION)
                 ),
                 goal("publish-features-and-bundles"),
                 configuration(
