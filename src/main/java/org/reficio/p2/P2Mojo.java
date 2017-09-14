@@ -114,7 +114,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
      * Specifies a file containing category definitions.
      */
     @Parameter(defaultValue = "")
-    private String categoryFileURL;
+    private String categoryFilePath;
 
     /**
      * Optional line of additional arguments passed to the p2 application launcher.
@@ -535,14 +535,14 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
                 .p2ApplicationLauncher(launcher)
                 .additionalArgs(additionalArgs)
                 .forkedProcessTimeoutInSeconds(forkedProcessTimeoutInSeconds)
-                .categoryFileLocation(categoryFileURL)
+                .categoryFileLocation(categoryFilePath)
                 .metadataRepositoryLocation(destinationDirectory)
                 .build();
         publisher.execute();
     }
 
     private void prepareCategoryLocationFile() throws IOException {
-        if (StringUtils.isBlank(categoryFileURL)) {
+        if (StringUtils.isBlank(categoryFilePath)) {
             InputStream is = getClass().getResourceAsStream(DEFAULT_CATEGORY_CLASSPATH_LOCATION + DEFAULT_CATEGORY_FILE);
             File destinationFolder = new File(destinationDirectory);
             destinationFolder.mkdirs();
@@ -550,7 +550,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
             FileWriter writer = new FileWriter(categoryDefinitionFile);
             IOUtils.copy(is, writer, "UTF-8");
             IOUtils.closeQuietly(writer);
-            categoryFileURL = categoryDefinitionFile.getAbsolutePath();
+            categoryFilePath = categoryDefinitionFile.getAbsolutePath();
         }
     }
 

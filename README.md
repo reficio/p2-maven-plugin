@@ -556,9 +556,9 @@ There are some other plugin options that you can specify in the configuration:
     <td>Folder where the generated p2 site should be copied to</td>
 </tr>
 <tr>
-    <td>categoryFileURL</td>
+    <td>categoryFilePath</td>
     <td>default category file (all plugins in one category)</td>
-    <td>URL of the category.xml file which should be used for the p2 site generation</td>
+    <td>Path of the category.xml file which should be used for the p2 site generation, e.g., `${basedir}/category.xml`.</td>
 </tr>
 <tr>
     <td>pedantic</td>
