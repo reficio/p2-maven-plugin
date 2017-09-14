@@ -37,9 +37,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.tycho.core.TychoConstants;
 import org.eclipse.tycho.core.osgitools.targetplatform.DefaultDependencyArtifacts;
+import org.reficio.p2.utils.Utils;
 
 public class TychoFeatureBuilder {
-    private static final String TYCHO_VERSION = "0.18.1";
 
     File featureFile;
     private final String outputDirectory;
@@ -80,7 +80,7 @@ public class TychoFeatureBuilder {
                 plugin(
                         groupId("org.eclipse.tycho"),
                         artifactId("tycho-packaging-plugin"),
-                        version(TYCHO_VERSION)
+                        version(Utils.TYCHO_VERSION)
                 ),
                 goal("package-feature"),
                 configuration(
