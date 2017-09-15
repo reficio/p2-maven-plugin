@@ -605,12 +605,6 @@ Sample configuration snippet with the additional options:
 
 ## Last but not least
 
-### How can I hack around?
-* GitHub -> https://github.com/reficio/p2-maven-plugin
-* Jenkins -> https://reficio.ci.cloudbees.com/view/p2-maven-plugin/
-* Site -> http://projects.reficio.org/p2-maven-plugin/1.2.1-SNAPSHOT/manual.html
-* Coverage -> http://projects.reficio.org/p2-maven-plugin/1.2.1-SNAPSHOT/clover/index.html
-
 ### Reporting bugs
 Please describe the issue thoroughly. Please include a minimal pom.xml file that can be used to reproduce the problem.
 
