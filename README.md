@@ -618,6 +618,27 @@ Invoke the following command to run the integration tests suite:
 $ mvn package
 ```
 
+### Releasing
+
+Run the release.sh script (syntax: master version, release version, new master version):
+```
+$ ./release.sh 1.3.0-SNAPSHOT 1.3.0 1.4.0-SNAPSHOT
+```
+
+Run maven artifacts gpg sign (assumes that gpg is configured on the box)
+```
+mvn verify -Pgpg
+```
+
+Tar all the artifacts in the target folder:
+```
+tar -cvf p2.tar p2*.*
+```
+
+Upload p2.tar to bintray (selecting the explode options) and trigger the sync to maven central.
+
+
+
 ### Who's behind it?
 Do you like the project? Star it on GitHub and follow me on Twitter! Thanks!
 
