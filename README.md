@@ -47,7 +47,8 @@ That's where p2-maven-plugin comes into play. It solves problems #1, #2, #3 and 
 ## How to use it in 2 minutes?
 Using p2-maven-plugin is really simple. I have prepared a quickstart pom.xml file so that you can give it a try right away. We're going to generate a site and expose it using the jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
 
-Here's the repo location where you can check the newest version id: http://repo.reficio.org/maven/org/reficio/p2-maven-plugin/
+
+p2-maven-plugin is now on maven central. You can find the latest version number here https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.reficio%22%20AND%20a%3A%22p2-maven-plugin%22
 
 Here's the pom.xml:
 
@@ -67,7 +68,7 @@ Here's the pom.xml:
             <plugin>
                 <groupId>org.reficio</groupId>
                 <artifactId>p2-maven-plugin</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
+                <version>1.3.0</version>
                 <executions>
                     <execution>
                         <id>default-cli</id>
@@ -101,13 +102,6 @@ Here's the pom.xml:
 
         </plugins>
     </build>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>reficio</id>
-            <url>http://repo.reficio.org/maven/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 </project>
 ```
