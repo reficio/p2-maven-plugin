@@ -468,13 +468,13 @@ Example usage:
     <artifacts>
         <artifact><id>org.apache.commons:commons-lang3:3.1</id></artifact>
     </artifacts>
-    <featureArtifacts>
+    <features>
         <artifact>
             <id>org.reficio:test.feature:1.0.0</id>
             <source>false</source>
             <transitive>false</transitive>
         </artifact>
-    </featureArtifacts>
+    </features>
 </configuration>
 ```
 
