@@ -36,9 +36,20 @@ public class P2Validator {
     }
 
     private static void validateGeneralConfig(P2Artifact p2Artifact) {
-        if (p2Artifact.shouldIncludeTransitive() && !p2Artifact.getInstructions().isEmpty()) {
+        if (p2Artifact.shouldIncludeTransitive() && !p2Artifact.getCombinedInstructions().isEmpty()) {
             String message = "BND instructions are NOT applied to the transitive dependencies of ";
             Logger.getLog().warn(String.format("%s %s", message, p2Artifact.getId()));
+        }
+
+        if (p2Artifact.getCombinedInstructions().size() != p2Artifact.getInstructions().size()) {
+            for (String propertyName : p2Artifact.getInstructionsProperties().stringPropertyNames()) {
+                if (!p2Artifact.getInstructions().containsKey(propertyName))
+                    continue;
+
+                String message = String.format("BND instruction <%s> from <instructions> " +
+                        "is overridden in <instructionsProperties>", propertyName);
+                Logger.getLog().warn(message);
+            }
         }
     }
 
@@ -46,7 +57,7 @@ public class P2Validator {
         boolean bundle = BundleUtils.INSTANCE.isBundle(resolvedArtifact.getArtifact().getFile());
         if (resolvedArtifact.isRoot() && bundle) {
             // artifact is a bundle and somebody specified instructions without override
-            if (!p2Artifact.shouldOverrideManifest() && !p2Artifact.getInstructions().isEmpty()) {
+            if (!p2Artifact.shouldOverrideManifest() && !p2Artifact.getCombinedInstructions().isEmpty()) {
                 String message = String.format("p2-maven-plugin misconfiguration" +
                         "\n\n\tJar [%s] is already a bundle. " +
                         "\n\tBND instructions are specified, but the <override> flag is set to false." +

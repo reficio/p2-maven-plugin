@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Represents one &lt;artifact&gt; section in the plugin configuration.
@@ -69,6 +70,19 @@ public class P2Artifact {
      */
     private Map<String, String> instructions = new LinkedHashMap<String, String>();
 
+    /**
+     * The BND instructions for the bundle.
+     * These properties complement {@link P2Artifact#instructions} with higher priority on duplicate keys.
+     */
+    private Properties instructionsProperties = new Properties();
+
+    /**
+     * Combined BND instructions for the bundle.
+     */
+    private Map<String, String> combinedInstructions = new LinkedHashMap<String, String>();
+
+    private boolean shouldResetCombinedInstructions = true;
+
     public P2Artifact() {
     }
 
@@ -86,6 +100,8 @@ public class P2Artifact {
 
     public void setInstructions(Map<String, String> instructions) {
         this.instructions = instructions;
+
+        markCombinedInstructionsObsolete();
     }
 
     public boolean shouldIncludeTransitive() {
@@ -124,4 +140,40 @@ public class P2Artifact {
         this.excludes = excludes;
     }
 
+    public Properties getInstructionsProperties() {
+        return instructionsProperties;
+    }
+
+    public void setInstructionsProperties(Properties instructionsProperties) {
+        this.instructionsProperties = instructionsProperties;
+
+        markCombinedInstructionsObsolete();
+    }
+
+    public Map<String, String> getCombinedInstructions() {
+        if (shouldResetCombinedInstructions) {
+            resetCombinedInstructions();
+
+            shouldResetCombinedInstructions = false;
+        }
+
+        return combinedInstructions;
+    }
+
+    private void markCombinedInstructionsObsolete() {
+        shouldResetCombinedInstructions = true;
+    }
+
+    private void resetCombinedInstructions() {
+        combinedInstructions = new LinkedHashMap<String, String>();
+
+        if (instructions != null)
+            combinedInstructions.putAll(instructions);
+
+        if (instructionsProperties != null) {
+            for (String key : instructionsProperties.stringPropertyNames()) {
+                combinedInstructions.put(key, instructionsProperties.getProperty(key));
+            }
+        }
+    }
 }
