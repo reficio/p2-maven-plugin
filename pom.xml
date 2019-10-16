@@ -23,9 +23,9 @@
         <eclipse.aether.version>1.1.0</eclipse.aether.version>
 
         <wagon.version>2.2</wagon.version>
-        <gmaven.version>1.5</gmaven.version>
+        <gmaven.version>2.1.1</gmaven.version>
         <gmaven.provider.selection>2.0</gmaven.provider.selection>
-        <groovy.version>2.4.8</groovy.version>
+        <groovy.version>2.5.8</groovy.version>
 
         <clover.version>3.3.0</clover.version>
         <clover.license>/private/reficio/clover.license</clover.license>
@@ -205,23 +205,27 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.7.10</version>
+            <version>3.0.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.gmaven.runtime</groupId>
-            <artifactId>gmaven-runtime-2.0</artifactId>
-            <version>${gmaven.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.codehaus.groovy</groupId>
-                    <artifactId>groovy-all</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.codehaus.gmaven.runtime</groupId>-->
+<!--            <artifactId>gmaven-runtime-2.0</artifactId>-->
+<!--            <version>${gmaven.version}</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.codehaus.groovy</groupId>-->
+<!--                    <artifactId>groovy-all</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.codehaus.groovy</groupId>-->
+<!--                    <artifactId>groovy</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
+            <artifactId>groovy</artifactId>
             <version>${groovy.version}</version>
         </dependency>
         <dependency>
@@ -255,12 +259,12 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.gmaven</groupId>
-                <artifactId>gmaven-plugin</artifactId>
-                <version>${gmaven.version}</version>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>1.8.0</version>
                 <configuration>
-                    <source/>
-                    <providerSelection>${gmaven.provider.selection}</providerSelection>
+<!--                    <source/>-->
+<!--                    <providerSelection>${gmaven.provider.selection}</providerSelection>-->
                     <sourceEncoding>UTF-8</sourceEncoding>
                 </configuration>
                 <executions>
@@ -269,14 +273,14 @@
                             <goal>generateStubs</goal>
                             <goal>compile</goal>
                             <goal>generateTestStubs</goal>
-                            <goal>testCompile</goal>
+                            <goal>compileTests</goal>
                         </goals>
                     </execution>
                 </executions>
                 <dependencies>
                     <dependency>
                         <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-all</artifactId>
+                        <artifactId>groovy</artifactId>
                         <version>${groovy.version}</version>
                     </dependency>
                 </dependencies>
