@@ -1,5 +1,6 @@
 language: java
 jdk:
-  - oraclejdk8
+  - openjdk8
+  - openjdk11
 install: /bin/true
 script: mvn clean package
