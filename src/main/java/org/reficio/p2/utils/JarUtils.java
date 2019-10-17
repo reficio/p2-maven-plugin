@@ -70,6 +70,13 @@ public class JarUtils {
     
     /**
      * Opens the feature.xml in the given jar file and adjusts all version numbers/timestamps
+     *
+     * @param inputFile - inputFile
+     * @param outputFile - outputFile
+     * @param log - log
+     * @param pluginDir - pluginDir
+     * @param timestamp - timestamp
+     *
      */
     public static void adjustFeatureXml(File inputFile, File outputFile, File pluginDir, Log log, String timestamp) {
         Jar jar = null;
@@ -117,6 +124,12 @@ public class JarUtils {
     
 	/**
 	 * Adjust the pluginId TODO - this may be wrong if singleton is used
+     *
+     * @param pluginDir - pluginDir
+     * @param featureSpec - featureSpec
+     * @param log  - log
+     *
+     * @throws IOException - an exception
 	 */
     public static void adjustFeaturePluginData(Document featureSpec, File pluginDir, Log log) throws IOException {
 	        //get list of all plugins
