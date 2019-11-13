@@ -83,4 +83,20 @@ public class XmlUtils {
 		parent.appendChild(e);
 		return e;
 	}
+	
+	public static Node getFirstChildNodeByName(Node parent, String childNodeName) {
+		if (parent == null)
+			return null;
+		NodeList childNodes = parent.getChildNodes();
+		for (int i = 0; i < childNodes.getLength(); i++) {
+			Node probeChild = childNodes.item(i);
+			if (probeChild == null)
+				continue;
+
+			if (probeChild.getNodeName().equals(childNodeName))
+				return probeChild;
+		}
+		return null;
+	}
+
 }

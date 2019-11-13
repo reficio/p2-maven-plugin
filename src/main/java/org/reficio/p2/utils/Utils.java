@@ -23,8 +23,8 @@ import java.util.Date;
 
 public class Utils {
 
-    private static final String JAR_SNAPSHOT_POSTFIX = "-SNAPSHOT";
-    private static final String OSGI_SNAPSHOT_POSTFIX = ".SNAPSHOT";
+    public static final String JAR_SNAPSHOT_POSTFIX = "-SNAPSHOT";
+    public static final String OSGI_SNAPSHOT_POSTFIX = ".SNAPSHOT";
     private static final String ECLIPSE_QUALIFIER_POSTFIX = ".qualifier";
     public static final String TYCHO_VERSION = "1.0.0";
 

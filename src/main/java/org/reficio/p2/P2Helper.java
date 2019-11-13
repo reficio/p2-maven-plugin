@@ -25,14 +25,22 @@ import org.apache.commons.lang.StringUtils;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.bundler.ArtifactBundlerRequest;
 import org.reficio.p2.bundler.impl.AquteHelper;
+import org.reficio.p2.logger.Logger;
 import org.reficio.p2.resolver.maven.Artifact;
 import org.reficio.p2.resolver.maven.ResolvedArtifact;
 import org.reficio.p2.utils.BundleUtils;
 import org.reficio.p2.utils.JarUtils;
 import org.reficio.p2.utils.Utils;
+import org.reficio.p2.utils.XmlUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Glues together the following independent modules that know nothing about the
@@ -200,11 +208,43 @@ public class P2Helper {
                 return version;
             }
         }
+        
         // attempt to take the proper snapshot version from the artifact's baseVersion
         String baseVersion = resolvedArtifact.getArtifact().getBaseVersion();
         if (isProperSnapshotVersion(baseVersion)) {
             return baseVersion;
         }
+        
+        // attempt to construct version from maven-metadata-local.xml
+        File mavenMetadataLocal = new File(resolvedArtifact.getArtifact().getFile().getParentFile(), "maven-metadata-local.xml");
+        if (mavenMetadataLocal.exists()) {
+        	try {
+	        	DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+	        	        .newInstance();
+	        	DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+	        	Document document = documentBuilder.parse(mavenMetadataLocal);
+	        	Node metadata = XmlUtils.getFirstChildNodeByName(document, "metadata");
+	        	Node versioning = XmlUtils.getFirstChildNodeByName(metadata, "versioning");
+	        	Node lastUpdated = XmlUtils.getFirstChildNodeByName(versioning, "lastUpdated");
+	        	String version = BundleUtils.INSTANCE.calculateBundleVersion(resolvedArtifact.getArtifact());
+	        	if (version.endsWith(Utils.JAR_SNAPSHOT_POSTFIX) || version.endsWith(Utils.OSGI_SNAPSHOT_POSTFIX)) {
+	        		version = version.substring(0, version.length() - Utils.JAR_SNAPSHOT_POSTFIX.length());
+	        		String lastUpdatedTrimmed = lastUpdated.getTextContent().trim();
+	        		if (lastUpdatedTrimmed.length() > 8) {
+		        		lastUpdatedTrimmed = lastUpdatedTrimmed.substring(0, 8) + "." + lastUpdatedTrimmed.substring(8);
+		        		version += "-" + lastUpdatedTrimmed;
+		        		version += "-1";
+	        		}
+	        	}
+	        	if (isProperSnapshotVersion(version))
+	        		return version;
+        	} catch (Exception e) {
+                Logger.getLog().warn(String.format("Could not extract version from Maven local metadata file %s", mavenMetadataLocal.getAbsolutePath()), e);
+        	}
+        	
+        }
+        
+        
         // otherwise manually add the SNAPSHOT postfix that will be automatically changed to timestamp
         if (!baseVersion.contains("SNAPSHOT")) {
             baseVersion += ".SNAPSHOT";
@@ -213,7 +253,9 @@ public class P2Helper {
     }
 
     public static boolean isProperSnapshotVersion(String version) {
-        return version.matches(".*[0-9\\.]{13,16}-[0-9]{3}");
+    	//matches e.g. 3.3.1-20190722.014326-123 or
+    	//1.0.1-20190721.031346-1
+        return version.matches(".*[0-9\\.]{13,16}-[0-9]+");
     }
 
     public static String calculateSourceSymbolicName(String symbolicName) {
