@@ -8,13 +8,13 @@ Welcome to the p2-maven-plugin! This is an easy-to-use Maven3 plugin responsible
 ### Why should you bother?
 Are you familiar with the automated dependency management like in Maven, Gradle or any other fancy tool? You just define a project descriptor, add a bunch of dependencies and everything happens "automagically"... Piece of cake huh?!
 
-Well, there are, however, these RCP "unfortunates" for whom it is not quite that easy... Why's that, you might think? 
+Well, there are, however, these RCP "unfortunates" for whom it is not quite that easy... Why's that, you might think?
 
 Firstly, Eclipse RCP is an OSGi environment which extends the Java dependency model, so you can’t simply take a "jar" file and hope that it's going to work; believe me - it will not. Secondly, there are some additional RCP conventions that have to be followed, which makes it even more complex.
 
 But wait! Isn't Tycho supposed to solve all of these problems? Yeah, well, Tycho can do a lot, but there is definitely "something" missing... What is more, the learning curve is really steep, so it’s very easy to go off down the wrong path wasting a lot of time on simple things.
 
-The following blog entry outlines the problem perfectly: http://bit.ly/2mdDsvw
+The following blog entry outlines the problem perfectly: https://bit.ly/2XhgJSQ
 The author presents five different approaches how to configure the build and dependency management in a Tycho / Eclipse RCP project and, in the end, she couldn’t really propose a satisfactory solution! Unfortunately, there is no "one-click" easy solution, but if you stick to some best practices and use the right tools you can relax while Maven does most of the hard work for you.
 
 p2-maven-plugin simply tries to bridge the gap between Maven-like and RCP-like dependency management styles so that all Maven features can be seamlessly used with "No Fear!"
@@ -22,17 +22,17 @@ p2-maven-plugin simply tries to bridge the gap between Maven-like and RCP-like d
 Read further to fully understand why dependency management with Maven and Tycho is not that easy.
 
 ### Java vs. Maven vs. Eclipse RCP - dependency war
-In order to add a third-party dependency to an Eclipse RCP project the dependency has to reside in a P2 update site. 
+In order to add a third-party dependency to an Eclipse RCP project the dependency has to reside in a P2 update site.
 
-Eclipse (and other providers) provide a set of public update sites, but obviously not all popular and publicly available dependencies are there (that is the problem number #1). Pretty often you would also like to add a corporate / internal dependency - and you do not have to be a genius to figure out that it is not somewhere on the web… 
+Eclipse (and other providers) provide a set of public update sites, but obviously not all popular and publicly available dependencies are there (that is the problem number #1). Pretty often you would also like to add a corporate / internal dependency - and you do not have to be a genius to figure out that it is not somewhere on the web…
 
 Since Eclipse RCP is an OSGi environment in order to add a dependency to a p2 update site the dependency has to be an OSGi bundle (that is the problem number #2).
 
-So, let's sum up for now: all our artifacts have to be OSGi bundles, but they are not always bundles and they have to be located in a P2 site, but we do not have that site. How do we proceed then? 
+So, let's sum up for now: all our artifacts have to be OSGi bundles, but they are not always bundles and they have to be located in a P2 site, but we do not have that site. How do we proceed then?
 
 It is not that difficult, there is a 'bnd' tool written by Peter Kriens that can transform your jars into bundles. There is also a convenience tool provided by Eclipse RCP that can generate a P2 site (in a cumbersome and painful way though). Both tools assume that all your jars/bundles are located in a local folder - which means that you have to download them by-hand. You could use Maven to automate it a bit, but there is a significant difference in the way how Maven calculates a dependency tree and this is not always compatible with the OSGi way (that is the problem number #3). Let us elaborate on it a bit more.
 
-In a P2 update site, there may be three versions of the same dependency, as bundles may selectively include one class from version X, and a second class from version Y (that is normal in the world of OSGi). In Maven, though, if you specify two versions of a dependency only one of them will be fetched as you don't want to have two almost identical dependencies on your classpath (Java simply cannot deal with that). 
+In a P2 update site, there may be three versions of the same dependency, as bundles may selectively include one class from version X, and a second class from version Y (that is normal in the world of OSGi). In Maven, though, if you specify two versions of a dependency only one of them will be fetched as you don't want to have two almost identical dependencies on your classpath (Java simply cannot deal with that).
 
 So in essence, to solve all problems mentioned above you have to do three things by-hand:
 
@@ -45,14 +45,14 @@ Ufff, that is a mundane, cumbersome, repeatable and stupid activity that may tak
 That's where p2-maven-plugin comes into play. It solves problems #1, #2, #3 and does all the hard work for you. Isn't that just brilliant? I think it is... :)
 
 ## How to use it in 2 minutes?
-Using p2-maven-plugin is really simple. I have prepared a quickstart pom.xml file so that you can give it a try right away. We're going to generate a site and expose it using the jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml 
+Using p2-maven-plugin is really simple. I have prepared a quickstart pom.xml file so that you can give it a try right away. We're going to generate a site and expose it using the jetty-maven-plugin. This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml
 
 
 p2-maven-plugin is now on maven central. You can find the latest version number here https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.reficio%22%20AND%20a%3A%22p2-maven-plugin%22
 
 Here's the pom.xml:
 
-```xml 
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -123,12 +123,12 @@ $ mvn p2:site
 [INFO] ------------------------------------------------------------------------
 [INFO] Building example-p2-site 1.0.0
 [INFO] ------------------------------------------------------------------------
-[INFO] 
+[INFO]
 [INFO] --- p2-maven-plugin:1.0.0:site (generate-p2-site) @ example-p2-site ---
 [INFO] Command line:
     /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources && /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/
     Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/
-    org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher 
+    org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher
     -artifactRepository file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository -metadataRepository file:/opt/
     workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository -publishArtifacts -compress -source /opt/workspaces/reficio/p2-
     maven-plugin/src/main/resources/target/source
@@ -138,7 +138,7 @@ Generation completed with success [0 seconds].
     /bin/sh -c cd /opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository && /System/Library/Java/JavaVirtualMachines/
     1.6.0.jdk/Contents/Home/bin/java -jar /opt/maven-ext/org/eclipse/tycho/tycho-bundles-external/0.14.0/eclipse/plugins/
     org.eclipse.equinox.launcher_1.3.0.v20111107-1631.jar -nosplash -application org.eclipse.equinox.p2.publisher.CategoryPublisher -
-    categoryDefinition file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/category.xml -metadataRepository 
+    categoryDefinition file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/category.xml -metadataRepository
     file:/opt/workspaces/reficio/p2-maven-plugin/src/main/resources/target/repository/        
 Generating metadata for ..
 Generation completed with success [0 seconds].
@@ -222,10 +222,10 @@ p2-maven-plugin is compatible with Maven 3.x (we test it against 3.0.x, 3.1.x, 3
 ## Examples
 There are many more use examples, just have a look:
 
-### Default options 
+### Default options
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/quickstart/pom.xml
 
-This is the simplest and the shortest setup. Only the identifiers of the dependencies have to be specified. 
+This is the simplest and the shortest setup. Only the identifiers of the dependencies have to be specified.
 What will be the behavior like if we use the configuration listed below?
 
 * specified dependencies will be fetched
@@ -251,16 +251,16 @@ The default instructions are:
     <Export-Package>*</Export-Package>
 </instructions>
 ```
- 
+
 The following definition of an artifact:
-```xml 
+```xml
 <artifact>
     <id>commons-io:commons-io:2.1</id>
 </artifact>
 ```
 
 is an equivalent of the following definition:
-```xml 
+```xml
 <artifact>
     <id>commons-io:commons-io:2.1</id>
     <transitive>true</transitive>
@@ -282,7 +282,7 @@ This is the configuration snippet that enables you to include the source jars an
 If enabled together with the transitive option it will fetch sources of transitive dependencies as well.
 
 Example:
-```xml 
+```xml
 <artifact>
     <id>commons-io:commons-io:2.1</id>
     <source>true</source>
@@ -643,4 +643,3 @@ www.reficio.org
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/reficio/p2-maven-plugin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
