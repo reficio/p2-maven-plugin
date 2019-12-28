@@ -274,6 +274,16 @@ is an equivalent of the following definition:
     <excludes/>
 </artifact>
 ```     
+If the instruction name cannot be used as a XML tag (for example `-noee`), you can use the properties format:
+```xml
+<instructionsProperties>
+    <property>
+        <name>-noee</name>
+        <value>true</value>
+    </property>
+</instructionsProperties>
+```
+Instructions in properties format take precedence over the ones in map format in case of duplicates, which means that if you defined the same instruction both in properties and map format, the value from properties will be used and the warning will be printed to log.
 
 ### Source option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/source/pom.xml

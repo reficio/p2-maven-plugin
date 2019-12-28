@@ -119,7 +119,7 @@ public class P2Helper {
             if (resolvedArtifact.isRoot()) {
                 // Instructions are propagated only to the root dependency
                 // and not to the transitive dependencies.
-                builder.instructions(p2Artifact.getInstructions());
+                builder.instructions(p2Artifact.getCombinedInstructions());
             }
             return builder.build();
         } catch (Exception ex) {
@@ -140,7 +140,7 @@ public class P2Helper {
     private static String calculateFullSymbolicName(P2Artifact p2Artifact, ResolvedArtifact resolvedArtifact) throws IOException {
         String symbolicName = null;
         if (resolvedArtifact.isRoot()) {
-            Object symbolicNameValue = p2Artifact.getInstructions().get(Analyzer.BUNDLE_SYMBOLICNAME);
+            Object symbolicNameValue = p2Artifact.getCombinedInstructions().get(Analyzer.BUNDLE_SYMBOLICNAME);
             symbolicName = symbolicNameValue != null ? symbolicNameValue.toString() : null;
         }
         if (symbolicName == null) {
@@ -170,7 +170,7 @@ public class P2Helper {
         String version = null;
         // in case of root artifact try to take the version from the instructions
         if (resolvedArtifact.isRoot()) {
-            Object versionValue = p2Artifact.getInstructions().get(Analyzer.BUNDLE_VERSION);
+            Object versionValue = p2Artifact.getCombinedInstructions().get(Analyzer.BUNDLE_VERSION);
             version = versionValue != null ? Utils.snapshotToTimestamp(versionValue.toString(), timestamp) : null;
         }
         // if contains snapshot (manually set by the user) -> "SNAPSHOT" will be manually replaced
