@@ -61,7 +61,7 @@ Here's the pom.xml:
     <groupId>org.reficio.rcp</groupId>
     <artifactId>example-p2-site</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.0</version>
+    <version>1.4.1-SNAPSHOT</version>
 
     <build>
         <plugins>
