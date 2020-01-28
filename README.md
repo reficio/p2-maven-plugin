@@ -93,7 +93,7 @@ Here's the pom.xml:
                 <version>8.1.5.v20120716</version>
                 <configuration>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
+                    <webAppSourceDirectory>${project.basedir}/target/repository/</webAppSourceDirectory>
                     <webApp>
                         <contextPath>/site</contextPath>
                     </webApp>
