@@ -60,14 +60,14 @@
     <pluginRepositories>
         <pluginRepository>
             <id>reficio</id>
-            <url>http://repo.reficio.org/maven/</url>
+            <url>https://repo.reficio.org/maven/</url>
         </pluginRepository>
     </pluginRepositories>
 
     <repositories>
         <repository>
             <id>kepler</id>
-            <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</url>
+            <url>https://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</url>
             <layout>p2</layout>
         </repository>
     </repositories>
