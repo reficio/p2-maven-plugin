@@ -468,7 +468,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 			log.info("Created feature "+p2featureDefinition.getId());
 
     	} catch (Exception e) {
-    		log.error(e);
+    		throw new RuntimeException(e);
     	}
     }
 
