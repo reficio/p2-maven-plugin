@@ -37,8 +37,9 @@ public class P2Validator {
 
     private static void validateGeneralConfig(P2Artifact p2Artifact) {
         if (p2Artifact.shouldIncludeTransitive() && !p2Artifact.getCombinedInstructions().isEmpty()) {
-            String message = "BND instructions are NOT applied to the transitive dependencies of ";
-            Logger.getLog().warn(String.format("%s %s", message, p2Artifact.getId()));
+            String message = String.format("BND instructions are NOT applied to the transitive dependencies of %s",
+                    p2Artifact.getId());
+            Logger.getLog().warn(message);
         }
 
         if (p2Artifact.getCombinedInstructions().size() != p2Artifact.getInstructions().size()) {
