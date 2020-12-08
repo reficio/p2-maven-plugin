@@ -543,6 +543,9 @@ Example usage:
 	</configuration>
 ```
 
+Note: Up to version 1.3 unresolvable artifacts inside `<featureDefinitions>` did not cause the build to fail.
+The problem was only logged and the artifacts were omitted from the feature.
+This has been corrected in version 1.4 and the build will fail in such situations.
 
 ### Other features
 * p2-maven-plugin will tweak the version of a snapshot dependency replacing the SNAPSHOT string with a timestamp in the following format "yyyyMMddHHmmss" (feature #14)
