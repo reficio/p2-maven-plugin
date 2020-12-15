@@ -24,16 +24,11 @@ import static org.reficio.p2.utils.TestUtils.*;
 
 File target = new File(basedir, 'target/repository/plugins')
 assert target.exists()
-assert target.listFiles().size() == 14
+assert target.listFiles().size() == 12
 
 // <!-- snapshot to snapshot conversion jar -->
 validateOriginalSnapshot(jar(target, "org.hibernate.core_4.3.0."), "4.3.0.")
 validateOriginalSnapshot(jar(target, "org.hibernate.core.source_4.3.0."), "4.3.0.")
-
-// sometimes it's original, sometimes it's repacked - depending on Maven Packaging...???
-// <!-- snapshot to snapshot conversion plugin -->
-// validateOriginalSnapshot(jar(target, "org.reficio.p2-maven-plugin_1.0.0."), "1.0.0.")
-// validateOriginalSnapshot(jar(target, "org.reficio.p2-maven-plugin.source_1.0.0."), "1.0.0.")
 
 // <!-- snapshot to non-snapshot conversion with override -->
 validateVersion(jar(target, "com.hibernato.poolo_1.2.3"), "1.2.3")
