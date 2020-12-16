@@ -683,14 +683,6 @@
         </profile>
     </profiles>
 
-    <repositories>
-        <!-- required to get the reficio-skin -->
-        <repository>
-            <id>reficio</id>
-            <url>http://repo.reficio.org/maven/</url>
-        </repository>
-    </repositories>
-
     <distributionManagement>
         <repository>
             <id>reficio</id>
