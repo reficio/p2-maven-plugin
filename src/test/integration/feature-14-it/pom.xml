@@ -59,13 +59,6 @@
                                     <transitive>false</transitive>
                                 </artifact>
 
-                                <!-- snapshot to snapshot conversion plugin -->
-                                <artifact>
-                                    <id>org.reficio:p2-maven-plugin:1.0.0-SNAPSHOT</id>
-                                    <source>true</source>
-                                    <transitive>false</transitive>
-                                </artifact>
-
                                 <!-- snapshot to non-snapshot conversion with override -->
                                 <artifact>
                                     <id>org.hibernate:hibernate-c3p0:4.3.0-SNAPSHOT</id>
@@ -133,21 +126,10 @@
         </plugins>
     </build>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>plugin-reficio</id>
-            <url>http://repo.reficio.org/maven</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <repositories>
         <repository>
             <id>hibernate-snapshots</id>
             <url>http://snapshots.jboss.org/maven2</url>
-        </repository>
-        <repository>
-            <id>reficio</id>
-            <url>http://repo.reficio.org/maven</url>
         </repository>
     </repositories>
 
