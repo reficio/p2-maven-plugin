@@ -14,9 +14,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <maven.version>3.3.9</maven.version>
-        <maven.annotations.version>3.5</maven.annotations.version>
-        <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
+        <maven.version>3.6.3</maven.version>
+        <maven.annotations.version>3.6.0</maven.annotations.version>
+        <maven.plugin.plugin.version>3.6.0</maven.plugin.plugin.version>
         <tycho.version>1.0.0</tycho.version>
 
         <sonatype.aether.version>1.13.1</sonatype.aether.version>
@@ -95,7 +95,6 @@
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
             <version>${maven.version}</version>
-            <scope>provided</scope>
         </dependency>
         <!-- dependencies to annotations -->
         <dependency>
