@@ -240,6 +240,25 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.rat</groupId>
+                    <artifactId>apache-rat-plugin</artifactId>
+                    <version>0.13</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>/**/src/it/projects/*/build.log</exclude>
+                            <exclude>/**/src/it/projects/*/target/**</exclude>
+                            <exclude>**/.externalToolBuilders/*</exclude>
+                            <exclude>**/infinitest.filters</exclude>
+                            <exclude>CONTRIBUTING.md</exclude>
+                            <exclude>README.md</exclude>
+                            <exclude>**/*.json</exclude>
+                            <exclude>**/spring.factories</exclude>
+                            <exclude>**/spring.provides</exclude>
+                            <exclude>**/*.iml</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -477,6 +496,10 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
             </plugin>
         </plugins>
 
