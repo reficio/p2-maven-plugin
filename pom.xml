@@ -301,7 +301,7 @@
                 <version>1.10.b1</version>
                 <configuration>
                     <strictCheck>true</strictCheck>
-                    <basedir>${basedir}</basedir>
+                    <basedir>${project.basedir}</basedir>
                     <header>src/main/resources/license.txt</header>
                     <quiet>false</quiet>
                     <failIfMissing>true</failIfMissing>
@@ -462,11 +462,11 @@
                         <configuration>
                             <failOnError>false</failOnError>
                             <target>
-                                <copy todir="${basedir}/src/site/markdown">
-                                    <fileset dir="${basedir}" includes="README.md"/>
+                                <copy todir="${project.basedir}/src/site/markdown">
+                                    <fileset dir="${project.basedir}" includes="README.md"/>
                                 </copy>
-                                <move file="${basedir}/src/site/markdown/README.md" tofile="${basedir}/src/site/markdown/manual.md"/>
-                                <replaceregexp file="${basedir}/src/site/markdown/manual.md"
+                                <move file="${project.basedir}/src/site/markdown/README.md" tofile="${project.basedir}/src/site/markdown/manual.md"/>
+                                <replaceregexp file="${project.basedir}/src/site/markdown/manual.md"
                                                match="```.*"
                                                replace=""
                                                byline="true"/>
