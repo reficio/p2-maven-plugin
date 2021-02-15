@@ -653,6 +653,3 @@ http://twitter.com/tombujok
 
 Reficio™ - Reestablish your software!
 www.reficio.org
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/reficio/p2-maven-plugin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
