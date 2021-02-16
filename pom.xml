@@ -13,6 +13,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.7</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <maven.version>3.3.9</maven.version>
         <maven.annotations.version>3.5</maven.annotations.version>
@@ -71,6 +74,16 @@
         <system>jenkins</system>
         <url>https://reficio.ci.cloudbees.com/job/p2-maven-plugin/</url>
     </ciManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>biz.aQute.bnd</artifactId>
+                <version>4.0.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -162,7 +175,6 @@
         <dependency>
             <groupId>biz.aQute.bnd</groupId>
             <artifactId>biz.aQute.bnd</artifactId>
-            <version>4.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -306,8 +318,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.5.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
                     <encoding>UTF-8</encoding>
                     <excludes>
                         <exclude>**/src/test/integration/**/*.*</exclude>
@@ -395,10 +405,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <source>1.6</source>
+                    <source>${java.version}</source>
                     <quiet>true</quiet>
                     <links>
-                        <link>http://docs.oracle.com/javase/6/docs/api/</link>
+                        <link>http://docs.oracle.com/javase/7/docs/api/</link>
                     </links>
                 </configuration>
             </plugin>
