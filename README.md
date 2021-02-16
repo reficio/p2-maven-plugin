@@ -1,4 +1,4 @@
-# p2-maven-plugin [![Build Status](https://secure.travis-ci.org/reficio/p2-maven-plugin.png?branch=master)](http://travis-ci.org/reficio/p2-maven-plugin)
+# p2-maven-plugin ![Java CI with Maven](https://github.com/reficio/p2-maven-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)
 
 ## Truly mavenize your Eclipse RCP project!
 
