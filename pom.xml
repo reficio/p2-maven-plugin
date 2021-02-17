@@ -20,13 +20,14 @@
         <maven.version>3.3.9</maven.version>
         <maven.annotations.version>3.5</maven.annotations.version>
         <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
+        <!-- actually a dependency here. -->
+        <dependency.maven.bundle.plugin.version>3.2.0</dependency.maven.bundle.plugin.version>
         <tycho.version>1.0.0</tycho.version>
 
         <sonatype.aether.version>1.13.1</sonatype.aether.version>
         <eclipse.aether.version>1.1.0</eclipse.aether.version>
 
         <wagon.version>2.2</wagon.version>
-        <gmaven.version>2.1.1</gmaven.version>
         <gmaven.provider.selection>2.0</gmaven.provider.selection>
         <groovy.version>2.5.14</groovy.version>
 
@@ -189,7 +190,7 @@
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>maven-bundle-plugin</artifactId>
-            <version>3.2.0</version>
+            <version>${dependency.maven.bundle.plugin.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.osgi</groupId>
@@ -271,13 +272,29 @@
                         </excludes>
                     </configuration>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.22.2</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.8.0</version>
+                <version>1.12.1</version>
                 <configuration>
 <!--                    <source/>-->
 <!--                    <providerSelection>${gmaven.provider.selection}</providerSelection>-->
@@ -316,7 +333,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.8.1</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                     <excludes>
@@ -369,7 +386,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
                 <executions>
                     <execution>
                         <id>attach-tests</id>
@@ -382,7 +398,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -395,7 +411,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -415,7 +431,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.9.1</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
@@ -673,7 +689,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-invoker-plugin</artifactId>
-                        <version>1.10</version>
+                        <version>3.2.1</version>
                         <dependencies>
                             <dependency>
                                 <groupId>org.codehaus.groovy</groupId>
