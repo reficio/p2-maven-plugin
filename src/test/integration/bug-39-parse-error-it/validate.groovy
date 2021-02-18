@@ -1,3 +1,7 @@
+import org.codehaus.plexus.util.Os
+
+import static org.codehaus.plexus.util.Os.FAMILY_WINDOWS
+
 /**
  * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
@@ -23,4 +27,12 @@
 
 File target = new File(basedir, 'target/repository/plugins')
 assert target.exists()
-assert target.listFiles().size() == 34
+
+if (Os.isFamily(FAMILY_WINDOWS)) {
+    // on windows the file org.eclipse.swt.gtk.linux.x86_64_3.3.0.v3346.jar doesn't exist
+    assert target.listFiles().size() == 33
+} else {
+    assert target.listFiles().size() == 34
+}
+
+
