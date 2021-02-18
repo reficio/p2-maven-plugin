@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.SystemUtils
+
 /**
  * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
@@ -23,4 +25,12 @@
 
 File target = new File(basedir, 'target/repository/plugins')
 assert target.exists()
-assert target.listFiles().size() == 34
+
+if (SystemUtils.IS_OS_WINDOWS) {
+    // on windows the file org.eclipse.swt.gtk.linux.x86_64_3.3.0.v3346.jar doesn't exist
+    assert target.listFiles().size() == 33
+} else {
+    assert target.listFiles().size() == 34
+}
+
+
