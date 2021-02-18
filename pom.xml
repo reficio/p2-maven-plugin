@@ -17,9 +17,9 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
-        <maven.version>3.3.9</maven.version>
-        <maven.annotations.version>3.5</maven.annotations.version>
-        <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
+        <maven.version>3.6.3</maven.version>
+        <maven.annotations.version>3.6.0</maven.annotations.version>
+        <maven.plugin.plugin.version>3.6.0</maven.plugin.plugin.version>
         <!-- actually a dependency here. -->
         <dependency.maven.bundle.plugin.version>3.2.0</dependency.maven.bundle.plugin.version>
         <tycho.version>1.0.0</tycho.version>
@@ -110,7 +110,6 @@
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
             <version>${maven.version}</version>
-            <scope>provided</scope>
         </dependency>
         <!-- dependencies to annotations -->
         <dependency>
