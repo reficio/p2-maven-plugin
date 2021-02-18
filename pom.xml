@@ -21,7 +21,7 @@
         <maven.annotations.version>3.5</maven.annotations.version>
         <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
         <!-- actually a dependency here. -->
-        <dependency.maven.bundle.plugin.version>3.2.0</dependency.maven.bundle.plugin.version>
+        <dependency.maven.bundle.plugin.version>4.2.1</dependency.maven.bundle.plugin.version>
         <tycho.version>1.0.0</tycho.version>
 
         <sonatype.aether.version>1.13.1</sonatype.aether.version>
@@ -81,8 +81,8 @@
         <dependencies>
             <dependency>
                 <groupId>biz.aQute.bnd</groupId>
-                <artifactId>biz.aQute.bnd</artifactId>
-                <version>4.0.0</version>
+                <artifactId>biz.aQute.bndlib</artifactId>
+                <version>5.2.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -176,7 +176,7 @@
         </dependency>
         <dependency>
             <groupId>biz.aQute.bnd</groupId>
-            <artifactId>biz.aQute.bnd</artifactId>
+            <artifactId>biz.aQute.bndlib</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -194,8 +194,8 @@
             <version>${dependency.maven.bundle.plugin.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.osgi</groupId>
-                    <artifactId>org.osgi.core</artifactId>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
