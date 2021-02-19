@@ -27,8 +27,7 @@ import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
 import java.io.File;
 import java.io.IOException;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
@@ -94,13 +93,16 @@ public class CategoryPublisher {
         private String metadataRepositoryLocation;
 
         public Builder p2ApplicationLauncher(P2ApplicationLauncher launcher) {
-            checkNotNull(launcher, "p2ApplicationLauncher cannot be null");
+            requireNonNull(launcher, "p2ApplicationLauncher cannot be null");
             this.launcher = launcher;
             return this;
         }
 
         public Builder forkedProcessTimeoutInSeconds(int forkedProcessTimeoutInSeconds) {
-            checkArgument(forkedProcessTimeoutInSeconds >= 0, "forkedProcessTimeoutInSeconds cannot be negative");
+            if (forkedProcessTimeoutInSeconds < 0) {
+                throw new IllegalArgumentException("forkedProcessTimeoutInSeconds cannot be negative but was: " + forkedProcessTimeoutInSeconds);
+            }
+
             this.forkedProcessTimeoutInSeconds = forkedProcessTimeoutInSeconds;
             return this;
         }
@@ -115,21 +117,21 @@ public class CategoryPublisher {
         }
 
         public Builder categoryFileLocation(String categoryFileLocation) {
-            checkNotNull(categoryFileLocation, "categoryFileLocation cannot be null");
+            requireNonNull(categoryFileLocation, "categoryFileLocation cannot be null");
             this.categoryFileLocation = categoryFileLocation;
             return this;
         }
 
         public Builder metadataRepositoryLocation(String metadataRepositoryLocation) {
-            checkNotNull(metadataRepositoryLocation, "metadataRepositoryLocation cannot be null");
+            requireNonNull(metadataRepositoryLocation, "metadataRepositoryLocation cannot be null");
             this.metadataRepositoryLocation = metadataRepositoryLocation;
             return this;
         }
 
         public CategoryPublisher build() {
-            checkNotNull(launcher, "p2ApplicationLauncher cannot be null");
-            checkNotNull(categoryFileLocation, "categoryFileLocation cannot be null");
-            checkNotNull(metadataRepositoryLocation, "metadataRepositoryLocation cannot be null");
+            requireNonNull(launcher, "p2ApplicationLauncher cannot be null");
+            requireNonNull(categoryFileLocation, "categoryFileLocation cannot be null");
+            requireNonNull(metadataRepositoryLocation, "metadataRepositoryLocation cannot be null");
             return new CategoryPublisher(launcher, forkedProcessTimeoutInSeconds, additionalArgs, categoryFileLocation,
                     metadataRepositoryLocation);
         }

@@ -18,10 +18,8 @@
  */
 package org.reficio.p2;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.execution.MavenSession;
@@ -43,6 +41,7 @@ import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
 import org.reficio.p2.bundler.ArtifactBundler;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.bundler.ArtifactBundlerRequest;
+import org.reficio.p2.bundler.P2ArtifactMap;
 import org.reficio.p2.bundler.impl.AquteBundler;
 import org.reficio.p2.logger.Logger;
 import org.reficio.p2.publisher.BundlePublisher;
@@ -60,8 +59,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static java.util.Objects.requireNonNull;
 
 
 /**
@@ -269,7 +271,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         if (repoSystem == null) {
             repoSystem = lookup("org.sonatype.aether.RepositorySystem");
         }
-        Preconditions.checkNotNull(repoSystem, "Could not initialize RepositorySystem");
+        requireNonNull(repoSystem, "Could not initialize RepositorySystem");
     }
 
     private Object lookup(String role) {
@@ -280,11 +282,11 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         return null;
     }
 
-    private Multimap<P2Artifact, ArtifactBundlerInstructions>  processArtifacts(List<P2Artifact> artifacts) {
+    private P2ArtifactMap<ArtifactBundlerInstructions> processArtifacts(List<P2Artifact> artifacts) {
         BundleUtils.INSTANCE.setReuseSnapshotVersionFromArtifact(reuseSnapshotVersionFromArtifact);
-    	Multimap<P2Artifact, ArtifactBundlerInstructions> bundlerInstructions = ArrayListMultimap.create();
+        P2ArtifactMap<ArtifactBundlerInstructions> bundlerInstructions = new P2ArtifactMap<>();
 
-        Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = resolveArtifacts(artifacts);
+        P2ArtifactMap<ResolvedArtifact> resolvedArtifacts = resolveArtifacts(artifacts);
         Set<Artifact> processedArtifacts = processRootArtifacts(resolvedArtifacts, bundlerInstructions, artifacts);
         processTransitiveArtifacts(resolvedArtifacts, processedArtifacts, bundlerInstructions, artifacts);
 
@@ -292,11 +294,12 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     }
 
-    private Set<Artifact> processRootArtifacts(Multimap<P2Artifact, ResolvedArtifact> processedArtifacts,
-    		Multimap<P2Artifact, ArtifactBundlerInstructions> bundlerInstructions, List<P2Artifact> artifacts) {
+    private Set<Artifact> processRootArtifacts(P2ArtifactMap<ResolvedArtifact> processedArtifacts,
+                                               P2ArtifactMap<ArtifactBundlerInstructions> bundlerInstructions,
+                                               List<P2Artifact> artifacts) {
 
 
-        Set<Artifact> bundledArtifacts = Sets.newHashSet();
+        Set<Artifact> bundledArtifacts = new HashSet<>();
         for (P2Artifact p2Artifact : artifacts) {
             for (ResolvedArtifact resolvedArtifact : processedArtifacts.get(p2Artifact)) {
                 if (resolvedArtifact.isRoot()) {
@@ -315,8 +318,10 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         return bundledArtifacts;
     }
 
-    private void processTransitiveArtifacts(Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts, Set<Artifact> bundledArtifacts,
-    		Multimap<P2Artifact, ArtifactBundlerInstructions> bundlerInstructions, List<P2Artifact> artifacts) {
+    private void processTransitiveArtifacts(P2ArtifactMap<ResolvedArtifact> resolvedArtifacts,
+                                            Set<Artifact> bundledArtifacts,
+                                            P2ArtifactMap<ArtifactBundlerInstructions> bundlerInstructions,
+                                            List<P2Artifact> artifacts) {
         // then bundle transitive artifacts
 
     	for (P2Artifact p2Artifact : artifacts) {
@@ -361,8 +366,8 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     }
 
 
-    private Multimap<P2Artifact, ResolvedArtifact> resolveArtifacts(List<P2Artifact> artifacts) {
-        Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = ArrayListMultimap.create();
+    private P2ArtifactMap<ResolvedArtifact> resolveArtifacts(List<P2Artifact> artifacts) {
+        P2ArtifactMap<ResolvedArtifact> resolvedArtifacts = new P2ArtifactMap<ResolvedArtifact>();
         for (P2Artifact p2Artifact : artifacts) {
             logResolving(p2Artifact);
             ArtifactResolutionResult resolutionResult;
@@ -434,7 +439,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     private void createFeature(P2FeatureDefinition p2featureDefinition) {
     	try {
-    		Multimap<P2Artifact, ArtifactBundlerInstructions> bi = this.processArtifacts(p2featureDefinition.getArtifacts());
+    		P2ArtifactMap bi = this.processArtifacts(p2featureDefinition.getArtifacts());
 
 			if (null==p2featureDefinition.getFeatureFile()) {
 				//we must be generating the feature file from the pom
