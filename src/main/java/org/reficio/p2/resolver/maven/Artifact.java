@@ -19,8 +19,7 @@
 package org.reficio.p2.resolver.maven;
 
 import java.io.File;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import java.util.Objects;
 
 import static java.util.Arrays.asList;
 
@@ -116,11 +115,14 @@ public class Artifact {
 
     @Override
     public boolean equals(Object other) {
-        return EqualsBuilder.reflectionEquals(this, other, asList("file"));
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Artifact artifact = (Artifact) other;
+        return snapshot == artifact.snapshot && Objects.equals(groupId, artifact.groupId) && Objects.equals(artifactId, artifact.artifactId) && Objects.equals(baseVersion, artifact.baseVersion) && Objects.equals(extension, artifact.extension) && Objects.equals(classifier, artifact.classifier) && Objects.equals(version, artifact.version) && Objects.equals(file, artifact.file);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this, asList("file"));
+        return Objects.hash(groupId, artifactId, baseVersion, extension, classifier, snapshot, version, file);
     }
 }

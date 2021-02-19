@@ -26,7 +26,6 @@ import java.util.Collection;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang.StringUtils;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.logger.Logger;
 import org.reficio.p2.utils.JarUtils;
@@ -178,7 +177,7 @@ public class FeatureBuilder {
 				if (generateSourceFeature) {
 					// 2015-05-12/RPr: A Source feature contains only sources.
 					id = abi.getSourceSymbolicName();
-					if (StringUtils.isBlank(id)) {
+					if (id == null || id.trim().isEmpty()) {
 						log().info("\t [WARN] No source found for " + abi.getSymbolicName());
 						continue;
 					}

@@ -18,7 +18,6 @@
  */
 package org.reficio.p2.resolver.maven.impl
 
-import org.apache.commons.lang.StringUtils
 import org.reficio.p2.logger.Logger
 import org.reficio.p2.resolver.maven.impl.facade.AetherFacade
 import org.reficio.p2.resolver.maven.Artifact
@@ -128,7 +127,7 @@ class AetherResolver implements ArtifactResolver {
     private static List<String> transformExcludes(String artifact, List<String> excludes) {
         List<String> transformedExcludes = []
         for (String exclude : excludes) {
-            if (StringUtils.isBlank(exclude)) {
+            if (exclude == null || exclude.trim().isEmpty()) {
                 // aether bug fix
                 Logger.getLog().warn("Empty exclude counts as exclude-all wildcard '*' [${artifact}]")
                 transformedExcludes += "*"

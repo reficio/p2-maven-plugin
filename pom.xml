@@ -18,7 +18,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <maven.version>3.3.9</maven.version>
-        <maven.annotations.version>3.5</maven.annotations.version>
+        <maven.annotations.version>3.3</maven.annotations.version>
         <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
         <!-- actually a dependency here. -->
         <dependency.maven.bundle.plugin.version>4.2.1</dependency.maven.bundle.plugin.version>
@@ -84,6 +84,53 @@
                 <artifactId>biz.aQute.bndlib</artifactId>
                 <version>5.2.0</version>
             </dependency>
+
+            <!-- 3.0 used by tycho. Force the target maven version here. -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-compat</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <!-- 3.0 used by tycho. Force the target maven version here. -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>${maven.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- 3.0 used by tycho. Force the target maven version here. -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-settings</artifactId>
+                <version>${maven.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- 3.0 used by org.twdata.maven:mojo-executor. -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-model</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <!-- 3.0 used by tycho -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <!-- 3.0 used by maven-plugin-annotations -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-artifact</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+
+            <!-- 1.5.5 used by tycho, others use 1.6 -->
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-component-annotations</artifactId>
+                <version>1.6</version>
+                <scope>provided</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -92,26 +139,12 @@
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
             <version>${maven.version}</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-model</artifactId>
-            <version>${maven.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>${maven.version}</version>
-            <scope>provided</scope>
         </dependency>
+
         <!-- dependencies to annotations -->
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
@@ -121,6 +154,10 @@
             <!-- annotations are needed only to build the plugin -->
         </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-component-annotations</artifactId>
+        </dependency>
 
         <!-- org.sonatype.aether artifacts ARE provided by Maven 3.0.x -->
         <dependency>
@@ -149,24 +186,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-compat</artifactId>
-            <version>${maven.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
             <version>2.6</version>
         </dependency>
         <dependency>
@@ -177,11 +198,6 @@
         <dependency>
             <groupId>biz.aQute.bnd</groupId>
             <artifactId>biz.aQute.bndlib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-exec</artifactId>
-            <version>1.3</version>
         </dependency>
         <dependency>
             <groupId>org.twdata.maven</groupId>
@@ -199,17 +215,18 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
-            <groupId>org.eclipse.tycho.extras</groupId>
-            <artifactId>tycho-p2-extras-plugin</artifactId>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-core</artifactId>
             <version>${tycho.version}</version>
         </dependency>
         <dependency>
-        	<groupId>org.eclipse.tycho</groupId>
-        	<artifactId>tycho-packaging-plugin</artifactId>
-        	<version>${tycho.version}</version>
-        	<type>maven-plugin</type>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>sisu-equinox-launching</artifactId>
+            <version>${tycho.version}</version>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -226,11 +243,6 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy</artifactId>
             <version>${groovy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.cenqua.clover</groupId>
-            <artifactId>clover</artifactId>
-            <version>${clover.version}</version>
         </dependency>
     </dependencies>
 
@@ -676,6 +688,31 @@
                                 <goals>
                                     <goal>install</goal>
                                     <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>convergence</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>3.0.0-M3</version>
+                        <executions>
+                            <execution>
+                                <id>enforce</id>
+                                <configuration>
+                                    <rules>
+                                        <dependencyConvergence/>
+                                    </rules>
+                                </configuration>
+                                <goals>
+                                    <goal>enforce</goal>
                                 </goals>
                             </execution>
                         </executions>
