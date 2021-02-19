@@ -54,9 +54,6 @@
                     <groupId>org.reficio</groupId>
                     <artifactId>p2-maven-plugin</artifactId>
                     <version>@project.version@</version>
-                    <configuration>
-                        <providerSelection>1.5</providerSelection>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -67,9 +64,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.5</version>
+                <version>3.2.0</version>
                 <configuration>
-                    <source>1.4</source>
+                    <source>1.7</source>
                 </configuration>
             </plugin>
         </plugins>
