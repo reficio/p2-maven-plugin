@@ -26,7 +26,7 @@ import org.reficio.p2.utils.Utils;
 
 import java.io.IOException;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 /**
@@ -109,8 +109,8 @@ public class BundlePublisher {
         }
 
         public BundlePublisher build() {
-            return new BundlePublisher(compressSite, additionalArgs, checkNotNull(mavenProject),
-                    checkNotNull(mavenSession), checkNotNull(buildPluginManager));
+            return new BundlePublisher(compressSite, additionalArgs, requireNonNull(mavenProject),
+                    requireNonNull(mavenSession), requireNonNull(buildPluginManager));
         }
     }
 }

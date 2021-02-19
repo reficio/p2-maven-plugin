@@ -27,19 +27,21 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
+import org.reficio.p2.bundler.P2ArtifactMap;
 import org.reficio.p2.logger.Logger;
 import org.reficio.p2.utils.JarUtils;
 import org.reficio.p2.utils.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.google.common.collect.Multimap;
-
 public class FeatureBuilder {
 
 
-	public FeatureBuilder(P2FeatureDefinition p2FeatureDefintion, Multimap<P2Artifact, 
-			ArtifactBundlerInstructions>  bundlerInstructions, boolean generateSourceFeature, boolean unpack, String timestamp) {
+	public FeatureBuilder(P2FeatureDefinition p2FeatureDefintion,
+						  final P2ArtifactMap bundlerInstructions,
+						  boolean generateSourceFeature,
+						  boolean unpack,
+						  String timestamp) {
 		this.p2FeatureDefintion = p2FeatureDefintion;
 		this.bundlerInstructions = bundlerInstructions;
 		this.generateSourceFeature = generateSourceFeature;
@@ -47,7 +49,7 @@ public class FeatureBuilder {
 		this.featureTimeStamp = timestamp;
 	}
 
-	private Multimap<P2Artifact, ArtifactBundlerInstructions>  bundlerInstructions;
+	private P2ArtifactMap<ArtifactBundlerInstructions> bundlerInstructions;
 	private P2FeatureDefinition p2FeatureDefintion;
 	private boolean generateSourceFeature;
 	private boolean unpack;
