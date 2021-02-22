@@ -367,7 +367,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
 
     private P2ArtifactMap<ResolvedArtifact> resolveArtifacts(List<P2Artifact> artifacts) {
-        P2ArtifactMap<ResolvedArtifact> resolvedArtifacts = new P2ArtifactMap<ResolvedArtifact>();
+        P2ArtifactMap<ResolvedArtifact> resolvedArtifacts = new P2ArtifactMap<>();
         for (P2Artifact p2Artifact : artifacts) {
             logResolving(p2Artifact);
             ArtifactResolutionResult resolutionResult;

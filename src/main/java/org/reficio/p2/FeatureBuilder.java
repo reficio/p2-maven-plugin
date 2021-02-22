@@ -38,7 +38,7 @@ public class FeatureBuilder {
 
 
 	public FeatureBuilder(P2FeatureDefinition p2FeatureDefintion,
-						  final P2ArtifactMap bundlerInstructions,
+						  final P2ArtifactMap<ArtifactBundlerInstructions> bundlerInstructions,
 						  boolean generateSourceFeature,
 						  boolean unpack,
 						  String timestamp) {
