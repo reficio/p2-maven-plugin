@@ -60,4 +60,5 @@ jobs:
 
 
       - name: Build with Maven
-        run: mvn --batch-mode --errors package --file pom.xml
+        run: mvn --batch-mode --errors package --file pom.xml '-Dinvoker.streamLogs=true'
+
