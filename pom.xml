@@ -22,7 +22,7 @@
         <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
         <!-- actually a dependency here. -->
         <dependency.maven.bundle.plugin.version>4.2.1</dependency.maven.bundle.plugin.version>
-        <tycho.version>1.0.0</tycho.version>
+        <tycho.version>1.7.0</tycho.version>
 
         <sonatype.aether.version>1.13.1</sonatype.aether.version>
         <eclipse.aether.version>1.1.0</eclipse.aether.version>
@@ -83,6 +83,12 @@
                 <groupId>biz.aQute.bnd</groupId>
                 <artifactId>biz.aQute.bndlib</artifactId>
                 <version>5.2.0</version>
+            </dependency>
+            <!-- needed due to dependency conflict tycho-1.7.0 and its transitive dependencies -->
+            <dependency>
+                <groupId>org.eclipse.platform</groupId>
+                <artifactId>org.eclipse.osgi</artifactId>
+                <version>3.15.200</version>
             </dependency>
 
             <!-- 3.0 used by tycho. Force the target maven version here. -->
@@ -212,6 +218,13 @@
             </exclusions>
         </dependency>
 
+        <!-- osgi log to avoid Security Exceptions at runtime (due to different hash of org.eclipse.osgi's Logger) -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.log</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>tycho-core</artifactId>
@@ -249,9 +262,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-plugin-plugin</artifactId>
                     <version>${maven.plugin.plugin.version}</version>
-                    <configuration>
-                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-                    </configuration>
                     <executions>
                         <execution>
                             <id>default-descriptor</id>
