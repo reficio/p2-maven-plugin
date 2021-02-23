@@ -29,7 +29,7 @@
 
         <wagon.version>2.2</wagon.version>
         <gmaven.provider.selection>2.0</gmaven.provider.selection>
-        <groovy.version>2.5.14</groovy.version>
+        <groovy.version>3.0.7</groovy.version>
 
         <clover.version>3.3.0</clover.version>
         <clover.license>/private/reficio/clover.license</clover.license>
@@ -320,8 +320,6 @@
                 <artifactId>gmavenplus-plugin</artifactId>
                 <version>1.12.1</version>
                 <configuration>
-<!--                    <source/>-->
-<!--                    <providerSelection>${gmaven.provider.selection}</providerSelection>-->
                     <sourceEncoding>UTF-8</sourceEncoding>
                 </configuration>
                 <executions>
@@ -337,8 +335,9 @@
                 <dependencies>
                     <dependency>
                         <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy</artifactId>
+                        <artifactId>groovy-all</artifactId>
                         <version>${groovy.version}</version>
+                        <type>pom</type>
                     </dependency>
                 </dependencies>
             </plugin>
