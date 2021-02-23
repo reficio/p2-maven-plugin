@@ -31,7 +31,7 @@
         <gmaven.provider.selection>2.0</gmaven.provider.selection>
         <groovy.version>3.0.7</groovy.version>
 
-        <clover.version>3.3.0</clover.version>
+        <clover.version>4.0.6</clover.version>
         <clover.license>/private/reficio/clover.license</clover.license>
         <plugin.maven.javadoc.version>3.2.0</plugin.maven.javadoc.version>
     </properties>
