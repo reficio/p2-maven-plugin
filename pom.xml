@@ -19,7 +19,7 @@
 
         <maven.version>3.3.9</maven.version>
         <maven.annotations.version>3.3</maven.annotations.version>
-        <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
+        <maven.plugin.plugin.version>3.6.0</maven.plugin.plugin.version>
         <!-- actually a dependency here. -->
         <dependency.maven.bundle.plugin.version>4.2.1</dependency.maven.bundle.plugin.version>
         <tycho.version>1.0.0</tycho.version>
