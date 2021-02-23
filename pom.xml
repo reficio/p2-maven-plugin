@@ -671,7 +671,6 @@
                         <configuration>
                             <addTestClassPath>true</addTestClassPath>
                             <projectsDirectory>src/test/integration</projectsDirectory>
-                            <streamLogs>true</streamLogs>
                             <showErrors>true</showErrors>
                             <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                             <pomIncludes>
