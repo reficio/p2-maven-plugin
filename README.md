@@ -621,10 +621,19 @@ Please describe the issue thoroughly. Please include a minimal pom.xml file that
 If you submit a pull request please make sure to add an unit/integration test case that covers the feature. Pull requests without a proper test coverage may not be pulled at all.
 
 ### Running integration tests
+
 Invoke the following command to run the integration tests suite:
 
 ```
-$ mvn package
+$ mvn verify -Pit
+```
+
+### Running the spotbugs checks
+
+Invoke the following command to run the spotbugs checks:
+
+```
+$ mvn verify -Pspotbugs
 ```
 
 ### Releasing
