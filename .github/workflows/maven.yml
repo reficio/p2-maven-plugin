@@ -56,9 +56,33 @@ jobs:
           java-version: ${{ matrix.java }}
 
       - name: License Check
-        run: mvn apache-rat:check "-Drat.consoleOutput"
+        run: mvn --batch-mode apache-rat:check "-Drat.consoleOutput"
 
 
       - name: Build with Maven
-        run: mvn --batch-mode --errors package --file pom.xml '-Dinvoker.streamLogs=true'
+        run: mvn --batch-mode --errors verify --file pom.xml '-Dinvoker.streamLogs=true' '-Pit'
 
+  verify:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up cache for ~./m2/repository
+        uses: actions/cache@v2.1.4
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ matrix.os }}-java${{ matrix.java }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            maven-${{ matrix.os }}-java${{ matrix.java }}-
+            maven-${{ matrix.os }}-
+
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Spotbugs check
+        run: mvn --batch-mode --errors verify --file pom.xml '-Pspotbugs'
