@@ -78,6 +78,7 @@ public class JarUtils {
      * @param timestamp - timestamp
      *
      */
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     public static void adjustFeatureXml(File inputFile, File outputFile, File pluginDir, Log log, String timestamp) {
         Jar jar = null;
         File newXml = null;
@@ -178,22 +179,23 @@ public class JarUtils {
 
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(unsignedJar));
             try {
-                ZipFile zip = new ZipFile(jar);
-                for (Enumeration list = zip.entries(); list.hasMoreElements(); ) {
-                    ZipEntry entry = (ZipEntry) list.nextElement();
-                    String name = entry.getName();
-                    if (entry.isDirectory()) {
-                        continue;
-                    } else if (name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
-                        continue;
-                    }
+                try (ZipFile zip = new ZipFile(jar)) {
+                    for (Enumeration list = zip.entries(); list.hasMoreElements(); ) {
+                        ZipEntry entry = (ZipEntry) list.nextElement();
+                        String name = entry.getName();
+                        if (entry.isDirectory()) {
+                            continue;
+                        } else if (name.endsWith(".RSA") || name.endsWith(".DSA") || name.endsWith(".SF")) {
+                            continue;
+                        }
 
-                    InputStream zipInputStream = zip.getInputStream(entry);
-                    zipOutputStream.putNextEntry(entry);
-                    try {
-                        IOUtils.copy(zipInputStream, zipOutputStream);
-                    } finally {
-                        zipInputStream.close();
+                        InputStream zipInputStream = zip.getInputStream(entry);
+                        zipOutputStream.putNextEntry(entry);
+                        try {
+                            IOUtils.copy(zipInputStream, zipOutputStream);
+                        } finally {
+                            zipInputStream.close();
+                        }
                     }
                 }
                 IOUtils.closeQuietly(zipOutputStream);

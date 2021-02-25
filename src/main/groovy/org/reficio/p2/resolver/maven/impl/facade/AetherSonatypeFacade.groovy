@@ -37,6 +37,7 @@ import org.sonatype.aether.util.graph.PreorderNodeListGenerator
  *         http://www.reficio.org
  * @since 1.1.0
  */
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("SE_NO_SERIALVERSIONID")
 class AetherSonatypeFacade implements AetherFacade {
 
     @Override

@@ -18,12 +18,12 @@
  */
 package org.reficio.p2.resolver.eclipse.impl
 
-import org.apache.commons.io.FilenameUtils
 import org.reficio.p2.logger.Logger
 import org.reficio.p2.resolver.eclipse.EclipseResolutionRequest
 import org.reficio.p2.resolver.eclipse.EclipseResolutionResponse
 import org.reficio.p2.resolver.eclipse.EclipseResolver
 
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("SE_NO_SERIALVERSIONID")
 class DefaultEclipseResolver implements EclipseResolver {
 
     final File target

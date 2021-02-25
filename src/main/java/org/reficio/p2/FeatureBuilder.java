@@ -56,6 +56,7 @@ public class FeatureBuilder {
 	//cache this so that the same timestamp is used
 	private String featureTimeStamp;
 	
+	@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
 	public void generate(File destinationFolder) {
 		try {
 			File featureContent = new File(destinationFolder, this.getFeatureFullName());

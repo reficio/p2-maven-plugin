@@ -37,6 +37,7 @@ import org.reficio.p2.resolver.maven.Artifact
  *         http://www.reficio.org
  * @since 1.1.0
  */
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("SE_NO_SERIALVERSIONID")
 class AetherEclipseFacade implements AetherFacade {
 
     @Override

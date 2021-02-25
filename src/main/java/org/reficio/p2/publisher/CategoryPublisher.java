@@ -18,6 +18,7 @@
  */
 package org.reficio.p2.publisher;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.maven.plugin.AbstractMojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.FileUtils;
@@ -45,6 +46,7 @@ public class CategoryPublisher {
     private final String categoryFileLocation;
     private final String metadataRepositoryLocation;
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public CategoryPublisher(P2ApplicationLauncher launcher, int forkedProcessTimeoutInSeconds, String[] additionalArgs,
                              String categoryFileLocation, String metadataRepositoryLocation) {
         this.launcher = launcher;
