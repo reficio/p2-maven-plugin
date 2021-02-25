@@ -23,6 +23,7 @@ import aQute.bnd.osgi.Analyzer;
 import aQute.bnd.osgi.FileResource;
 import aQute.bnd.osgi.Jar;
 import aQute.bnd.osgi.Resource;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
@@ -78,7 +79,7 @@ public class JarUtils {
      * @param timestamp - timestamp
      *
      */
-    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     public static void adjustFeatureXml(File inputFile, File outputFile, File pluginDir, Log log, String timestamp) {
         Jar jar = null;
         File newXml = null;

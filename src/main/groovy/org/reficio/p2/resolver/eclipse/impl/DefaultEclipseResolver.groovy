@@ -18,12 +18,14 @@
  */
 package org.reficio.p2.resolver.eclipse.impl
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+
 import org.reficio.p2.logger.Logger
 import org.reficio.p2.resolver.eclipse.EclipseResolutionRequest
 import org.reficio.p2.resolver.eclipse.EclipseResolutionResponse
 import org.reficio.p2.resolver.eclipse.EclipseResolver
 
-@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("SE_NO_SERIALVERSIONID")
+@SuppressFBWarnings("SE_NO_SERIALVERSIONID")
 class DefaultEclipseResolver implements EclipseResolver {
 
     final File target

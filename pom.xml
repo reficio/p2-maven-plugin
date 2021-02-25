@@ -245,6 +245,7 @@
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
             <version>4.2.1</version>
+            <scope>provided</scope>
         </dependency>
 
 

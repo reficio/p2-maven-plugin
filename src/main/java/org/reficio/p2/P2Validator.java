@@ -22,6 +22,8 @@ import org.reficio.p2.logger.Logger;
 import org.reficio.p2.resolver.maven.ResolvedArtifact;
 import org.reficio.p2.utils.BundleUtils;
 
+import java.util.Locale;
+
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
  *         Reficio (TM) - Reestablish your software!<br>
@@ -37,7 +39,7 @@ public class P2Validator {
 
     private static void validateGeneralConfig(P2Artifact p2Artifact) {
         if (p2Artifact.shouldIncludeTransitive() && !p2Artifact.getCombinedInstructions().isEmpty()) {
-            String message = String.format("BND instructions are NOT applied to the transitive dependencies of %s",
+            String message = String.format(Locale.ENGLISH,"BND instructions are NOT applied to the transitive dependencies of %s",
                     p2Artifact.getId());
             Logger.getLog().warn(message);
         }
@@ -47,7 +49,7 @@ public class P2Validator {
                 if (!p2Artifact.getInstructions().containsKey(propertyName))
                     continue;
 
-                String message = String.format("BND instruction <%s> from <instructions> " +
+                String message = String.format(Locale.ENGLISH,"BND instruction <%s> from <instructions> " +
                         "is overridden in <instructionsProperties>", propertyName);
                 Logger.getLog().warn(message);
             }
@@ -59,7 +61,7 @@ public class P2Validator {
         if (resolvedArtifact.isRoot() && bundle) {
             // artifact is a bundle and somebody specified instructions without override
             if (!p2Artifact.shouldOverrideManifest() && !p2Artifact.getCombinedInstructions().isEmpty()) {
-                String message = String.format("p2-maven-plugin misconfiguration" +
+                String message = String.format(Locale.ENGLISH, "p2-maven-plugin misconfiguration" +
                         "%n%n\tJar [%s] is already a bundle. " +
                         "%n\tBND instructions are specified, but the <override> flag is set to false." +
                         "%n\tEither remove the instructions or set the <override> flag to true." +
@@ -68,7 +70,7 @@ public class P2Validator {
             }
             // artifact is a bundle and somebody specified singleton flag without override
             if (!p2Artifact.shouldOverrideManifest() && p2Artifact.isSingleton()) {
-                String message = String.format("p2-maven-plugin misconfiguration" +
+                String message = String.format(Locale.ENGLISH,"p2-maven-plugin misconfiguration" +
                         "%n%n\tJar [%s] is already a bundle. " +
                         "%n\tsingleton is set to true, but the <override> flag is set to false." +
                         "%n\tEither remove the singleton flag or set the <override> flag to true." +

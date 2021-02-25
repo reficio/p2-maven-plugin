@@ -26,6 +26,7 @@ import java.util.Collection;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.bundler.P2ArtifactMap;
 import org.reficio.p2.logger.Logger;
@@ -56,7 +57,7 @@ public class FeatureBuilder {
 	//cache this so that the same timestamp is used
 	private String featureTimeStamp;
 	
-	@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
+	@SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
 	public void generate(File destinationFolder) {
 		try {
 			File featureContent = new File(destinationFolder, this.getFeatureFullName());

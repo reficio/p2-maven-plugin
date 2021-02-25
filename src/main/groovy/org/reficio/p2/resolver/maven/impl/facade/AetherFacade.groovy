@@ -18,6 +18,7 @@
  */
 package org.reficio.p2.resolver.maven.impl.facade
 
+
 import org.reficio.p2.resolver.maven.Artifact
 
 /**
