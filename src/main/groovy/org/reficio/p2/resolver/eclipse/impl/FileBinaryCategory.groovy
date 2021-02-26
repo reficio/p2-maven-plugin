@@ -18,6 +18,9 @@
  */
 package org.reficio.p2.resolver.eclipse.impl
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressFBWarnings("SE_NO_SERIALVERSIONID")
 class FileBinaryCategory {
     def static leftShift(File file, URL url) {
         url.withInputStream { is ->

@@ -20,6 +20,7 @@ package org.reficio.p2;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.execution.MavenSession;
@@ -55,12 +56,18 @@ import org.reficio.p2.utils.JarUtils;
 import org.reficio.p2.utils.Utils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -307,9 +314,9 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
                     	ArtifactBundlerInstructions abi = bundleArtifact(p2Artifact, resolvedArtifact);
                     	bundlerInstructions.put(p2Artifact,abi);
                     } else {
-                        String message = String.format("p2-maven-plugin misconfiguration" +
-                                "\n\n\tJar [%s] is configured as an artifact multiple times. " +
-                                "\n\tRemove the duplicate artifact definitions.\n", resolvedArtifact.getArtifact());
+                        String message = String.format(Locale.ENGLISH, "p2-maven-plugin misconfiguration" +
+                                "%n%n\tJar [%s] is configured as an artifact multiple times. " +
+                                "%n\tRemove the duplicate artifact definitions.%n", resolvedArtifact.getArtifact());
                         throw new RuntimeException(message);
                     }
                 }
@@ -334,13 +341,13 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
                             bundlerInstructions.put(p2Artifact,abi);
                         } catch (final RuntimeException ex) {
                             if (skipInvalidArtifacts) {
-                                log.warn(String.format("Skip artifact=[%s]: %s", p2Artifact.getId(), ex.getMessage()));
+                                log.warn(String.format(Locale.ENGLISH,"Skip artifact=[%s]: %s", p2Artifact.getId(), ex.getMessage()));
                             } else {
                                 throw ex;
                             }
                         }
                     } else {
-                        log.debug(String.format("Not bundling transitive dependency since it has already been bundled [%s]", resolvedArtifact.getArtifact()));
+                        log.debug(String.format(Locale.ENGLISH,"Not bundling transitive dependency since it has already been bundled [%s]", resolvedArtifact.getArtifact()));
                     }
                 }
             }
@@ -456,8 +463,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 				}
 			} else {
 				//given a feature file, so build using tycho
-				File basedir = p2featureDefinition.getFeatureFile().getParentFile();
-				TychoFeatureBuilder builder = new TychoFeatureBuilder(
+                TychoFeatureBuilder builder = new TychoFeatureBuilder(
 						p2featureDefinition.getFeatureFile(),
 						this.featuresDestinationFolder.getAbsolutePath(),
 						"test.feature",  // these are only dummy values.
@@ -545,14 +551,18 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         publisher.execute();
     }
 
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     private void prepareCategoryLocationFile() throws IOException {
         if (categoryFileURL == null || categoryFileURL.trim().isEmpty()) {
-            InputStream is = getClass().getResourceAsStream(DEFAULT_CATEGORY_CLASSPATH_LOCATION + DEFAULT_CATEGORY_FILE);
-            File destinationFolder = new File(destinationDirectory);
-            destinationFolder.mkdirs();
-            File categoryDefinitionFile = new File(destinationFolder, DEFAULT_CATEGORY_FILE);
-            FileWriter writer = new FileWriter(categoryDefinitionFile);
-            IOUtils.copy(is, writer, "UTF-8");
+            File categoryDefinitionFile;
+            Writer writer;
+            try (InputStream is = getClass().getResourceAsStream(DEFAULT_CATEGORY_CLASSPATH_LOCATION + DEFAULT_CATEGORY_FILE)) {
+                File destinationFolder = new File(destinationDirectory);
+                destinationFolder.mkdirs();
+                categoryDefinitionFile = new File(destinationFolder, DEFAULT_CATEGORY_FILE);
+                writer = new OutputStreamWriter(new FileOutputStream(categoryDefinitionFile), StandardCharsets.UTF_8);
+                IOUtils.copy(is, writer, StandardCharsets.UTF_8);
+            }
             IOUtils.closeQuietly(writer);
             categoryFileURL = categoryDefinitionFile.getAbsolutePath();
         }

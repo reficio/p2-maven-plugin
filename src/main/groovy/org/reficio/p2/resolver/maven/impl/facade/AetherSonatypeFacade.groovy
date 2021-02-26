@@ -18,6 +18,8 @@
  */
 package org.reficio.p2.resolver.maven.impl.facade
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+
 import org.reficio.p2.resolver.maven.Artifact
 import org.sonatype.aether.artifact.Artifact as AetherArtifact
 import org.sonatype.aether.collection.CollectRequest
@@ -37,6 +39,7 @@ import org.sonatype.aether.util.graph.PreorderNodeListGenerator
  *         http://www.reficio.org
  * @since 1.1.0
  */
+@SuppressFBWarnings("SE_NO_SERIALVERSIONID")
 class AetherSonatypeFacade implements AetherFacade {
 
     @Override
