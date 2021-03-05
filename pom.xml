@@ -476,32 +476,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>modify-markdown</id>
-                        <phase>pre-site</phase>
-                        <configuration>
-                            <failOnError>false</failOnError>
-                            <target>
-                                <copy todir="${project.basedir}/src/site/markdown">
-                                    <fileset dir="${project.basedir}" includes="README.md"/>
-                                </copy>
-                                <move file="${project.basedir}/src/site/markdown/README.md" tofile="${project.basedir}/src/site/markdown/manual.md"/>
-                                <replaceregexp file="${project.basedir}/src/site/markdown/manual.md"
-                                               match="```.*"
-                                               replace=""
-                                               byline="true"/>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
             </plugin>
