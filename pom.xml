@@ -21,7 +21,7 @@
         <maven.annotations.version>3.3</maven.annotations.version>
         <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
         <!-- actually a dependency here. -->
-        <dependency.maven.bundle.plugin.version>4.2.1</dependency.maven.bundle.plugin.version>
+        <dependency.maven.bundle.plugin.version>5.1.1</dependency.maven.bundle.plugin.version>
         <tycho.version>1.7.0</tycho.version>
 
         <sonatype.aether.version>1.13.1</sonatype.aether.version>
