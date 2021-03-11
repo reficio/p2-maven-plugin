@@ -21,6 +21,7 @@ package org.reficio.p2.bundler.impl;
 import aQute.bnd.osgi.Analyzer;
 import aQute.bnd.osgi.Jar;
 import org.apache.commons.io.FileUtils;
+import org.reficio.p2.bundler.AquteAnalyzerException;
 import org.reficio.p2.bundler.ArtifactBundler;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.bundler.ArtifactBundlerRequest;
@@ -51,6 +52,11 @@ public class AquteBundler implements ArtifactBundler {
 
     public AquteBundler(boolean pedantic) {
         this.bundleUtils = new BundleUtils();
+        this.pedantic = pedantic;
+    }
+
+    AquteBundler(boolean pedantic, BundleUtils bundleUtils) {
+        this.bundleUtils = bundleUtils;
         this.pedantic = pedantic;
     }
 
@@ -89,13 +95,12 @@ public class AquteBundler implements ArtifactBundler {
     }
 
     private void handleVanillaJarWrap(ArtifactBundlerRequest request, ArtifactBundlerInstructions instructions) throws Exception {
-        Analyzer analyzer = AquteHelper.buildAnalyzer(request, instructions, pedantic);
-        try {
+        try (Analyzer analyzer = AquteHelper.buildAnalyzer(request, instructions, pedantic)) {
             populateJar(analyzer, request.getBinaryOutputFile());
-            bundleUtils.reportErrors(analyzer);
+            if (bundleUtils.reportErrors(analyzer)) {
+                throw new AquteAnalyzerException("Aqute Jar Analyser reports error.");
+            }
             removeSignature(request.getBinaryOutputFile());
-        } finally {
-            analyzer.close();
         }
     }
 
