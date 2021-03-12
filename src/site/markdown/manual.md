@@ -108,14 +108,13 @@ Here's the pom.xml:
 
 The artifacts may be specified using the following notation:
 
-
-`<groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>`
-
+```
+<groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
+```
 
 There are many more config options, but basically that's the thing that you need for now. in order to generate the site invoke the following command 'mvn p2:site' in the folder where the pom.xml file resides. When the process finishes your P2 site is ready!
 
 You will see the following output:
-
 ```
 $ mvn p2:site
 
@@ -153,7 +152,6 @@ Generation completed with success [0 seconds].
 ```
 
 Your p2 site is located in the target/repository folder and looks like this:
-
 ```
 pom.xml
 target
@@ -172,13 +170,11 @@ target
 │   │   └── com.example.feature_1.0.0.jar
 ```
 
-
 Unfortunately, it's not the end of the story since tycho does not support local repositories (being more precise: repositories located in a local folder). The only way to work it around is to expose our newly created update site using an HTTP server. We're going to use the jetty-plugin - don't worry, the example above contains a sample jetty-plugin set-up. Just type 'mvn jetty:run' and open the following link http://localhost:8080/site. Your P2 update site will be there!
 
 Now, simply reference your site in your target definition and play with your Eclipse RCP project like you were in the Plain Old Java Environment. Remember to enable the "Group items by category" option, otherwise you will not see any bundles.
 
-
-```xml
+```
 $ mvn jetty:run
 
 [INFO] Scanning for projects...
@@ -211,7 +207,6 @@ $ mvn jetty:run
 [INFO] Started Jetty Server
 [INFO] Starting scanner at interval of 10 seconds.
 ```
-
 
 ## Best Practices
 * **DO NOT** to use the Tycho's pomDependencies->consider option as it is simply of NO good
@@ -250,7 +245,6 @@ How the instructions works:
 *  if you specify any instructions they will be applied only if the jar is not already an OSGi bundle - otherwise you have to use the override option - please see the /examples/override/pom.xml example
 
 The default instructions are:
-
 ```xml
 <instructions>
     <Import-Package>*;resolution:=optional</Import-Package>
@@ -259,7 +253,6 @@ The default instructions are:
 ```
 
 The following definition of an artifact:
-
 ```xml
 <artifact>
     <id>commons-io:commons-io:2.1</id>
@@ -267,7 +260,6 @@ The following definition of an artifact:
 ```
 
 is an equivalent of the following definition:
-
 ```xml
 <artifact>
     <id>commons-io:commons-io:2.1</id>
@@ -281,10 +273,8 @@ is an equivalent of the following definition:
     </instructions>
     <excludes/>
 </artifact>
-```
-
+```     
 If the instruction name cannot be used as a XML tag (for example `-noee`), you can use the properties format:
-
 ```xml
 <instructionsProperties>
     <property>
@@ -293,7 +283,6 @@ If the instruction name cannot be used as a XML tag (for example `-noee`), you c
     </property>
 </instructionsProperties>
 ```
-
 Instructions in properties format take precedence over the ones in map format in case of duplicates, which means that if you defined the same instruction both in properties and map format, the value from properties will be used and the warning will be printed to log.
 
 ### Source option
@@ -303,7 +292,6 @@ This is the configuration snippet that enables you to include the source jars an
 If enabled together with the transitive option it will fetch sources of transitive dependencies as well.
 
 Example:
-
 ```xml
 <artifact>
     <id>commons-io:commons-io:2.1</id>
@@ -323,7 +311,6 @@ Expected behavior:
 * transitive dependencies will NOT be fetched
 
 Example usage:
-
 ```xml
 <artifact>
     <id>org.mockito:mockito-core:1.9.0</id>
@@ -331,20 +318,19 @@ Example usage:
 </artifact>
 ```
 
-
 ### Maven phase binding
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/phase/pom.xml
 
 You can also bind the invocation of the plugin to a Maven phase. Just specify the following binding and your p2-maven-plugin will be invoked during the 'mvn compile' phase.
-
 ```xml
-<id>generate-p2-site</id>
-<phase>compile</phase>
-<goals>
-    <goal>site</goal>
-</goals> 
+<execution>
+    <id>generate-p2-site</id>
+    <phase>compile</phase>
+    <goals>
+        <goal>site</goal>
+    </goals>
+</execution>
 ```
-
 
 ### Override option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/override/pom.xml
@@ -366,17 +352,14 @@ Expected behavior:
 * if you specify instructions for these jars they will be APPLIED (not to the transitive dependencies though)
 
 The following example presents how to enable the override option:
-
 ```xml
 <artifact>
     <id>commons-io:commons-io:2.1</id>
     <override>true</override>
 </artifact>
-```
-
+```    
 
 The following example presents how to enable the override option specifying the instructions:
-
 ```xml
 <artifact>
     <id>commons-io:commons-io:2.1</id>
@@ -389,9 +372,7 @@ The following example presents how to enable the override option specifying the 
 </artifact>
 ```
 
-
 This definition of an artifact should look like this:
-
 ```xml
 <artifact>
     <id>commons-io:commons-io:2.1</id>
@@ -399,7 +380,6 @@ This definition of an artifact should look like this:
     <override>true</override>
 </artifact>
 ```
-
 
 ### Excludes option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/excludes/pom.xml
@@ -431,7 +411,6 @@ Expected behavior:
 * selected transitive dependencies will be fetched
 
 Example usage:
-
 ```xml
 <artifact>
     <id>org.mockito:mockito-core:1.9.0</id>
@@ -443,7 +422,6 @@ Example usage:
 </artifact>
 ```
 
-
 ### Singleton option
 This is the configuration snippet that enables you to generate singleton bundles. `<singleton>true</singleton>` section has to be included to enable this option.
 
@@ -453,7 +431,6 @@ Expected behavior:
 * remember that the build may fail if the artifact is already a bundle and the singleton is set to true and the override option is skipped or set to false.
 
 Example usage:
-
 ```xml
 <artifact>
     <id>org.mockito:mockito-core:1.9.0</id>
@@ -461,13 +438,11 @@ Example usage:
 </artifact>
 ```
 
-
 ### P2 Resolver
 The plugin also includes the P2 resolver which means that you can include bundles residing in P2 repositories in the generated site.
 Have a look at the P2 example located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/p2/pom.xml
 
 In order to have a P2 artifact resolved include its definition in the `<p2>` tag (not in the `<artifacts>` tag)
-
 ```xml
 <p2>
     <artifact>
@@ -476,9 +451,7 @@ In order to have a P2 artifact resolved include its definition in the `<p2>` tag
 </p2>
 ```
 
-
 Next, add a P2 repository in the `<repositories>` tag (its layout has to be set to `<layout>p2</layout>`):
-
 ```xml
     <repositories>
         <repository>
@@ -488,7 +461,6 @@ Next, add a P2 repository in the `<repositories>` tag (its layout has to be set 
         </repository>
     </repositories>
 ```
-
 
 If there's more P2 repositories defined, they will be taken in the top-down manner, until the artifact resolution has been successfully executed.
 
@@ -503,7 +475,6 @@ You can also add eclipse feature bundles to maven and include them in the genera
 * plugins must be added separately, adding the feature will not add the corresponding plugins
 
 Example usage:
-
 ```xml
 <configuration>
     <artifacts>
@@ -520,8 +491,7 @@ Example usage:
 ```
 
 Your p2 site will look like this:
-
-```xml
+```
 pom.xml
 target
 ├── repository
@@ -533,8 +503,8 @@ target
 │   │
 │   └── features
 │       └── com.example.feature_1.0.0.jar
-```
 
+```
 
 You can have a look at two integration test cases of this feature that are located in the src/test/integration folder:
 
@@ -546,7 +516,6 @@ You can have a look at two integration test cases of this feature that are locat
 Alternatively, you can get this plugin to generate the feature bundles for you as part of generating the p2 repository,
 
 Example usage:
-
 ```xml
 	<configuration>
 		<featureDefinitions>
@@ -575,7 +544,6 @@ Example usage:
 		</featureDefinitions>
 	</configuration>
 ```
-
 
 Note: Up to version 1.3 unresolvable artifacts inside `<featureDefinitions>` did not cause the build to fail.
 The problem was only logged and the artifacts were omitted from the feature.
@@ -635,7 +603,6 @@ There are some other plugin options that you can specify in the configuration:
 
 
 Sample configuration snippet with the additional options:
-
 ```xml
 <configuration>
     <pedantic>false</pedantic>
@@ -644,7 +611,6 @@ Sample configuration snippet with the additional options:
     <forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
 </configuration>
 ```
-
 
 ## Last but not least
 
@@ -655,28 +621,37 @@ Please describe the issue thoroughly. Please include a minimal pom.xml file that
 If you submit a pull request please make sure to add an unit/integration test case that covers the feature. Pull requests without a proper test coverage may not be pulled at all.
 
 ### Running integration tests
+
 Invoke the following command to run the integration tests suite:
 
+```
+$ mvn verify -Pit
+```
 
-`$ mvn package`
+### Running the spotbugs checks
 
+Invoke the following command to run the spotbugs checks:
+
+```
+$ mvn verify -Pspotbugs
+```
 
 ### Releasing
 
 Run the release.sh script (syntax: master version, release version, new master version):
-
-`$ ./release.sh 1.3.0-SNAPSHOT 1.3.0 1.4.0-SNAPSHOT`
-
+```
+$ ./release.sh 1.3.0-SNAPSHOT 1.3.0 1.4.0-SNAPSHOT
+```
 
 Run maven artifacts gpg sign (assumes that gpg is configured on the box)
-
-`mvn verify -Pgpg`
-
+```
+mvn verify -Pgpg
+```
 
 Tar all the artifacts in the target folder:
-
-`tar -cvf p2.tar p2*.*`
-
+```
+tar -cvf p2.tar p2*.*
+```
 
 Upload p2.tar to bintray (selecting the explode options) and trigger the sync to maven central.
 
