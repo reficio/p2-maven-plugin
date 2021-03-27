@@ -323,7 +323,7 @@ Example usage:
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/bnd-errors/pom.xml
 
 Because of backward compatibility, BND tool error are ignoring by default.
-You can break the P2 build when BND tool produces errors with the flag `<skipBndErrors>false</skipBndErrors>` in the `<configuration>` section.  
+You can break the P2 build when BND tool produces errors with the flag `<ignoreBndErrors>false</ignoreBndErrors>` in the `<configuration>` section.  
 
 ### Maven phase binding
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/phase/pom.xml

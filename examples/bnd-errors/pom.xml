@@ -43,7 +43,7 @@
                         <!--
                         This is the configuration when bnd tools errors should break the p2 build.
 
-                        The flag skipBndErrors has to be set to false.
+                        The flag ignoreBndErrors has to be set to false.
 
                         The default behaviour of the p2-maven-plugin is to ignore bnd errors,
                         because of backward compatibility reasons (elder versions of p2-maven-plugin ignore them)
@@ -51,7 +51,7 @@
                         To run the example please invoke: mvn p2:site
                         -->
                         <configuration>
-                            <skipBndErrors>false</skipBndErrors>
+                            <ignoreBndErrors>false</ignoreBndErrors>
                             <artifacts>
                                 <artifact>
                                     <id>commons-lang:commons-lang:2.4</id>

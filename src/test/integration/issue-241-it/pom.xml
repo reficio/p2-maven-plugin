@@ -51,7 +51,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <skipBndErrors>false</skipBndErrors>
+                            <ignoreBndErrors>false</ignoreBndErrors>
                             <artifacts>
                                 <artifact>
                                     <id>org.python:jython-standalone:2.5.3</id>

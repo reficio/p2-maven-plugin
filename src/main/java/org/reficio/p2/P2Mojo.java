@@ -184,7 +184,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
      * It defaults to false to keep the old behavior (ignoring bnd tool errors).
      */
     @Parameter(defaultValue = "true")
-    private boolean skipBndErrors;
+    private boolean ignoreBndErrors;
 
     /**
      * Dependency injection container - used to get some components programatically
@@ -530,7 +530,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     }
 
     private ArtifactBundler getArtifactBundler() {
-        return new AquteBundler(pedantic, skipBndErrors);
+        return new AquteBundler(pedantic, ignoreBndErrors);
     }
 
     private void executeP2PublisherPlugin() throws IOException, MojoExecutionException {
