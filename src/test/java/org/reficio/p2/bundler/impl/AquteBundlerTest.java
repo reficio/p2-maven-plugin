@@ -21,6 +21,7 @@ package org.reficio.p2.bundler.impl;
 
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.assertj.core.api.ThrowableAssert;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.MockedStatic;
@@ -42,6 +43,11 @@ public class AquteBundlerTest {
     @BeforeClass
     public static void setUpClass() {
         Logger.initialize(new SystemStreamLog());
+    }
+
+    @AfterClass
+    public static void cleanUp() {
+        Logger.initialize(null);
     }
 
     @Test
