@@ -49,13 +49,16 @@ public class AquteBundler implements ArtifactBundler {
 
     protected final BundleUtils bundleUtils;
     private final boolean pedantic;
+    private final boolean skipBndErrors;
 
-    public AquteBundler(boolean pedantic) {
+    public AquteBundler(boolean pedantic, boolean skipBndErrors) {
+        this.skipBndErrors = skipBndErrors;
         this.bundleUtils = new BundleUtils();
         this.pedantic = pedantic;
     }
 
-    AquteBundler(boolean pedantic, BundleUtils bundleUtils) {
+    AquteBundler(boolean pedantic, boolean skipBndErrors, BundleUtils bundleUtils) {
+        this.skipBndErrors = skipBndErrors;
         this.bundleUtils = bundleUtils;
         this.pedantic = pedantic;
     }
@@ -97,7 +100,7 @@ public class AquteBundler implements ArtifactBundler {
     private void handleVanillaJarWrap(ArtifactBundlerRequest request, ArtifactBundlerInstructions instructions) throws Exception {
         try (Analyzer analyzer = AquteHelper.buildAnalyzer(request, instructions, pedantic)) {
             populateJar(analyzer, request.getBinaryOutputFile());
-            if (bundleUtils.reportErrors(analyzer)) {
+            if (bundleUtils.reportErrors(analyzer) && !skipBndErrors) {
                 throw new AquteAnalyzerException("Aqute Jar Analyser reports error.");
             }
             removeSignature(request.getBinaryOutputFile());

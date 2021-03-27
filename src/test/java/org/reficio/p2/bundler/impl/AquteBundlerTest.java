@@ -50,10 +50,22 @@ public class AquteBundlerTest {
             theMock.when(() -> AquteHelper.buildAnalyzer(any(ArtifactBundlerRequest.class), any(ArtifactBundlerInstructions.class), anyBoolean()))
                     .thenReturn(new AnalyzerStub());
 
-            AquteBundler bundlerUnderTest = new AquteBundler(true, new BundleUtilsStub());
+            AquteBundler bundlerUnderTest = new AquteBundler(true, false, new BundleUtilsStub());
             ThrowableAssert.ThrowingCallable methodUnderTest = () -> bundlerUnderTest.execute(new ArtifactBundlerRequest(new File(""), new File("target/tmp.jar"), null, null, true), ArtifactBundlerInstructions.builder().build());
 
             assertThatThrownBy(methodUnderTest).isInstanceOf(RuntimeException.class).hasRootCauseInstanceOf(AquteAnalyzerException.class);
+        }
+    }
+
+    @Test
+    public void bndAnalyzerProduceErrorThenExceptionIsUnexpected() {
+        try (MockedStatic<AquteHelper> theMock = mockStatic(AquteHelper.class)) {
+            theMock.when(() -> AquteHelper.buildAnalyzer(any(ArtifactBundlerRequest.class), any(ArtifactBundlerInstructions.class), anyBoolean()))
+                    .thenReturn(new AnalyzerStub());
+
+            AquteBundler bundlerUnderTest = new AquteBundler(true, true, new BundleUtilsStub());
+
+            bundlerUnderTest.execute(new ArtifactBundlerRequest(new File(""), new File("target/tmp.jar"), null, null, true), ArtifactBundlerInstructions.builder().build());
         }
     }
 }
