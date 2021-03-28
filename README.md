@@ -232,7 +232,7 @@ What will be the behavior like if we use the configuration listed below?
 * transitive dependencies will be fetched
 * jars containing source code will NOT be fetched
 * jars that are **NOT** osgi bundles will be "bundled" using bnd tool; if instructions are specified, they will be APPLIED.
-* errors throwing by bnd tool are ignored 
+* errors thrown by bnd tool are ignored 
 * jars that are osgi bundles will be simply included, if instructions are specified, they will be **IGNORED** (see override example)
 * p2 site will be generated
 
@@ -322,7 +322,7 @@ Example usage:
 ### Skip BND tool errors option
 This example is located here: https://github.com/reficio/p2-maven-plugin/blob/master/examples/bnd-errors/pom.xml
 
-Because of backward compatibility, BND tool error are ignoring by default.
+Because of backward compatibility, BND tool errors are ignored by default.
 You can break the P2 build when BND tool produces errors with the flag `<ignoreBndErrors>false</ignoreBndErrors>` in the `<configuration>` section.  
 
 ### Maven phase binding

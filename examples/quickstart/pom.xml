@@ -49,7 +49,7 @@
                           - jars containing source source code will NOT be fetched
                           - jars that are NOT OSGi bundles will be "bundled" using bnd tool,
                             if you specify instructions for these jars they will be APPLIED
-                          - errors throwing by bnd tool are ignored
+                          - errors thrown by bnd tool are ignored
                           - jars that are OSGi bundles will be simply included
                             if you specify instructions for these jars they will be IGNORED (see <override> option)
                           - p2 site will be generated
