@@ -301,6 +301,8 @@
                             <exclude>**/spring.factories</exclude>
                             <exclude>**/spring.provides</exclude>
                             <exclude>**/*.iml</exclude>
+                            <exclude>**/*.sha1</exclude>
+                            <exclude>**/*.repositories</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
