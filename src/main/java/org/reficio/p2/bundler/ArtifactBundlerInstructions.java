@@ -20,6 +20,7 @@ package org.reficio.p2.bundler;
 
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -29,6 +30,15 @@ import java.util.Map;
  * @since 1.1.0
  */
 public final class ArtifactBundlerInstructions {
+
+    /**
+     * BND instructions that should be used when no instruction is set.
+     */
+    private static Map<String, String> DEFAULT_INSTRUCTIONS = new LinkedHashMap<>();
+
+    static {
+        DEFAULT_INSTRUCTIONS.put("_fixupmessages", "\"Classes found in the wrong directory\";is:=warning");
+    }
 
     private final String name;
     private final String symbolicName;
@@ -51,7 +61,11 @@ public final class ArtifactBundlerInstructions {
         this.sourceName = sourceName;
         this.sourceSymbolicName = sourceSymbolicName;
         this.proposedVersion = proposedVersion;
-        this.instructions = instructions;
+        if(instructions.isEmpty()) {
+            this.instructions = DEFAULT_INSTRUCTIONS;
+        } else {
+            this.instructions = instructions;
+        }
         this.snapshot = snapshot;
     }
 
