@@ -21,4 +21,4 @@ import org.apache.commons.io.FileUtils
  */
 
 // copy dummy multi-release jar into local repository
-FileUtils.copyDirectory(new File(basedir, "m2Repository/multi-release"), new File(localRepositoryPath, "multi-release"))
+FileUtils.copyDirectory(new File(basedir, "m2Repository/multi-release"), new File(originalLocalRepository, "multi-release"))

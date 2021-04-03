@@ -690,6 +690,9 @@
                             <localRepositoryPath>${project.build.directory}/it-repo</localRepositoryPath>
                             <preBuildHookScript>setup.groovy</preBuildHookScript>
                             <postBuildHookScript>validate.groovy</postBuildHookScript>
+                            <scriptVariables>
+                                <originalLocalRepository>${settings.localRepository}</originalLocalRepository>
+                            </scriptVariables>
                             <properties>
                                 <gmaven.logging>TRACE</gmaven.logging>
                             </properties>
