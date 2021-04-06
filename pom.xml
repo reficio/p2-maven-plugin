@@ -5,7 +5,7 @@
     <groupId>org.reficio</groupId>
     <artifactId>p2-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.5.1-SNAPSHOT</version>
+    <version>1.6.0-SNAPSHOT</version>
     <name>p2-maven-plugin</name>
     <url>https://github.com/reficio/p2-maven-plugin</url>
     <description>Maven plugin for the automation of jars wrapping and p2 site generation</description>
@@ -248,7 +248,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -257,8 +256,14 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <artifactId>mockito-inline</artifactId>
             <version>3.8.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.18.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

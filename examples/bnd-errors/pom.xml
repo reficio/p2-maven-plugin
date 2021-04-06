@@ -39,58 +39,19 @@
                 <executions>
                     <execution>
                         <id>default-cli</id>
-                        <!-- QUICK-START EXAMPLE -->
+                        <!-- BND-ERRORS EXAMPLE -->
                         <!--
-                        This is the default quick-start configuration.
+                        This is the configuration when bnd tools errors should break the p2 build.
 
-                        Expected behavior:
-                          - specified dependencies will be fetched
-                          - transitive dependencies will be fetched (no default exclusions)
-                          - jars containing source source code will NOT be fetched
-                          - jars that are NOT OSGi bundles will be "bundled" using bnd tool,
-                            if you specify instructions for these jars they will be APPLIED
-                          - errors thrown by bnd tool are ignored
-                          - jars that are OSGi bundles will be simply included
-                            if you specify instructions for these jars they will be IGNORED (see <override> option)
-                          - p2 site will be generated
+                        The flag ignoreBndErrors has to be set to false.
 
-                        How the instructions works:
-                          - instructions are applied only to the root artifact that you specify!
-                          - instructions are not applied to the TRANSITIVE dependencies!
-                          - transitive dependencies are never overridden (see <override> option)
-                          - transitive dependencies are bundled using the default instructions:
-                              <instructions>
-                                  <Import-Package>*;resolution:=optional</Import-Package>
-                                  <Export-Package>*</Export-Package>
-                              </instructions>
-                          - other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, etc.
-                            are calculated according to the following rules:
-                            http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
-                          - if you specify any instructions they will be applied only if
-                            the jar is not already an OSGi bundle - otherwise you have to use the override
-                            option - please see the /examples/override/pom.xml example
-
-                        The following definition of an artifact:
-                            <artifact>
-                                <id>commons-io:commons-io:2.1</id>
-                            </artifact>
-
-                        is an equivalent of the following definition:
-                            <artifact>
-                                <id>commons-io:commons-io:2.1</id>
-                                <transitive>true</transitive>
-                                <source>false</source>
-                                <override>false</override>
-                                <instructions>
-                                    <Import-Package>*;resolution:=optional</Import-Package>
-                                    <Export-Package>*</Export-Package>
-                                </instructions>
-                                <excludes/>
-                            </artifact>
+                        The default behaviour of the p2-maven-plugin is to ignore bnd errors,
+                        because of backward compatibility reasons (elder versions of p2-maven-plugin ignore them)
 
                         To run the example please invoke: mvn p2:site
                         -->
                         <configuration>
+                            <ignoreBndErrors>false</ignoreBndErrors>
                             <artifacts>
                                 <artifact>
                                     <id>commons-lang:commons-lang:2.4</id>

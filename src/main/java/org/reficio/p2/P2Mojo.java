@@ -177,6 +177,16 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     private String additionalArgs;
 
     /**
+     * Skipe coming from embedded bnd tools should be skipped.
+     *
+     * <p>
+     * This flag controls if the processing should be continued anyway, if the embedded bnd tool throws errors.
+     * It defaults to false to keep the old behavior (ignoring bnd tool errors).
+     */
+    @Parameter(defaultValue = "true")
+    private boolean ignoreBndErrors;
+
+    /**
      * Dependency injection container - used to get some components programatically
      */
     private PlexusContainer container;
@@ -520,7 +530,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     }
 
     private ArtifactBundler getArtifactBundler() {
-        return new AquteBundler(pedantic);
+        return new AquteBundler(pedantic, ignoreBndErrors);
     }
 
     private void executeP2PublisherPlugin() throws IOException, MojoExecutionException {
