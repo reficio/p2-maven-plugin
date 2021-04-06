@@ -250,6 +250,7 @@ The default instructions are:
 <instructions>
     <Import-Package>*;resolution:=optional</Import-Package>
     <Export-Package>*</Export-Package>
+    <_fixupmessages>"Classes found in the wrong directory";is:=warning</_fixupmessages>
 </instructions>
 ```
 
@@ -271,6 +272,7 @@ is an equivalent of the following definition:
     <instructions>
         <Import-Package>*;resolution:=optional</Import-Package>
         <Export-Package>*</Export-Package>
+        <_fixupmessages>"Classes found in the wrong directory";is:=warning</_fixupmessages>
     </instructions>
     <excludes/>
 </artifact>
