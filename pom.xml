@@ -59,6 +59,15 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>sparsick</id>
+            <name>Sandra Parsick</name>
+            <email>mail (at) sandra-parsick.de</email>
+            <url>https://www.sandra-parsick.de</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
 
     <issueManagement>
@@ -72,10 +81,16 @@
         <url>http://github.com/reficio/p2-maven-plugin</url>
     </scm>
 
-    <ciManagement>
-        <system>jenkins</system>
-        <url>https://reficio.ci.cloudbees.com/job/p2-maven-plugin/</url>
-    </ciManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -608,7 +623,7 @@
         </profile>
 
         <profile>
-            <id>gpg</id>
+            <id>release</id>
             <build>
                 <plugins>
                     <plugin>
@@ -736,14 +751,6 @@
             </build>
         </profile>
     </profiles>
-
-    <distributionManagement>
-        <repository>
-            <id>reficio</id>
-            <name>Reficio Maven Repository</name>
-            <url>scp://${reficio.server}/var/www/repo/maven</url>
-        </repository>
-    </distributionManagement>
 
     <reporting>
         <plugins>
