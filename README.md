@@ -242,8 +242,8 @@ How the instructions works:
 * instructions are not applied to the TRANSITIVE dependencies!
 * transitive dependencies are never overridden (see `<override>` option)
 * transitive dependencies are bundled using the default instructions quoted below.
-*  other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, etc. are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
-*  if you specify any instructions they will be applied only if the jar is not already an OSGi bundle - otherwise you have to use the override option - please see the /examples/override/pom.xml example
+* other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, etc. are calculated according to the following rules: http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
+* if you specify any instructions they will be applied only if the jar is not already an OSGi bundle - otherwise you have to use the override option - please see the /examples/override/pom.xml example
 
 The default instructions are:
 ```xml
@@ -251,6 +251,8 @@ The default instructions are:
     <Import-Package>*;resolution:=optional</Import-Package>
     <Export-Package>*</Export-Package>
     <_fixupmessages>"Classes found in the wrong directory";is:=warning</_fixupmessages>
+    <_removeheaders>Bnd-LastModified</_removeheaders>
+    <_reproducible>true</_reproducible>
 </instructions>
 ```
 
@@ -273,6 +275,8 @@ is an equivalent of the following definition:
         <Import-Package>*;resolution:=optional</Import-Package>
         <Export-Package>*</Export-Package>
         <_fixupmessages>"Classes found in the wrong directory";is:=warning</_fixupmessages>
+        <_removeheaders>Bnd-LastModified</_removeheaders>
+        <_reproducible>true</_reproducible>
     </instructions>
     <excludes/>
 </artifact>
@@ -377,6 +381,9 @@ The following example presents how to enable the override option specifying the 
     <instructions>
         <Import-Package>*;resolution:=optional</Import-Package>
         <Export-Package>*</Export-Package>
+        <_fixupmessages>"Classes found in the wrong directory";is:=warning</_fixupmessages>
+        <_removeheaders>Bnd-LastModified</_removeheaders>
+        <_reproducible>true</_reproducible>
     </instructions>
 </artifact>
 ```

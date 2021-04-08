@@ -33,9 +33,10 @@ public class ArtifactBundlerInstructionsTest {
         ArtifactBundlerInstructions artifactBundlerInstructions = ArtifactBundlerInstructions.builder().build();
 
         assertThat(artifactBundlerInstructions.getInstructions())
-                .hasSize(1)
-                .containsEntry("_fixupmessages", "\"Classes found in the wrong directory\";is:=warning");
-
+                .hasSize(3)
+                .containsEntry("_fixupmessages", "\"Classes found in the wrong directory\";is:=warning")
+                .containsEntry("_removeheaders", "Bnd-LastModified")
+                .containsEntry("_reproducible", "true");
     }
 
     @Test

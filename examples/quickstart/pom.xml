@@ -62,6 +62,9 @@
                               <instructions>
                                   <Import-Package>*;resolution:=optional</Import-Package>
                                   <Export-Package>*</Export-Package>
+                                  <_fixupmessages>"Classes found in the wrong directory";is:=warning</_fixupmessages>
+                                  <_removeheaders>Bnd-LastModified</_removeheaders>
+                                  <_reproducible>true</_reproducible>
                               </instructions>
                           - other instructions, such as, Bundle-SymbolicName, Bundle-Name, Bundle-Version, etc.
                             are calculated according to the following rules:
@@ -84,6 +87,9 @@
                                 <instructions>
                                     <Import-Package>*;resolution:=optional</Import-Package>
                                     <Export-Package>*</Export-Package>
+                                    <_fixupmessages>"Classes found in the wrong directory";is:=warning</_fixupmessages>
+                                    <_removeheaders>Bnd-LastModified</_removeheaders>
+                                    <_reproducible>true</_reproducible>
                                 </instructions>
                                 <excludes/>
                             </artifact>

@@ -38,6 +38,8 @@ public final class ArtifactBundlerInstructions {
 
     static {
         DEFAULT_INSTRUCTIONS.put("_fixupmessages", "\"Classes found in the wrong directory\";is:=warning");
+        DEFAULT_INSTRUCTIONS.put("_removeheaders", "Bnd-LastModified");
+        DEFAULT_INSTRUCTIONS.put("_reproducible", "true");
     }
 
     private final String name;
