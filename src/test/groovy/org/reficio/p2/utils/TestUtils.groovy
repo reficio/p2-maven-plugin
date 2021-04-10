@@ -38,6 +38,10 @@ class TestUtils {
         jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.BUNDLE_VERSION)
     }
 
+    static boolean hasNoBndLastModifiedHeader(Jar jar) {
+        jar?.getManifest()?.getMainAttributes()?.getValue(Analyzer.BND_LASTMODIFIED) == null
+    }
+
     static void validateVersion(Jar jar, String versionString) {
         assert version(jar) == versionString
     }

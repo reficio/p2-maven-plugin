@@ -48,6 +48,7 @@ assert files.contains(hamcrestName)
 Jar hamcrestJar = new Jar(new File(target, hamcrestName));
 assert Util.symbolicName(hamcrestJar) == "org.hamcrest.core"
 assert Util.version(hamcrestJar) == "1.1.0"
+assert Util.hasNoBndLastModifiedHeader(hamcrestJar)
 
 // verify 'objenesis' dependency artifact
 String objenesisName = "org.objenesis_1.0.0.jar"
