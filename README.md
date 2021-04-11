@@ -659,19 +659,8 @@ Run the release.sh script (syntax: master version, release version, new master v
 $ ./release.sh 1.3.0-SNAPSHOT 1.3.0 1.4.0-SNAPSHOT
 ```
 
-Run maven artifacts gpg sign (assumes that gpg is configured on the box)
-```
-mvn verify -Pgpg
-```
-
-Tar all the artifacts in the target folder:
-```
-tar -cvf p2.tar p2*.*
-```
-
-Upload p2.tar to bintray (selecting the explode options) and trigger the sync to maven central.
-
-
+This script creates a git tag and deploys the Maven artifact to Maven Central.
+It requires that PGP is configured as documented on Maven's [Guide to uploading artifacts to the Central Repository](https://maven.apache.org/repository/guide-central-repository-upload.html#guide-to-uploading-artifacts-to-the-central-repository)
 
 ### Who's behind it?
 Do you like the project? Star it on GitHub and follow me on Twitter! Thanks!
