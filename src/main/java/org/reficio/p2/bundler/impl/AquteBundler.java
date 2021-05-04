@@ -31,6 +31,7 @@ import org.reficio.p2.utils.JarUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -63,6 +64,7 @@ public class AquteBundler implements ArtifactBundler {
         this.pedantic = pedantic;
     }
 
+    @Override
     public void execute(ArtifactBundlerRequest request, ArtifactBundlerInstructions instructions) {
         log().info("Executing Bundler:");
         try {
@@ -194,12 +196,8 @@ public class AquteBundler implements ArtifactBundler {
     private void sanitizeSourceManifest(Manifest manifest) {
       Attributes attributes = manifest.getMainAttributes();
       if (!attributes.isEmpty()) {
-        for (String header : new String[] { Analyzer.EXPORT_PACKAGE,
-            Analyzer.EXPORT_SERVICE, Analyzer.PROVIDE_CAPABILITY }) {
-          if (attributes.containsKey(header)) {
-            attributes.remove(header);
-          }
-        }
+        attributes.keySet().removeIf(header -> Arrays.asList(Analyzer.EXPORT_PACKAGE,
+            Analyzer.EXPORT_SERVICE, Analyzer.PROVIDE_CAPABILITY ).contains(header));
       }
     }
 
