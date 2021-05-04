@@ -173,6 +173,7 @@ public class AquteBundler implements ArtifactBundler {
     }
 
     private void decorateSourceManifest(Manifest manifest, String name, String refrencedBundleSymbolicName, String symbolicName, String version) {
+        sanitizeSourceManifest(manifest);
         Attributes attributes = manifest.getMainAttributes();
         attributes.putValue(Analyzer.BUNDLE_SYMBOLICNAME, symbolicName);
         attributes.putValue(ECLIPSE_SOURCE_BUNDLE, refrencedBundleSymbolicName + ";version=\"" + version + "\";roots:=\".\"");
@@ -184,6 +185,22 @@ public class AquteBundler implements ArtifactBundler {
         attributes.putValue(IMPLEMENTATION_TITLE, name);
         attributes.putValue(SPECIFICATION_TITLE, name);
         attributes.putValue(AquteHelper.TOOL_KEY, AquteHelper.TOOL);
+    }
+
+    /**
+     * Removes the bundle manifest headers that incorrectly cause a source bundle being
+     * resolved instead of its corresponding classes bundle.
+     */
+    private void sanitizeSourceManifest(Manifest manifest) {
+      Attributes attributes = manifest.getMainAttributes();
+      if (!attributes.isEmpty()) {
+        for (String header : new String[] { Analyzer.EXPORT_PACKAGE,
+            Analyzer.EXPORT_SERVICE, Analyzer.PROVIDE_CAPABILITY }) {
+          if (attributes.containsKey(header)) {
+            attributes.remove(header);
+          }
+        }
+      }
     }
 
     private Logger log() {
