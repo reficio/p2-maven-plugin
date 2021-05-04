@@ -196,8 +196,9 @@ public class AquteBundler implements ArtifactBundler {
     private void sanitizeSourceManifest(Manifest manifest) {
       Attributes attributes = manifest.getMainAttributes();
       if (!attributes.isEmpty()) {
+        // note that header is of type Attributes.Name, hence we call header.toString()
         attributes.keySet().removeIf(header -> Arrays.asList(Analyzer.EXPORT_PACKAGE,
-            Analyzer.EXPORT_SERVICE, Analyzer.PROVIDE_CAPABILITY ).contains(header));
+            Analyzer.EXPORT_SERVICE, Analyzer.PROVIDE_CAPABILITY ).contains(header.toString()));
       }
     }
 
