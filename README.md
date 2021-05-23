@@ -297,6 +297,7 @@ This example is located here: https://github.com/reficio/p2-maven-plugin/blob/ma
 
 This is the configuration snippet that enables you to include the source jars and generate the source bundles for all the dependencies. `<source>true</source>` section has to be included to enable this option.
 If enabled together with the transitive option it will fetch sources of transitive dependencies as well.
+Furthermore, it will sanitize source bundle manifest headers, if they are not correct.
 
 Example:
 ```xml
