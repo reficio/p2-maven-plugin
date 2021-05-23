@@ -48,24 +48,22 @@ function catch_sig() {
     clean_exit $exit_status
 }
 
-if [ $# -ne 3 ]; then
-  echo "Usage: release.sh <current_version> <release_version> <new_version>"
+if [ $# -ne 2 ]; then
+  echo "Usage: release.sh <release_version> <new_version>"
   exit 1
 fi
 
-current_version=$1
-release_version=$2
-new_version=$3
+release_version=$1
+new_version=$2
 
-find . \( -name "pom.xml" -or -name "README.md" \) -not -path "*/src/it/*" -not -path "*/target/*" -not -path "*svn*" -not -path "*git*" -exec sed -i "" "s#<version>$current_version</version>#<version>$release_version</version>#g" {} \;
-find . \( -name "pom.xml" -or -name "README.md" \) -not -path "*/src/it/*" -not -path "*/target/*" -not -path "*svn*" -not -path "*git*" -exec sed -i "" "s#projects.reficio.org/p2-maven-plugin/$current_version#projects.reficio.org/p2-maven-plugin/$release_version#g" {} \;
+mvn versions:set -DnewVersion=$release_version -DgenerateBackupPoms=false
+
 git commit -a -m "$release_version release"
 git tag -a v$release_version -a -m "$release_version release"
 
 mvn clean deploy -Prelease
 
-find . \( -name "pom.xml" -or -name "README.md" \) -not -path "*/src/it/*" -not -path "*/target/*" -not -path "*svn*" -not -path "*git*" -exec sed -i "" "s#<version>$release_version</version>#<version>$new_version</version>#g" {} \;
-find . \( -name "pom.xml" -or -name "README.md" \) -not -path "*/src/it/*" -not -path "*/target/*" -not -path "*svn*" -not -path "*git*" -exec sed -i "" "s#projects.reficio.org/p2-maven-plugin/$release_version#projects.reficio.org/p2-maven-plugin/$new_version#g" {} \;
+mvn versions:set -DnewVersion=$new_version -DgenerateBackupPoms=false
 git commit -a -m "Preparing $new_version iteration"
 
 git push
