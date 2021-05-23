@@ -61,6 +61,12 @@
                                     <source>true</source>
                                     <transitive>false</transitive>
                                 </artifact>
+                                
+                                <artifact>
+                                    <id>org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec:2.0.1.Final</id>
+                                    <source>true</source>
+                                    <transitive>false</transitive>
+                                </artifact>
                             </artifacts>
                         </configuration>
 

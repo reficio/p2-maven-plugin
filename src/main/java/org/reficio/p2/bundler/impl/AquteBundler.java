@@ -31,6 +31,7 @@ import org.reficio.p2.utils.JarUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -63,6 +64,7 @@ public class AquteBundler implements ArtifactBundler {
         this.pedantic = pedantic;
     }
 
+    @Override
     public void execute(ArtifactBundlerRequest request, ArtifactBundlerInstructions instructions) {
         log().info("Executing Bundler:");
         try {
@@ -173,6 +175,7 @@ public class AquteBundler implements ArtifactBundler {
     }
 
     private void decorateSourceManifest(Manifest manifest, String name, String refrencedBundleSymbolicName, String symbolicName, String version) {
+        sanitizeSourceManifest(manifest);
         Attributes attributes = manifest.getMainAttributes();
         attributes.putValue(Analyzer.BUNDLE_SYMBOLICNAME, symbolicName);
         attributes.putValue(ECLIPSE_SOURCE_BUNDLE, refrencedBundleSymbolicName + ";version=\"" + version + "\";roots:=\".\"");
@@ -184,6 +187,19 @@ public class AquteBundler implements ArtifactBundler {
         attributes.putValue(IMPLEMENTATION_TITLE, name);
         attributes.putValue(SPECIFICATION_TITLE, name);
         attributes.putValue(AquteHelper.TOOL_KEY, AquteHelper.TOOL);
+    }
+
+    /**
+     * Removes the bundle manifest headers that incorrectly cause a source bundle being
+     * resolved instead of its corresponding classes bundle.
+     */
+    private void sanitizeSourceManifest(Manifest manifest) {
+      Attributes attributes = manifest.getMainAttributes();
+      if (!attributes.isEmpty()) {
+        // note that header is of type Attributes.Name, hence we call header.toString()
+        attributes.keySet().removeIf(header -> Arrays.asList(Analyzer.EXPORT_PACKAGE,
+            Analyzer.EXPORT_SERVICE, Analyzer.PROVIDE_CAPABILITY ).contains(header.toString()));
+      }
     }
 
     private Logger log() {

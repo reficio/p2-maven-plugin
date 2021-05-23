@@ -27,7 +27,7 @@ import org.reficio.p2.utils.TestUtils as Util;
 // verify target
 File target = new File(basedir, 'target/repository/plugins')
 assert target.exists()
-assert target.listFiles().size() == 2
+assert target.listFiles().size() == 4
 
 // verify number of artifacts
 def files = target.listFiles().collect { it.name }
@@ -51,3 +51,13 @@ assert Util.tool(source) == "p2-maven-plugin (reficio.org)"
 assert Util.eclipseSourceBundle(source) ==
         "org.mockito.mockito-core;version=\"1.9.0\";roots:=\".\"";
 
+// verify that broken source bundle manifest gets sanitized
+sourceName = "org.jboss.spec.javax.annotation.jboss-annotations-api_1.3_spec.source_2.0.1.Final.jar"
+assert files.contains(sourceName)
+
+Jar sourceSan = new Jar(new File(target, sourceName));
+assert Util.symbolicName(sourceSan) == "org.jboss.spec.javax.annotation.jboss-annotations-api_1.3_spec.source"
+assert Util.eclipseSourceBundle(sourceSan) != null
+assert Util.attr(sourceSan, "Export-Package") == null
+assert Util.attr(sourceSan, "Export-Service") == null
+assert Util.attr(sourceSan, "Provide-Capability") == null
