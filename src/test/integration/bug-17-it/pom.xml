@@ -82,7 +82,7 @@
     <repositories>
         <repository>
             <id>hibernate-snapshots</id>
-            <url>http://snapshots.jboss.org/maven2</url>
+            <url>https://snapshots.jboss.org/maven2</url>
         </repository>
     </repositories>
 
