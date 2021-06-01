@@ -86,3 +86,11 @@ jobs:
 
       - name: Spotbugs check
         run: mvn --batch-mode --errors verify --file pom.xml '-Pspotbugs'
+
+      - name: JaCoCo report
+        run: mvn --batch-mode --errors jacoco:report --file pom.xml
+
+      - name: Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          files: target/site/jacoco/jacoco.xml
