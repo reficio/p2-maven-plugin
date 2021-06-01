@@ -17,7 +17,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
-        <maven.version>3.3.9</maven.version>
+        <maven.version>3.8.1</maven.version>
         <maven.annotations.version>3.3</maven.annotations.version>
         <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
         <!-- actually a dependency here. -->
