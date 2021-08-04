@@ -5,7 +5,7 @@
     <groupId>org.reficio</groupId>
     <artifactId>p2-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
     <name>p2-maven-plugin</name>
     <url>https://github.com/reficio/p2-maven-plugin</url>
     <description>Maven plugin for the automation of jars wrapping and p2 site generation</description>
