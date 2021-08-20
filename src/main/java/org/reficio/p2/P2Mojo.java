@@ -18,8 +18,6 @@
  */
 package org.reficio.p2;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -57,17 +55,18 @@ import org.reficio.p2.utils.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -366,7 +365,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     private void processFeatures() {
         // artifacts should already have been resolved by processArtifacts()
-        Multimap<P2Artifact, ResolvedArtifact> resolvedFeatures = resolveFeatures();
+        Map<P2Artifact, Collection<ResolvedArtifact>> resolvedFeatures = resolveFeatures();
         // then bundle the artifacts including the transitive dependencies (if specified so)
         log.info("Resolved " + resolvedFeatures.size() + " features");
         for (P2Artifact p2Artifact : features) {
@@ -407,12 +406,12 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         return resolvedArtifacts;
     }
 
-    private Multimap<P2Artifact, ResolvedArtifact> resolveFeatures() {
-        Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = ArrayListMultimap.create();
+    private Map<P2Artifact, Collection<ResolvedArtifact>> resolveFeatures() {
+        Map<P2Artifact, Collection<ResolvedArtifact>> resolvedArtifacts = new HashMap<>();
         for (P2Artifact p2Artifact : features) {
             logResolving(p2Artifact);
             ArtifactResolutionResult resolutionResult = resolveArtifact(p2Artifact);
-            resolvedArtifacts.putAll(p2Artifact, resolutionResult.getResolvedArtifacts());
+            resolvedArtifacts.put(p2Artifact, resolutionResult.getResolvedArtifacts());
         }
         return resolvedArtifacts;
     }
