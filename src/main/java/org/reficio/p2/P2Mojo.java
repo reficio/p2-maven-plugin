@@ -18,8 +18,6 @@
  */
 package org.reficio.p2;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -29,7 +27,11 @@ import org.apache.maven.plugin.AbstractMojoExecutionException;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugins.annotations.*;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -49,7 +51,11 @@ import org.reficio.p2.publisher.BundlePublisher;
 import org.reficio.p2.publisher.CategoryPublisher;
 import org.reficio.p2.resolver.eclipse.EclipseResolutionRequest;
 import org.reficio.p2.resolver.eclipse.impl.DefaultEclipseResolver;
-import org.reficio.p2.resolver.maven.*;
+import org.reficio.p2.resolver.maven.Artifact;
+import org.reficio.p2.resolver.maven.ArtifactResolutionRequest;
+import org.reficio.p2.resolver.maven.ArtifactResolutionResult;
+import org.reficio.p2.resolver.maven.ArtifactResolver;
+import org.reficio.p2.resolver.maven.ResolvedArtifact;
 import org.reficio.p2.resolver.maven.impl.AetherResolver;
 import org.reficio.p2.utils.BundleUtils;
 import org.reficio.p2.utils.JarUtils;
@@ -57,17 +63,18 @@ import org.reficio.p2.utils.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -366,7 +373,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     private void processFeatures() {
         // artifacts should already have been resolved by processArtifacts()
-        Multimap<P2Artifact, ResolvedArtifact> resolvedFeatures = resolveFeatures();
+        P2ArtifactMap<ResolvedArtifact> resolvedFeatures = resolveFeatures();
         // then bundle the artifacts including the transitive dependencies (if specified so)
         log.info("Resolved " + resolvedFeatures.size() + " features");
         for (P2Artifact p2Artifact : features) {
@@ -407,12 +414,12 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         return resolvedArtifacts;
     }
 
-    private Multimap<P2Artifact, ResolvedArtifact> resolveFeatures() {
-        Multimap<P2Artifact, ResolvedArtifact> resolvedArtifacts = ArrayListMultimap.create();
+    private P2ArtifactMap<ResolvedArtifact> resolveFeatures() {
+        P2ArtifactMap<ResolvedArtifact> resolvedArtifacts = new P2ArtifactMap<>();
         for (P2Artifact p2Artifact : features) {
             logResolving(p2Artifact);
             ArtifactResolutionResult resolutionResult = resolveArtifact(p2Artifact);
-            resolvedArtifacts.putAll(p2Artifact, resolutionResult.getResolvedArtifacts());
+            resolvedArtifacts.put(p2Artifact, resolutionResult.getResolvedArtifacts());
         }
         return resolvedArtifacts;
     }

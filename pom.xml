@@ -13,16 +13,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
-        <maven.version>3.3.9</maven.version>
-        <maven.annotations.version>3.3</maven.annotations.version>
-        <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
+        <maven.version>3.6.3</maven.version>
+        <maven.annotations.version>3.6.0</maven.annotations.version>
+        <maven.plugin.plugin.version>3.6.0</maven.plugin.plugin.version>
         <!-- actually a dependency here. -->
         <dependency.maven.bundle.plugin.version>5.1.2</dependency.maven.bundle.plugin.version>
-        <tycho.version>1.7.0</tycho.version>
+        <tycho.version>2.5.0</tycho.version>
 
         <sonatype.aether.version>1.13.1</sonatype.aether.version>
         <eclipse.aether.version>1.1.0</eclipse.aether.version>
@@ -96,11 +96,11 @@
                 <artifactId>biz.aQute.bndlib</artifactId>
                 <version>5.3.0</version>
             </dependency>
-            <!-- needed due to dependency conflict tycho-1.7.0 and its transitive dependencies -->
+            <!-- needed due to dependency conflict tycho-2.5.0 and its transitive dependencies -->
             <dependency>
                 <groupId>org.eclipse.platform</groupId>
                 <artifactId>org.eclipse.osgi</artifactId>
-                <version>3.15.200</version>
+                <version>3.17.100</version>
             </dependency>
 
             <!-- 3.0 used by tycho. Force the target maven version here. -->
@@ -496,7 +496,7 @@
                     <source>${java.version}</source>
                     <quiet>true</quiet>
                     <links>
-                        <link>http://docs.oracle.com/javase/7/docs/api/</link>
+                        <link>http://docs.oracle.com/javase/11/docs/api/</link>
                     </links>
                 </configuration>
             </plugin>
