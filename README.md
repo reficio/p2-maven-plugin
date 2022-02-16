@@ -636,6 +636,7 @@ Please describe the issue thoroughly. Please include a minimal pom.xml file that
 
 ### Pull requests
 If you submit a pull request please make sure to add an unit/integration test case that covers the feature. Pull requests without a proper test coverage may not be pulled at all.
+Ensure that the pull request title matches the title of the issue. The title of the pull request is used for the automated generated release notes.
 
 ### Running integration tests
 
