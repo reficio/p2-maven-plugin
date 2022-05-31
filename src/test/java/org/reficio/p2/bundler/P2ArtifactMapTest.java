@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012 Reficio (TM) - Reestablish your software! All Rights Reserved.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,7 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.reficio.p2.bundler;
 
 import org.junit.Test;
