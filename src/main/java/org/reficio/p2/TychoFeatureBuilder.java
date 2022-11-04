@@ -35,7 +35,7 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
-import org.eclipse.tycho.core.TychoConstants;
+import org.eclipse.tycho.TychoConstants;
 import org.eclipse.tycho.core.osgitools.targetplatform.DefaultDependencyArtifacts;
 import org.reficio.p2.utils.Utils;
 

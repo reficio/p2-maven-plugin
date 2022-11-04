@@ -26,7 +26,7 @@ public class Utils {
     private static final String JAR_SNAPSHOT_POSTFIX = "-SNAPSHOT";
     private static final String OSGI_SNAPSHOT_POSTFIX = ".SNAPSHOT";
     private static final String ECLIPSE_QUALIFIER_POSTFIX = ".qualifier";
-    public static final String TYCHO_VERSION = "2.5.0";
+    public static final String TYCHO_VERSION = "2.7.5";
 
     public static String getTimeStamp() {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");

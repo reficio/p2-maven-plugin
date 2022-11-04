@@ -22,7 +22,7 @@
         <maven.plugin.plugin.version>3.6.0</maven.plugin.plugin.version>
         <!-- actually a dependency here. -->
         <dependency.maven.bundle.plugin.version>5.1.6</dependency.maven.bundle.plugin.version>
-        <tycho.version>2.5.0</tycho.version>
+        <tycho.version>2.7.5</tycho.version>
 
         <sonatype.aether.version>1.13.1</sonatype.aether.version>
         <eclipse.aether.version>1.1.0</eclipse.aether.version>
@@ -153,6 +153,13 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>${maven.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
