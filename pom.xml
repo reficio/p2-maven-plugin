@@ -29,7 +29,7 @@
 
         <wagon.version>2.2</wagon.version>
         <gmaven.provider.selection>2.0</gmaven.provider.selection>
-        <groovy.version>3.0.9</groovy.version>
+        <groovy.version>4.0.6</groovy.version>
         <jacoco.version>0.8.8</jacoco.version>
     </properties>
 
@@ -256,7 +256,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy</artifactId>
             <version>${groovy.version}</version>
         </dependency>
@@ -380,7 +380,7 @@
                 </executions>
                 <dependencies>
                     <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
+                        <groupId>org.apache.groovy</groupId>
                         <artifactId>groovy-all</artifactId>
                         <version>${groovy.version}</version>
                         <type>pom</type>
@@ -690,7 +690,7 @@
                         <version>3.2.2</version>
                         <dependencies>
                             <dependency>
-                                <groupId>org.codehaus.groovy</groupId>
+                                <groupId>org.apache.groovy</groupId>
                                 <artifactId>groovy</artifactId>
                                 <version>${groovy.version}</version>
                             </dependency>
