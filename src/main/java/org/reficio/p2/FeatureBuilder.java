@@ -38,6 +38,7 @@ import org.w3c.dom.Element;
 public class FeatureBuilder {
 
 
+	@SuppressFBWarnings("EI_EXPOSE_REP2")
 	public FeatureBuilder(P2FeatureDefinition p2FeatureDefintion,
 						  final P2ArtifactMap<ArtifactBundlerInstructions> bundlerInstructions,
 						  boolean generateSourceFeature,

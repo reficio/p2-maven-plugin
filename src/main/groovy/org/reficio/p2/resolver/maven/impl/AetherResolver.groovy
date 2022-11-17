@@ -34,7 +34,7 @@ import org.reficio.p2.resolver.maven.ResolvedArtifact
  *         http://www.reficio.org
  * @since 1.0.0
  */
-@SuppressFBWarnings("SE_NO_SERIALVERSIONID")
+@SuppressFBWarnings(value = ["EI_EXPOSE_REP", "SE_NO_SERIALVERSIONID"])
 class AetherResolver implements ArtifactResolver {
 
     static final String DEFAULT_SCOPE = "compile"

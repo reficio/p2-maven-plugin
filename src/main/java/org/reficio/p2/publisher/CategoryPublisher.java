@@ -36,6 +36,7 @@ import static java.util.Objects.requireNonNull;
  *         http://www.reficio.org
  * @since 1.0.0
  */
+@SuppressFBWarnings("EI_EXPOSE_REP2")
 public class CategoryPublisher {
 
     private static final String CATEGORY_PUBLISHER_APP_NAME = "org.eclipse.equinox.p2.publisher.CategoryPublisher";
@@ -46,7 +47,6 @@ public class CategoryPublisher {
     private final String categoryFileLocation;
     private final String metadataRepositoryLocation;
 
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public CategoryPublisher(P2ApplicationLauncher launcher, int forkedProcessTimeoutInSeconds, String[] additionalArgs,
                              String categoryFileLocation, String metadataRepositoryLocation) {
         this.launcher = launcher;

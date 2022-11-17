@@ -18,7 +18,10 @@
  */
 package org.reficio.p2.resolver.eclipse;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,12 +30,13 @@ import java.util.List;
  *         http://www.reficio.org
  * @since 1.1.2
  */
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP", "EI_EXPOSE_REP2"})
 public class EclipseResolutionResponse {
 
     private final List<File> resolved;
 
     public EclipseResolutionResponse(List<File> resolved) {
-        this.resolved = resolved;
+        this.resolved = Collections.unmodifiableList(resolved);
     }
 
     public List<File> getResolved() {

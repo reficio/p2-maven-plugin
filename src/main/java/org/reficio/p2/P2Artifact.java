@@ -18,7 +18,10 @@
  */
 package org.reficio.p2;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,7 @@ import java.util.Properties;
  *         http://www.reficio.org
  * @since 1.0.0
  */
+@SuppressFBWarnings({"EI_EXPOSE_REP2", "EI_EXPOSE_REP"})
 public class P2Artifact {
 
     /**

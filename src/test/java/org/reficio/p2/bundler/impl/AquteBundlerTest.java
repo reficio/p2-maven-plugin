@@ -19,6 +19,7 @@
 package org.reficio.p2.bundler.impl;
 
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.AfterClass;
@@ -37,6 +38,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mockStatic;
 
+@SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
 public class AquteBundlerTest {
 
 

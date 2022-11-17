@@ -18,6 +18,8 @@
  */
 package org.reficio.p2;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ import java.util.List;
  *         http://www.itemis.de
  * @since 1.1.2
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP")
 public class P2FeatureDefinition  {
 	
 	public P2FeatureDefinition() {
