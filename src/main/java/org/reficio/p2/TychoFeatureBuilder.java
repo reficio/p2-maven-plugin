@@ -31,6 +31,8 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
 
 import java.io.File;
 import java.io.IOException;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -39,6 +41,7 @@ import org.eclipse.tycho.TychoConstants;
 import org.eclipse.tycho.core.osgitools.targetplatform.DefaultDependencyArtifacts;
 import org.reficio.p2.utils.Utils;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP")
 public class TychoFeatureBuilder {
 
     File featureFile;

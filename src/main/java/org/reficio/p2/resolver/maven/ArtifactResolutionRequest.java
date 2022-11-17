@@ -19,6 +19,7 @@
 package org.reficio.p2.resolver.maven;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ public final class ArtifactResolutionRequest {
     }
 
     public List<String> getExcludes() {
-        return excludes;
+        return Collections.unmodifiableList(excludes);
     }
 
     public boolean isResolveTransitive() {

@@ -18,12 +18,14 @@
  */
 package org.reficio.p2.resolver.impl;
 
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Test;
 import org.reficio.p2.resolver.maven.impl.Aether;
 import org.reficio.p2.resolver.maven.impl.facade.AetherEclipseFacade;
 import org.reficio.p2.resolver.maven.impl.facade.AetherFacade;
 import org.reficio.p2.resolver.maven.impl.facade.AetherSonatypeFacade;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -44,7 +46,7 @@ public class AetherTest {
         AetherFacade facade = Aether.facade(repositorySystem);
 
         // THEN
-        assertTrue("Wrong facade type", facade instanceof AetherSonatypeFacade);
+        assertThat(facade).isInstanceOf(AetherSonatypeFacade.class);
     }
 
     @Test
@@ -56,7 +58,7 @@ public class AetherTest {
         AetherFacade facade = Aether.facade(repositorySystem);
 
         // THEN
-        assertTrue("Wrong facade type", facade instanceof AetherEclipseFacade);
+        assertThat(facade).isInstanceOf(AetherEclipseFacade.class);
     }
 
 }

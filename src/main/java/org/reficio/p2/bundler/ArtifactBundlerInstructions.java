@@ -19,6 +19,8 @@
 package org.reficio.p2.bundler;
 
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,6 +31,7 @@ import java.util.Map;
  *         http://www.reficio.org
  * @since 1.1.0
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP")
 public final class ArtifactBundlerInstructions {
 
     /**

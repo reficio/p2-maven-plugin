@@ -25,7 +25,7 @@ import org.reficio.p2.resolver.eclipse.EclipseResolutionRequest
 import org.reficio.p2.resolver.eclipse.EclipseResolutionResponse
 import org.reficio.p2.resolver.eclipse.EclipseResolver
 
-@SuppressFBWarnings("SE_NO_SERIALVERSIONID")
+@SuppressFBWarnings(value = ["EI_EXPOSE_REP", "SE_NO_SERIALVERSIONID"])
 class DefaultEclipseResolver implements EclipseResolver {
 
     final File target
