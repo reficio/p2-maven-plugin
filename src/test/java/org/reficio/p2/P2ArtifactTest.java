@@ -18,21 +18,21 @@
  */
 package org.reficio.p2;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @since 1.4.0
  */
-public class P2ArtifactTest {
+class P2ArtifactTest {
 
     @Test
-    public void testCombinedInstructions() {
+    void testCombinedInstructions() {
         // GIVEN
         P2Artifact artifact = new P2Artifact();
         artifact.setInstructions(Collections.singletonMap("Import-Package", "package.one"));
@@ -50,7 +50,7 @@ public class P2ArtifactTest {
     }
 
     @Test
-    public void testInstructionsPropertiesOverrideInstructions() {
+    void testInstructionsPropertiesOverrideInstructions() {
         // GIVEN
         P2Artifact artifact = new P2Artifact();
         artifact.setInstructions(Collections.singletonMap("Export-Package", "package.one"));
@@ -67,7 +67,7 @@ public class P2ArtifactTest {
     }
 
     @Test
-    public void testInstructionsPropertiesOverrideInstructionsWhenPropertiesSetFirst() {
+    void testInstructionsPropertiesOverrideInstructionsWhenPropertiesSetFirst() {
         // GIVEN
         P2Artifact artifact = new P2Artifact();
         Properties instructionsProperties = new Properties();

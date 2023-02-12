@@ -18,17 +18,17 @@
  */
 package org.reficio.p2.bundler;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class ArtifactBundlerInstructionsTest {
+class ArtifactBundlerInstructionsTest {
 
     @Test
-    public void useDefaultInstruction(){
+    void useDefaultInstruction() {
         ArtifactBundlerInstructions artifactBundlerInstructions = ArtifactBundlerInstructions.builder().build();
 
         assertThat(artifactBundlerInstructions.getInstructions())
@@ -39,7 +39,7 @@ public class ArtifactBundlerInstructionsTest {
     }
 
     @Test
-    public void ignoreDefaultInstruction(){
+    void ignoreDefaultInstruction() {
         ArtifactBundlerInstructions artifactBundlerInstructions = ArtifactBundlerInstructions.builder()
                 .instructions(Collections.singletonMap("-noee", "true"))
                 .build();

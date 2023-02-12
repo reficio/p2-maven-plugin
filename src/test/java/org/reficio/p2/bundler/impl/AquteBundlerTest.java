@@ -22,9 +22,9 @@ package org.reficio.p2.bundler.impl;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.assertj.core.api.ThrowableAssert;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.reficio.p2.bundler.AquteAnalyzerException;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
@@ -39,21 +39,21 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mockStatic;
 
 @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
-public class AquteBundlerTest {
+class AquteBundlerTest {
 
 
-    @BeforeClass
-    public static void setUpClass() {
+    @BeforeAll
+    static void setUpClass() {
         Logger.initialize(new SystemStreamLog());
     }
 
-    @AfterClass
-    public static void cleanUp() {
+    @AfterAll
+    static void cleanUp() {
         Logger.initialize(null);
     }
 
     @Test
-    public void bndAnalyzerProduceErrorThenExceptionIsExpected() {
+    void bndAnalyzerProduceErrorThenExceptionIsExpected() {
         try (MockedStatic<AquteHelper> theMock = mockStatic(AquteHelper.class)) {
             theMock.when(() -> AquteHelper.buildAnalyzer(any(ArtifactBundlerRequest.class), any(ArtifactBundlerInstructions.class), anyBoolean()))
                     .thenReturn(new AnalyzerStub());
@@ -66,7 +66,7 @@ public class AquteBundlerTest {
     }
 
     @Test
-    public void bndAnalyzerProduceErrorThenExceptionIsUnexpected() {
+    void bndAnalyzerProduceErrorThenExceptionIsUnexpected() {
         try (MockedStatic<AquteHelper> theMock = mockStatic(AquteHelper.class)) {
             theMock.when(() -> AquteHelper.buildAnalyzer(any(ArtifactBundlerRequest.class), any(ArtifactBundlerInstructions.class), anyBoolean()))
                     .thenReturn(new AnalyzerStub());

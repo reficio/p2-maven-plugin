@@ -18,15 +18,13 @@
  */
 package org.reficio.p2.resolver.impl;
 
-import org.hamcrest.core.IsInstanceOf;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.reficio.p2.resolver.maven.impl.Aether;
 import org.reficio.p2.resolver.maven.impl.facade.AetherEclipseFacade;
 import org.reficio.p2.resolver.maven.impl.facade.AetherFacade;
 import org.reficio.p2.resolver.maven.impl.facade.AetherSonatypeFacade;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -35,10 +33,10 @@ import static org.mockito.Mockito.mock;
  *         http://www.reficio.org
  * @since 1.1.0
  */
-public class AetherTest {
+class AetherTest {
 
     @Test
-    public void facade_sonatypeAetherSystem() {
+    void facade_sonatypeAetherSystem() {
         // GIVEN
         Object repositorySystem = mock(org.sonatype.aether.RepositorySystem.class);
 
@@ -50,7 +48,7 @@ public class AetherTest {
     }
 
     @Test
-    public void facade_eclipseAetherSystem() {
+    void facade_eclipseAetherSystem() {
         // GIVEN
         Object repositorySystem = mock(org.eclipse.aether.RepositorySystem.class);
 

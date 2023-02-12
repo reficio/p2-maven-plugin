@@ -18,7 +18,9 @@
  */
 package org.reficio.p2.logger;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
@@ -26,11 +28,13 @@ import org.junit.Test;
  *         http://www.reficio.org
  * @since 1.0.0
  */
-public class LoggerTest {
+class LoggerTest {
 
-    @Test(expected = RuntimeException.class)
-    public void getLog_uninitializedLogger_exceptionThrown() {
-        Logger.getLog();
+    @Test
+    void getLog_uninitializedLogger_exceptionThrown() {
+        assertThrows(RuntimeException.class, () -> {
+            Logger.getLog();
+        });
     }
 
 }
