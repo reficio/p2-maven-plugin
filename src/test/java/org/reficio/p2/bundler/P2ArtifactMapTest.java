@@ -18,17 +18,17 @@
  */
 package org.reficio.p2.bundler;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.reficio.p2.P2Artifact;
 
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class P2ArtifactMapTest {
+class P2ArtifactMapTest {
 
     @Test
-    public void getNoFoundValueReturnsEmptyList() {
+    void getNoFoundValueReturnsEmptyList() {
         P2ArtifactMap<P2Artifact> mapUnderTest = new P2ArtifactMap<>();
 
         Collection<P2Artifact> value = mapUnderTest.get(new P2Artifact());

@@ -18,9 +18,9 @@
  */
 package org.reficio.p2.bundler;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.reficio.p2.P2Helper.calculateSourceName;
 
 /**
@@ -29,10 +29,10 @@ import static org.reficio.p2.P2Helper.calculateSourceName;
  *         http://www.reficio.org
  * @since 1.0.0
  */
-public class ArtifactBundlerInstructionTest {
+class ArtifactBundlerInstructionTest {
 
     @Test
-    public void calculateSourceName_specTest() {
+    void calculateSourceName_specTest() {
         assertEquals("org.reficio.p2.source", calculateSourceName(null, "org.reficio.p2"));
         assertEquals("org.reficio.P2.source", calculateSourceName(null, "org.reficio.P2"));
         assertEquals("Reficio P2 Source", calculateSourceName("Reficio P2", "org.reficio.p2"));

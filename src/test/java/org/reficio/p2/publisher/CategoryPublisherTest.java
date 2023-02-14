@@ -21,13 +21,14 @@ package org.reficio.p2.publisher;
 import org.apache.maven.plugin.AbstractMojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 /**
@@ -36,44 +37,54 @@ import static org.mockito.Mockito.when;
  *         http://www.reficio.org
  * @since 1.0.0
  */
-public class CategoryPublisherTest {
+class CategoryPublisherTest {
 
-    @Test(expected = NullPointerException.class)
-    public void nullLauncher() {
-        CategoryPublisher.builder().p2ApplicationLauncher(null);
+    @Test
+    void nullLauncher() {
+        assertThrows(NullPointerException.class, () -> {
+            CategoryPublisher.builder().p2ApplicationLauncher(null);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
-    public void emptyBuilder() {
-        CategoryPublisher.builder().build();
+    @Test
+    void emptyBuilder() {
+        assertThrows(NullPointerException.class, () -> {
+            CategoryPublisher.builder().build();
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void wrongTimeout() {
-        CategoryPublisher.builder().forkedProcessTimeoutInSeconds(-1);
+    @Test
+    void wrongTimeout() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            CategoryPublisher.builder().forkedProcessTimeoutInSeconds(-1);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void wrongArgs() {
-        CategoryPublisher.builder().additionalArgs("--zcx.vzxc.v§';s.dcxz-1-aods[vzmcxvlkzndofahsdpf");
+    @Test
+    void wrongArgs() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            CategoryPublisher.builder().additionalArgs("--zcx.vzxc.v§';s.dcxz-1-aods[vzmcxvlkzndofahsdpf");
+        });
     }
 
-    @Test(expected = MojoFailureException.class)
-    public void exceptionThrownInCaseOfLauncherFailure() throws IOException, AbstractMojoExecutionException {
-        // given
-        P2ApplicationLauncher launcher = Mockito.mock(P2ApplicationLauncher.class, Mockito.RETURNS_DEEP_STUBS);
-        when(launcher.execute(Mockito.anyInt())).thenReturn(137);
-        File file = File.createTempFile(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-        file.deleteOnExit();
+    @Test
+    void exceptionThrownInCaseOfLauncherFailure() throws IOException, AbstractMojoExecutionException {
+        assertThrows(MojoFailureException.class, () -> {
+            // given
+            P2ApplicationLauncher launcher = Mockito.mock(P2ApplicationLauncher.class, Mockito.RETURNS_DEEP_STUBS);
+            when(launcher.execute(Mockito.anyInt())).thenReturn(137);
+            File file = File.createTempFile(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+            file.deleteOnExit();
 
-        // when
-        CategoryPublisher publisher = CategoryPublisher.builder()
-                .p2ApplicationLauncher(launcher)
-                .categoryFileLocation(file.getPath())
-                .additionalArgs("-args")
-                .metadataRepositoryLocation("target/tmp")
-                .build();
-        publisher.execute();
+            // when
+            CategoryPublisher publisher = CategoryPublisher.builder()
+                    .p2ApplicationLauncher(launcher)
+                    .categoryFileLocation(file.getPath())
+                    .additionalArgs("-args")
+                    .metadataRepositoryLocation("target/tmp")
+                    .build();
+            publisher.execute();
+        });
     }
 
 }
