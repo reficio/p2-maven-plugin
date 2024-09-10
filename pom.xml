@@ -100,7 +100,7 @@
             <dependency>
                 <groupId>org.eclipse.platform</groupId>
                 <artifactId>org.eclipse.osgi</artifactId>
-                <version>3.17.100</version>
+                <version>3.21.0</version>
             </dependency>
 
             <!-- 3.0 used by tycho. Force the target maven version here. -->
