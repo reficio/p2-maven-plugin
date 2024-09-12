@@ -29,7 +29,7 @@
 
         <wagon.version>2.2</wagon.version>
         <gmaven.provider.selection>2.0</gmaven.provider.selection>
-        <groovy.version>4.0.6</groovy.version>
+        <groovy.version>4.0.23</groovy.version>
         <jacoco.version>0.8.8</jacoco.version>
     </properties>
 
