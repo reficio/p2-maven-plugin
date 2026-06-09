@@ -316,7 +316,7 @@
                 <plugin>
                     <groupId>org.apache.rat</groupId>
                     <artifactId>apache-rat-plugin</artifactId>
-                    <version>0.13</version>
+                    <version>0.18</version>
                     <configuration>
                         <excludes>
                             <exclude>/**/src/it/projects/*/build.log</exclude>
