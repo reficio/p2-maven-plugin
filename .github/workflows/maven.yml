@@ -38,7 +38,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
 
       - name: Set up cache for ~./m2/repository
         uses: actions/cache@v5.0.5
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
 
       - name: Set up cache for ~./m2/repository
         uses: actions/cache@v5.0.5
