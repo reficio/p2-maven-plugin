@@ -33,7 +33,7 @@ jobs:
   update_release_draft:
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v5.25.0
+      - uses: release-drafter/release-drafter@v7.3.1
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
