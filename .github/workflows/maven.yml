@@ -51,9 +51,10 @@ jobs:
 
 
       - name: Set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v5.2.0
         with:
           java-version: ${{ matrix.java }}
+          distribution: temurin
 
       - name: License Check
         run: mvn -V --batch-mode apache-rat:check "-Drat.consoleOutput"
@@ -70,7 +71,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Set up cache for ~./m2/repository
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v5.0.5
         with:
           path: ~/.m2/repository
           key: maven-${{ matrix.os }}-java${{ matrix.java }}-${{ hashFiles('**/pom.xml') }}
@@ -80,9 +81,10 @@ jobs:
 
 
       - name: Set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v5.2.0
         with:
           java-version: 11
+          distribution: temurin
 
       - name: Spotbugs check
         run: mvn --batch-mode --errors verify --file pom.xml '-Pspotbugs'
