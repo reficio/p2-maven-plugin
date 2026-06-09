@@ -284,14 +284,14 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.14.4</version>
+            <version>6.1.0</version>
             <scope>test</scope>
         </dependency>
         <!-- Required by target/generated-sources/groovy-stubs/test  -->
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
-            <version>5.14.4</version>
+            <version>6.1.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
