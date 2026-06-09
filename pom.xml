@@ -367,7 +367,7 @@
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
-                <version>2.1.0</version>
+                <version>5.0.0</version>
                 <configuration>
                     <sourceEncoding>UTF-8</sourceEncoding>
                 </configuration>
