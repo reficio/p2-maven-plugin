@@ -39,7 +39,6 @@ import org.sonatype.aether.util.graph.PreorderNodeListGenerator
  *         http://www.reficio.org
  * @since 1.1.0
  */
-@SuppressFBWarnings(value = ["EI_EXPOSE_REP2" , "EI_EXPOSE_REP" , "SE_NO_SERIALVERSIONID" ])
 class AetherSonatypeFacade implements AetherFacade {
 
     @Override

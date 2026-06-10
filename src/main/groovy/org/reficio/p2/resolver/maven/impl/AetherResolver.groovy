@@ -21,12 +21,8 @@ package org.reficio.p2.resolver.maven.impl
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 
 import org.reficio.p2.logger.Logger
+import org.reficio.p2.resolver.maven.*
 import org.reficio.p2.resolver.maven.impl.facade.AetherFacade
-import org.reficio.p2.resolver.maven.Artifact
-import org.reficio.p2.resolver.maven.ArtifactResolutionRequest
-import org.reficio.p2.resolver.maven.ArtifactResolutionResult
-import org.reficio.p2.resolver.maven.ArtifactResolver
-import org.reficio.p2.resolver.maven.ResolvedArtifact
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
@@ -34,7 +30,7 @@ import org.reficio.p2.resolver.maven.ResolvedArtifact
  *         http://www.reficio.org
  * @since 1.0.0
  */
-@SuppressFBWarnings(value = ["EI_EXPOSE_REP", "SE_NO_SERIALVERSIONID"])
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2")
 class AetherResolver implements ArtifactResolver {
 
     static final String DEFAULT_SCOPE = "compile"

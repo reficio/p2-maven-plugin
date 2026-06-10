@@ -30,7 +30,6 @@ import java.util.List;
  *         http://www.reficio.org
  * @since 1.1.2
  */
-@SuppressFBWarnings(value = {"EI_EXPOSE_REP", "EI_EXPOSE_REP2"})
 public class EclipseResolutionResponse {
 
     private final List<File> resolved;

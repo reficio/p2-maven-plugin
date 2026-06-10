@@ -29,7 +29,6 @@ import org.reficio.p2.resolver.maven.impl.facade.AetherSonatypeFacade
  *         http://www.reficio.org
  * @since 1.1.0
  */
-@SuppressFBWarnings(value = ["EI_EXPOSE_REP", "EI_EXPOSE_REP2"])
 class Aether {
 
     static AetherFacade facade(def repositorySystemSession) {
