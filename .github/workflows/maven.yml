@@ -32,7 +32,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
-        java: [ 11, 17 ]
+        java: [ 17, 21]
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -83,7 +83,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v5.2.0
         with:
-          java-version: 11
+          java-version: 21
           distribution: temurin
 
       - name: Spotbugs check
