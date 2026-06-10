@@ -28,6 +28,9 @@ on:
   # pull_request_target event is required for autolabeler to support PRs from forks
   # pull_request_target:
   #   types: [opened, reopened, synchronize]
+  permissions:
+    contents: write
+    pull-requests: read
 
 jobs:
   update_release_draft:
@@ -35,5 +38,7 @@ jobs:
     steps:
       - uses: release-drafter/release-drafter@v7.3.1
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
+        with:
+          commitish: master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
