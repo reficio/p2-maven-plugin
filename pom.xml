@@ -438,19 +438,23 @@
                 <configuration>
                     <strictCheck>true</strictCheck>
                     <basedir>${project.basedir}</basedir>
-                    <header>${project.basedir}/src/main/resources/license.txt</header>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>${project.basedir}/src/main/resources/license.txt</header>
+                            <includes>
+                                <include>src/**</include>
+                                <include>**/test/**</include>
+                            </includes>
+                            <excludes>
+                                <exclude>target/**</exclude>
+                                <exclude>**/resources/**</exclude>
+                                <exclude>.dependabot/**</exclude>
+                            </excludes>
+                        </licenseSet>
+                    </licenseSets>
                     <quiet>false</quiet>
                     <failIfMissing>true</failIfMissing>
                     <aggregate>false</aggregate>
-                    <includes>
-                        <include>src/**</include>
-                        <include>**/test/**</include>
-                    </includes>
-                    <excludes>
-                        <exclude>target/**</exclude>
-                        <exclude>**/resources/**</exclude>
-                        <exclude>.dependabot/**</exclude>
-                    </excludes>
                     <useDefaultExcludes>true</useDefaultExcludes>
                     <mapping>
                         <jwc>XML_STYLE</jwc>
@@ -545,7 +549,8 @@
                                 <copy todir="${project.basedir}/src/site/markdown">
                                     <fileset dir="${project.basedir}" includes="README.md"/>
                                 </copy>
-                                <move file="${project.basedir}/src/site/markdown/README.md" tofile="${project.basedir}/src/site/markdown/manual.md"/>
+                                <move file="${project.basedir}/src/site/markdown/README.md"
+                                      tofile="${project.basedir}/src/site/markdown/manual.md"/>
                             </target>
                         </configuration>
                         <goals>
@@ -588,9 +593,11 @@
                                 <configuration>
                                     <tasks>
                                         <echo message="Running ANT for deploying the site..."/>
-                                        <property name="project_folder" value="/var/www/projects/${project.artifactId}"/>
+                                        <property name="project_folder"
+                                                  value="/var/www/projects/${project.artifactId}"/>
                                         <property name="version_folder" value="${project_folder}/${project.version}"/>
-                                        <property name="site_tgz" value="${project.artifactId}-${project.version}-site.tgz"/>
+                                        <property name="site_tgz"
+                                                  value="${project.artifactId}-${project.version}-site.tgz"/>
                                         <tar destfile="target/${site_tgz}" basedir="target/site" compression="gzip"/>
                                         <echo message="Creating folder for the site ${version_folder}"/>
                                         <sshexec host="${reficio.server}"
@@ -599,7 +606,8 @@
                                                  verbose="false"
                                                  command="mkdir -p ${version_folder}"/>
                                         <echo message="Uploading compressed site ${site_tgz}"/>
-                                        <scp file="target/${site_tgz}" todir="${reficio.usr}@${reficio.server}:${project_folder}/"
+                                        <scp file="target/${site_tgz}"
+                                             todir="${reficio.usr}@${reficio.server}:${project_folder}/"
                                              password="${reficio.pwd}" verbose="false"/>
                                         <echo message="Extracting compressed site and cleaning up"/>
                                         <sshexec host="${reficio.server}"
@@ -783,19 +791,19 @@
                     <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
                     <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
                 </configuration>
-               <reportSets>
-                   <reportSet>
-                       <reports>
-                           <report>index</report>
-                           <report>team</report>
-                           <report>ci-management</report>
-                           <report>issue-management</report>
-                           <report>licenses</report>
-                           <report>scm</report>
-                           <report>summary</report>
-                       </reports>
-                   </reportSet>
-               </reportSets>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                            <report>team</report>
+                            <report>ci-management</report>
+                            <report>issue-management</report>
+                            <report>licenses</report>
+                            <report>scm</report>
+                            <report>summary</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
