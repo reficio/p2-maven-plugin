@@ -128,18 +128,21 @@
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-model</artifactId>
                 <version>${maven.version}</version>
+                <scope>provided</scope>
             </dependency>
             <!-- 3.0 used by tycho -->
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-plugin-api</artifactId>
                 <version>${maven.version}</version>
+                <scope>provided</scope>
             </dependency>
             <!-- 3.0 used by maven-plugin-annotations -->
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-artifact</artifactId>
                 <version>${maven.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <!-- 1.5.5 used by tycho, others use 1.6 -->
