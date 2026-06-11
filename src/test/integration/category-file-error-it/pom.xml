@@ -61,7 +61,7 @@
                                     <transitive>false</transitive>
                                 </artifact>
                             </artifacts>
-                            <categoryFileURL>WRONG_PATH_TO_CATEGORY_FILE</categoryFileURL>
+                            <categoryFilePath>WRONG_PATH_TO_CATEGORY_FILE</categoryFilePath>
                         </configuration>
                     </execution>
                 </executions>

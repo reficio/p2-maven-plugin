@@ -127,9 +127,17 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     /**
      * Specifies a file containing category definitions.
+     * @deprecated please use {@link #categoryFilePath}
      */
     @Parameter(defaultValue = "")
+    @Deprecated(since = "3.0.0")
     private String categoryFileURL;
+
+    /**
+     * Specifies a file containing category definitions.
+     */
+    @Parameter(defaultValue = "")
+    private String categoryFilePath;
 
     /**
      * Optional line of additional arguments passed to the p2 application launcher.
@@ -283,9 +291,12 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         FileUtils.deleteDirectory(new File(buildDirectory, BUNDLES_TOP_FOLDER));
         FileUtils.forceMkdir(bundlesDestinationFolder);
         FileUtils.forceMkdir(featuresDestinationFolder);
-        artifacts = artifacts != null ? artifacts : new ArrayList<P2Artifact>();
-        features = features != null ? features : new ArrayList<P2Artifact>();
-        p2 = p2 != null ? p2 : new ArrayList<EclipseArtifact>();
+        artifacts = artifacts != null ? artifacts : new ArrayList<>();
+        features = features != null ? features : new ArrayList<>();
+        p2 = p2 != null ? p2 : new ArrayList<>();
+        if ((categoryFilePath == null || categoryFilePath.trim().isEmpty()) && (categoryFileURL != null && !categoryFileURL.trim().isEmpty())) {
+            categoryFilePath = categoryFileURL.trim();
+        }
     }
 
     private void initializeRepositorySystem() {
@@ -562,7 +573,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
                 .p2ApplicationLauncher(launcher)
                 .additionalArgs(additionalArgs)
                 .forkedProcessTimeoutInSeconds(forkedProcessTimeoutInSeconds)
-                .categoryFileLocation(categoryFileURL)
+                .categoryFileLocation(categoryFilePath)
                 .metadataRepositoryLocation(destinationDirectory)
                 .build();
         publisher.execute();
@@ -570,7 +581,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     private void prepareCategoryLocationFile() throws IOException {
-        if (categoryFileURL == null || categoryFileURL.trim().isEmpty()) {
+        if (categoryFilePath == null || categoryFilePath.trim().isEmpty()) {
             File categoryDefinitionFile;
             Writer writer;
             try (InputStream is = getClass().getResourceAsStream(DEFAULT_CATEGORY_CLASSPATH_LOCATION + DEFAULT_CATEGORY_FILE)) {
@@ -581,7 +592,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
                 IOUtils.copy(is, writer, StandardCharsets.UTF_8);
             }
             IOUtils.closeQuietly(writer);
-            categoryFileURL = categoryDefinitionFile.getAbsolutePath();
+            categoryFilePath = categoryDefinitionFile.getAbsolutePath();
         }
     }
 
