@@ -25,8 +25,6 @@ import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.project.MavenProject;
 import org.reficio.p2.utils.Utils;
 
-import java.io.IOException;
-
 import static java.util.Objects.requireNonNull;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
@@ -53,16 +51,18 @@ public class CategoryPublisher {
     private MavenProject mavenProject;
     private MavenSession mavenSession;
     private BuildPluginManager buildPluginManager;
+    private final int forkedProcessTimeoutInSeconds;
 
-    public CategoryPublisher(String categoryFileLocation, String metadataRepositoryLocation, MavenProject mavenProject, MavenSession mavenSession, BuildPluginManager buildPluginManager) {
+    public CategoryPublisher(String categoryFileLocation, String metadataRepositoryLocation, MavenProject mavenProject, MavenSession mavenSession, BuildPluginManager buildPluginManager, int forkedProcessTimeoutInSeconds) {
         this.categoryFileLocation = categoryFileLocation;
         this.metadataRepositoryLocation = metadataRepositoryLocation;
         this.mavenProject = mavenProject;
         this.mavenSession = mavenSession;
         this.buildPluginManager = buildPluginManager;
+        this.forkedProcessTimeoutInSeconds = forkedProcessTimeoutInSeconds;
     }
 
-    public void execute() throws AbstractMojoExecutionException, IOException {
+    public void execute() throws AbstractMojoExecutionException {
         executeMojo( //
                 plugin( //
                         groupId("org.eclipse.tycho"), //
@@ -72,10 +72,8 @@ public class CategoryPublisher {
                 goal("category-p2-metadata"), //
                 configuration( //
                         element(name("target"), metadataRepositoryLocation), //
-                        element( //
-                                name("categoryDefinition"), //
-                                categoryFileLocation //
-                        ), //
+                        element(name("forkedProcessTimeoutInSeconds"), Integer.toString(forkedProcessTimeoutInSeconds)), //
+                        element(name("categoryDefinition"), categoryFileLocation), //
                         element(name("metadataRepositoryName"), "Dependencies aggregated by org.reficio:p2-maven-plugin") //
                 ), //
                 executionEnvironment( //
@@ -97,6 +95,7 @@ public class CategoryPublisher {
         private MavenProject mavenProject;
         private MavenSession mavenSession;
         private BuildPluginManager buildPluginManager;
+        private int forkedProcessTimeoutInSeconds;
 
 
         public Builder mavenProject(MavenProject mavenProject) {
@@ -111,6 +110,15 @@ public class CategoryPublisher {
 
         public Builder buildPluginManager(BuildPluginManager buildPluginManager) {
             this.buildPluginManager = buildPluginManager;
+            return this;
+        }
+
+        public Builder forkedProcessTimeoutInSeconds(int forkedProcessTimeoutInSeconds) {
+            if (forkedProcessTimeoutInSeconds < 0) {
+                throw new IllegalArgumentException("forkedProcessTimeoutInSeconds cannot be negative but was: " + forkedProcessTimeoutInSeconds);
+            }
+
+            this.forkedProcessTimeoutInSeconds = forkedProcessTimeoutInSeconds;
             return this;
         }
 
@@ -135,7 +143,7 @@ public class CategoryPublisher {
             requireNonNull(categoryFileLocation, "categoryFileLocation cannot be null");
             requireNonNull(metadataRepositoryLocation, "metadataRepositoryLocation cannot be null");
             return new CategoryPublisher(categoryFileLocation,
-                    metadataRepositoryLocation, mavenProject, mavenSession , buildPluginManager );
+                    metadataRepositoryLocation, mavenProject, mavenSession , buildPluginManager, forkedProcessTimeoutInSeconds );
         }
 
 
