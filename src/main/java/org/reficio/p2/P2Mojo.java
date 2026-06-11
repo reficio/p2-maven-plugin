@@ -27,7 +27,6 @@ import org.apache.maven.plugin.AbstractMojoExecutionException;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -35,7 +34,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
@@ -69,12 +67,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -567,6 +562,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
                 .mavenSession(session)
                 .mavenProject(project)
                 .buildPluginManager(pluginManager)
+                .forkedProcessTimeoutInSeconds(forkedProcessTimeoutInSeconds)
                 .categoryFileLocation(categoryFilePath)
                 .metadataRepositoryLocation(destinationDirectory)
                 .build();
@@ -590,7 +586,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
         }
     }
 
-    private void cleanupEnvironment() throws IOException {
+    private void cleanupEnvironment() {
         File workFolder = new File(buildDirectory, BUNDLES_TOP_FOLDER);
         try {
             FileUtils.deleteDirectory(workFolder);
