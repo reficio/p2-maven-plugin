@@ -67,7 +67,7 @@ public class CategoryPublisher {
                 plugin( //
                         groupId("org.eclipse.tycho"), //
                         artifactId("tycho-p2-plugin"), //
-                        version(Utils.TYCHO_VERSION) //
+                        version(Utils.tychoVersion()) //
                 ), //
                 goal("category-p2-metadata"), //
                 configuration( //

@@ -59,7 +59,7 @@ public class BundlePublisher {
                 plugin(
                         groupId("org.eclipse.tycho.extras"),
                         artifactId("tycho-p2-extras-plugin"),
-                        version(Utils.TYCHO_VERSION)
+                        version(Utils.tychoVersion())
                 ),
                 goal("publish-features-and-bundles"),
                 configuration(
