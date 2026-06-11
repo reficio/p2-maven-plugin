@@ -19,16 +19,25 @@
 package org.reficio.p2.publisher;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
+import org.apache.maven.plugin.BuildPluginManager;
+import org.apache.maven.project.MavenProject;
+import org.reficio.p2.utils.Utils;
 
-import java.io.File;
 import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
 
 /**
  * @author Tom Bujok (tom.bujok@gmail.com)<br>
@@ -39,47 +48,41 @@ import static java.util.Objects.requireNonNull;
 @SuppressFBWarnings("EI_EXPOSE_REP2")
 public class CategoryPublisher {
 
-    private static final String CATEGORY_PUBLISHER_APP_NAME = "org.eclipse.equinox.p2.publisher.CategoryPublisher";
-
-    private final P2ApplicationLauncher launcher;
-    private final int forkedProcessTimeoutInSeconds;
-    private final String[] additionalArgs;
     private final String categoryFileLocation;
     private final String metadataRepositoryLocation;
+    private MavenProject mavenProject;
+    private MavenSession mavenSession;
+    private BuildPluginManager buildPluginManager;
 
-    public CategoryPublisher(P2ApplicationLauncher launcher, int forkedProcessTimeoutInSeconds, String[] additionalArgs,
-                             String categoryFileLocation, String metadataRepositoryLocation) {
-        this.launcher = launcher;
-        this.forkedProcessTimeoutInSeconds = forkedProcessTimeoutInSeconds;
-        this.additionalArgs = additionalArgs;
+    public CategoryPublisher(String categoryFileLocation, String metadataRepositoryLocation, MavenProject mavenProject, MavenSession mavenSession, BuildPluginManager buildPluginManager) {
         this.categoryFileLocation = categoryFileLocation;
         this.metadataRepositoryLocation = metadataRepositoryLocation;
+        this.mavenProject = mavenProject;
+        this.mavenSession = mavenSession;
+        this.buildPluginManager = buildPluginManager;
     }
 
     public void execute() throws AbstractMojoExecutionException, IOException {
-        configureLauncher(categoryFileLocation, metadataRepositoryLocation);
-        executeLauncher();
-    }
-
-    private void configureLauncher(String categoryFileLocation, String metadataRepositoryLocation) throws AbstractMojoExecutionException, IOException {
-        File metadataRepositoryDir = new File(metadataRepositoryLocation).getCanonicalFile();
-        File categoryDefinitionFileSource = new File(categoryFileLocation);
-        File categoryDefinitionFileTarget = new File(metadataRepositoryDir, "category.xml");
-        FileUtils.copyFile(categoryDefinitionFileSource, categoryDefinitionFileTarget);
-
-        launcher.setWorkingDirectory(metadataRepositoryDir);
-        launcher.setApplicationName(CATEGORY_PUBLISHER_APP_NAME);
-
-        launcher.addArguments("-categoryDefinition", "file:/" + new File(categoryDefinitionFileTarget.toURI()).getAbsolutePath());
-        launcher.addArguments("-metadataRepository", "file:/" + new File(metadataRepositoryDir.toURI()).getAbsolutePath());
-        launcher.addArguments(additionalArgs);
-    }
-
-    private void executeLauncher() throws MojoFailureException {
-        int result = launcher.execute(forkedProcessTimeoutInSeconds);
-        if (result != 0) {
-            throw new MojoFailureException("P2 publisher return code was " + result);
-        }
+        executeMojo( //
+                plugin( //
+                        groupId("org.eclipse.tycho"), //
+                        artifactId("tycho-p2-plugin"), //
+                        version(Utils.TYCHO_VERSION) //
+                ), //
+                goal("category-p2-metadata"), //
+                configuration( //
+                        element(name("target"), metadataRepositoryLocation), //
+                        element( //
+                                name("categoryDefinition"), //
+                                categoryFileLocation //
+                        ), //
+                        element(name("metadataRepositoryName"), "Dependencies aggregated by org.reficio:p2-maven-plugin") //
+                ), //
+                executionEnvironment( //
+                        mavenProject, //
+                        mavenSession, //
+                        buildPluginManager //
+                ));
     }
 
     public static Builder builder() {
@@ -88,35 +91,30 @@ public class CategoryPublisher {
 
     public static class Builder {
 
-        private P2ApplicationLauncher launcher;
-        private int forkedProcessTimeoutInSeconds = 0;
-        private String[] additionalArgs;
         private String categoryFileLocation;
         private String metadataRepositoryLocation;
 
-        public Builder p2ApplicationLauncher(P2ApplicationLauncher launcher) {
-            requireNonNull(launcher, "p2ApplicationLauncher cannot be null");
-            this.launcher = launcher;
+        private MavenProject mavenProject;
+        private MavenSession mavenSession;
+        private BuildPluginManager buildPluginManager;
+
+
+        public Builder mavenProject(MavenProject mavenProject) {
+            this.mavenProject = mavenProject;
             return this;
         }
 
-        public Builder forkedProcessTimeoutInSeconds(int forkedProcessTimeoutInSeconds) {
-            if (forkedProcessTimeoutInSeconds < 0) {
-                throw new IllegalArgumentException("forkedProcessTimeoutInSeconds cannot be negative but was: " + forkedProcessTimeoutInSeconds);
-            }
-
-            this.forkedProcessTimeoutInSeconds = forkedProcessTimeoutInSeconds;
+        public Builder mavenSession(MavenSession mavenSession) {
+            this.mavenSession = mavenSession;
             return this;
         }
 
-        public Builder additionalArgs(String additionalArgs) {
-            try {
-                this.additionalArgs = CommandLineUtils.translateCommandline(additionalArgs);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Unable to translate additional arguments into command line array", e);
-            }
+        public Builder buildPluginManager(BuildPluginManager buildPluginManager) {
+            this.buildPluginManager = buildPluginManager;
             return this;
         }
+
+
 
         public Builder categoryFileLocation(String categoryFileLocation) {
             requireNonNull(categoryFileLocation, "categoryFileLocation cannot be null");
@@ -131,12 +129,16 @@ public class CategoryPublisher {
         }
 
         public CategoryPublisher build() {
-            requireNonNull(launcher, "p2ApplicationLauncher cannot be null");
+            requireNonNull(mavenProject, "mavenProject cannot be null");
+            requireNonNull(mavenSession, "mavenSession cannot be null");
+            requireNonNull(buildPluginManager, "buildPluginManager cannot be null");
             requireNonNull(categoryFileLocation, "categoryFileLocation cannot be null");
             requireNonNull(metadataRepositoryLocation, "metadataRepositoryLocation cannot be null");
-            return new CategoryPublisher(launcher, forkedProcessTimeoutInSeconds, additionalArgs, categoryFileLocation,
-                    metadataRepositoryLocation);
+            return new CategoryPublisher(categoryFileLocation,
+                    metadataRepositoryLocation, mavenProject, mavenSession , buildPluginManager );
         }
+
+
 
     }
 

@@ -40,7 +40,6 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-import org.eclipse.sisu.equinox.launching.internal.P2ApplicationLauncher;
 import org.reficio.p2.bundler.ArtifactBundler;
 import org.reficio.p2.bundler.ArtifactBundlerInstructions;
 import org.reficio.p2.bundler.ArtifactBundlerRequest;
@@ -61,6 +60,7 @@ import org.reficio.p2.utils.BundleUtils;
 import org.reficio.p2.utils.JarUtils;
 import org.reficio.p2.utils.Utils;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -119,11 +119,6 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
 
     @Parameter(defaultValue = "${project.build.directory}/repository", required = true)
     private String destinationDirectory;
-
-    @Component
-    @Requirement
-    private P2ApplicationLauncher launcher;
-
 
     /**
      * Specifies a file containing category definitions.
@@ -570,9 +565,9 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     private void executeCategoryPublisher() throws AbstractMojoExecutionException, IOException {
         prepareCategoryLocationFile();
         CategoryPublisher publisher = CategoryPublisher.builder()
-                .p2ApplicationLauncher(launcher)
-                .additionalArgs(additionalArgs)
-                .forkedProcessTimeoutInSeconds(forkedProcessTimeoutInSeconds)
+                .mavenSession(session)
+                .mavenProject(project)
+                .buildPluginManager(pluginManager)
                 .categoryFileLocation(categoryFilePath)
                 .metadataRepositoryLocation(destinationDirectory)
                 .build();
