@@ -71,7 +71,7 @@ public class TychoFeatureBuilder {
     	mp.getModel().setPackaging("eclipse-feature");
     	mp.setPluginArtifactRepositories(this.mavenProject.getPluginArtifactRepositories());
     	mp.setFile(featureFile); //sets the basedir for the MavenProject
-    	org.eclipse.tycho.artifacts.DependencyArtifacts da = new DefaultDependencyArtifacts();
+    	org.eclipse.tycho.DependencyArtifacts da = new DefaultDependencyArtifacts();
     	mp.setContextValue(TychoConstants.CTX_DEPENDENCY_ARTIFACTS, da);
     	return mp;
 	}
