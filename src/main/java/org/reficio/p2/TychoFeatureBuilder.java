@@ -83,7 +83,7 @@ public class TychoFeatureBuilder {
                 plugin(
                         groupId("org.eclipse.tycho"),
                         artifactId("tycho-packaging-plugin"),
-                        version(Utils.TYCHO_VERSION)
+                        version(Utils.tychoVersion())
                 ),
                 goal("package-feature"),
                 configuration(
