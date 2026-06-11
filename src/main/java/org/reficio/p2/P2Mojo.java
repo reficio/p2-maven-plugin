@@ -110,8 +110,7 @@ public class P2Mojo extends AbstractMojo implements Contextualizable {
     @Parameter(defaultValue = "${session}", required = true, readonly = true)
     private MavenSession session;
 
-    @Component
-    @Requirement
+    @Inject
     private BuildPluginManager pluginManager;
 
     @Parameter(defaultValue = "${project.build.directory}", required = true)
