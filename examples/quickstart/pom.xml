@@ -34,7 +34,7 @@
                 <groupId>org.reficio</groupId>
                 <artifactId>p2-maven-plugin</artifactId>
                 <!-- consider updating the version -->
-                <version>1.3.0</version>
+                <version>3.0.0</version>
                      
                 <executions>
                     <execution>
