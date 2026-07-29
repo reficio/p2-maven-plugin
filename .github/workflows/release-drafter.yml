@@ -36,7 +36,7 @@ jobs:
   update_release_draft:
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v7.3.1
+      - uses: release-drafter/release-drafter@v7.7.0
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
           commitish: master
